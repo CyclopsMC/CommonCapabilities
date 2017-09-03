@@ -12,7 +12,7 @@ import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityStorage;
  * Config for the inventory state capability.
  * @author rubensworks
  */
-public class InventoryStateConfig extends CapabilityConfig {
+public class InventoryStateConfig extends CapabilityConfig<IInventoryState> {
 
     /**
      * The unique instance.

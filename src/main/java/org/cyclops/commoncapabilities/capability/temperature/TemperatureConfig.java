@@ -13,7 +13,7 @@ import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityStorage;
  * @author rubensworks
  *
  */
-public class TemperatureConfig extends CapabilityConfig {
+public class TemperatureConfig extends CapabilityConfig<ITemperature> {
 
     /**
      * The unique instance.

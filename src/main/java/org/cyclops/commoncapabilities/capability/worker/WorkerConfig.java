@@ -13,7 +13,7 @@ import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityStorage;
  * @author rubensworks
  *
  */
-public class WorkerConfig extends CapabilityConfig {
+public class WorkerConfig extends CapabilityConfig<IWorker> {
 
     /**
      * The unique instance.
