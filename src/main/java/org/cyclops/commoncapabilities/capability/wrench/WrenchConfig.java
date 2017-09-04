@@ -14,7 +14,7 @@ import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityStorage;
  * @author rubensworks
  *
  */
-public class WrenchConfig extends CapabilityConfig {
+public class WrenchConfig extends CapabilityConfig<IWrench> {
 
     /**
      * The unique instance.
@@ -34,7 +34,7 @@ public class WrenchConfig extends CapabilityConfig {
                 "wrench",
                 "Indicates if something is a wrench",
                 IWrench.class,
-                new DefaultCapabilityStorage(),
+                new DefaultCapabilityStorage<IWrench>(),
                 DefaultWrench.class
         );
     }

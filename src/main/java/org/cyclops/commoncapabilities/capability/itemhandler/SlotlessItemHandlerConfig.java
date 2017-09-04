@@ -12,7 +12,7 @@ import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityStorage;
  * Config for the slotless item handler capability.
  * @author rubensworks
  */
-public class SlotlessItemHandlerConfig extends CapabilityConfig {
+public class SlotlessItemHandlerConfig extends CapabilityConfig<ISlotlessItemHandler> {
 
     /**
      * The unique instance.
