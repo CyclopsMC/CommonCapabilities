@@ -33,14 +33,14 @@ repositories {
 dependencies {
     // Add something like 'cyclopscore_version_local=0.1.0-DEV' to your gradle.properties if you want to use a custom local CyclopsCore version.
     if(project.hasProperty("cyclopscore_version_local")) {
-        compile "org.cyclops.cyclopscore:CyclopsCore:${config.minecraft_version}-${project.cyclopscore_version_local}:deobf"
+        compile "org.cyclops.cyclopscore:CyclopsCore:1.9.4-${project.cyclopscore_version_local}:deobf"
     } else {
-        compile "org.cyclops.cyclopscore:CyclopsCore:${config.minecraft_version}-${config.cyclopscore_version}:deobf"
+        compile "org.cyclops.cyclopscore:CyclopsCore:1.9.4-${config.cyclopscore_version}:deobf"
     }
 
     deobfCompile "net.bdew.thirdparty:rfapi:${config.rfapi_version}-mc1.8.9:api" // http://jenkins.bdew.net/maven/net/bdew/thirdparty/rfapi/
-    deobfCompile "com.enderio:EnderIO:${config.minecraft_version}-${config.enderio_version}" // http://maven.tterrag.com/com/enderio/EnderIO
-    deobfCompile "com.enderio.core:EnderCore:${config.minecraft_version}-${config.endercore_version}" // http://maven.tterrag.com/com/enderio/EnderIO
+    deobfCompile "com.enderio:EnderIO:1.9.4-${config.enderio_version}" // http://maven.tterrag.com/com/enderio/EnderIO
+    deobfCompile "com.enderio.core:EnderCore:1.9.4-${config.endercore_version}" // http://maven.tterrag.com/com/enderio/core/EnderCore/
     deobfCompile "slimeknights.mantle:Mantle:${config.minecraft_version}-${config.mantle_version}" // http://dvs1.progwml6.com/files/maven/slimeknights/mantle/Mantle/maven-metadata.xml
     deobfCompile "slimeknights:TConstruct:${config.minecraft_version}-${config.tconstruct_version}" // http://dvs1.progwml6.com/files/maven/slimeknights/TConstruct/maven-metadata.xml
     deobfCompile "net.sengir.forestry:forestry_${config.minecraft_version}:${config.forestry_version}" // http://maven.ic2.player.to/
