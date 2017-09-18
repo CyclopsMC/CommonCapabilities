@@ -31,7 +31,7 @@ public class TilePoweredWorker implements IWorker {
 
     protected boolean hasEnoughEnergy() {
         return tile.getWorkCounter() > 0 ||
-                (tile.getEnergyManager().getTotalEnergyStored() > 0 && !tile.getErrorLogic().contains(EnumErrorCode.NO_POWER));
+                (tile.getEnergyManager().getEnergyStored() > 0 && !tile.getErrorLogic().contains(EnumErrorCode.NO_POWER));
     }
 
     @Override

@@ -29,6 +29,6 @@ public class TileFarmGearboxWorker implements IWorker {
     @Override
     public boolean canWork() {
         return tile.getMultiblockLogic().getController().isAssembled()
-                && tile.getEnergyManager().getTotalEnergyStored() >= ENERGY_PER_OPERATION;
+                && tile.getEnergyManager().getEnergyStored() >= ENERGY_PER_OPERATION;
     }
 }
