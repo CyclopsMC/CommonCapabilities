@@ -1,12 +1,18 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityItemFrame;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemShulkerBox;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -18,8 +24,13 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.cyclops.commoncapabilities.CommonCapabilities;
 import org.cyclops.commoncapabilities.Reference;
+import org.cyclops.commoncapabilities.api.capability.block.BlockCapabilities;
+import org.cyclops.commoncapabilities.api.capability.block.IBlockCapabilityConstructor;
+import org.cyclops.commoncapabilities.api.capability.block.IBlockCapabilityProvider;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
+import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 import org.cyclops.commoncapabilities.capability.temperature.TemperatureConfig;
 import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage.VanillaEntityItemEnergyStorage;
@@ -29,6 +40,9 @@ import org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler.
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaEntityItemFrameItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaEntityItemItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaItemShulkerBoxItemHandler;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler.VanillaBrewingStandRecipeHandler;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler.VanillaCraftingTableRecipeHandler;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler.VanillaFurnaceRecipeHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.temperature.VanillaFurnaceTemperature;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.temperature.VanillaUniversalBucketTemperature;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.work.VanillaBrewingStandWorker;
@@ -39,6 +53,7 @@ import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityProvider;
 import org.cyclops.cyclopscore.modcompat.capabilities.ICapabilityConstructor;
 import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -46,6 +61,11 @@ import javax.annotation.Nullable;
  * @author rubensworks
  */
 public class VanillaModCompat implements IModCompat {
+
+    public VanillaModCompat() {
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
     @Override
     public String getModID() {
         return Reference.MOD_VANILLA;
@@ -299,6 +319,84 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
+
+            // RecipeHandler
+            registry.registerTile(TileEntityBrewingStand.class, new ICapabilityConstructor<IRecipeHandler, TileEntityBrewingStand, TileEntityBrewingStand>() {
+                @Override
+                public Capability<IRecipeHandler> getCapability() {
+                    return RecipeHandlerConfig.CAPABILITY;
+                }
+
+                @Nullable
+                @Override
+                public ICapabilityProvider createProvider(TileEntityBrewingStand hostType, TileEntityBrewingStand host) {
+                    IRecipeHandler recipeHandler = new VanillaBrewingStandRecipeHandler(host);
+                    return new ICapabilityProvider() {
+                        @Override
+                        public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+                            return capability == RecipeHandlerConfig.CAPABILITY;
+                        }
+
+                        @Nullable
+                        @Override
+                        public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+                            return RecipeHandlerConfig.CAPABILITY.cast(recipeHandler);
+                        }
+                    };
+                }
+            });
+            registry.registerTile(TileEntityFurnace.class, new ICapabilityConstructor<IRecipeHandler, TileEntityFurnace, TileEntityFurnace>() {
+                @Override
+                public Capability<IRecipeHandler> getCapability() {
+                    return RecipeHandlerConfig.CAPABILITY;
+                }
+
+                @Nullable
+                @Override
+                public ICapabilityProvider createProvider(TileEntityFurnace hostType, TileEntityFurnace host) {
+                    IRecipeHandler recipeHandler = new VanillaFurnaceRecipeHandler(host);
+                    return new ICapabilityProvider() {
+                        @Override
+                        public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+                            return capability == RecipeHandlerConfig.CAPABILITY;
+                        }
+
+                        @Nullable
+                        @Override
+                        public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+                            return RecipeHandlerConfig.CAPABILITY.cast(recipeHandler);
+                        }
+                    };
+                }
+            });
+            BlockCapabilities.getInstance().register(new IBlockCapabilityConstructor() {
+                @Nullable
+                @Override
+                public Block getBlock() {
+                    return Blocks.CRAFTING_TABLE;
+                }
+
+                @Override
+                public IBlockCapabilityProvider createProvider() {
+                    return new IBlockCapabilityProvider() {
+                        @Override
+                        public boolean hasCapability(@Nonnull IBlockState blockState, @Nonnull Capability<?> capability,
+                                                     @Nonnull World world, @Nonnull BlockPos pos, @Nullable EnumFacing facing) {
+                            return capability == RecipeHandlerConfig.CAPABILITY;
+                        }
+
+                        @Nullable
+                        @Override
+                        public <T> T getCapability(@Nonnull IBlockState blockState, @Nonnull Capability<T> capability,
+                                                   @Nonnull World world, @Nonnull BlockPos pos, @Nullable EnumFacing facing) {
+                            if (capability == RecipeHandlerConfig.CAPABILITY) {
+                                return RecipeHandlerConfig.CAPABILITY.cast(new VanillaCraftingTableRecipeHandler(world));
+                            }
+                            return null;
+                        }
+                    };
+                }
+            });
         }
     }
 }

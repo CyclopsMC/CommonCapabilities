@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.capability.inventorystate.InventoryStateConfig;
 import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
+import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 import org.cyclops.commoncapabilities.capability.temperature.TemperatureConfig;
 import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 import org.cyclops.commoncapabilities.capability.wrench.WrenchConfig;
@@ -146,6 +147,7 @@ public class CommonCapabilities extends ModBaseVersionable {
         configHandler.add(new TemperatureConfig());
         configHandler.add(new InventoryStateConfig());
         configHandler.add(new SlotlessItemHandlerConfig());
+        configHandler.add(new RecipeHandlerConfig());
     }
 
     @Override
