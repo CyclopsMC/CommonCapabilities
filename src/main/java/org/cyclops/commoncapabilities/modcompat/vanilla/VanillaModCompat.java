@@ -11,6 +11,7 @@ import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -381,16 +382,16 @@ public class VanillaModCompat implements IModCompat {
                     return new IBlockCapabilityProvider() {
                         @Override
                         public boolean hasCapability(@Nonnull IBlockState blockState, @Nonnull Capability<?> capability,
-                                                     @Nonnull World world, @Nonnull BlockPos pos, @Nullable EnumFacing facing) {
+                                                     @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nullable EnumFacing facing) {
                             return capability == RecipeHandlerConfig.CAPABILITY;
                         }
 
                         @Nullable
                         @Override
                         public <T> T getCapability(@Nonnull IBlockState blockState, @Nonnull Capability<T> capability,
-                                                   @Nonnull World world, @Nonnull BlockPos pos, @Nullable EnumFacing facing) {
+                                                   @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nullable EnumFacing facing) {
                             if (capability == RecipeHandlerConfig.CAPABILITY) {
-                                return RecipeHandlerConfig.CAPABILITY.cast(new VanillaCraftingTableRecipeHandler(world));
+                                return RecipeHandlerConfig.CAPABILITY.cast(new VanillaCraftingTableRecipeHandler((World) world));
                             }
                             return null;
                         }
