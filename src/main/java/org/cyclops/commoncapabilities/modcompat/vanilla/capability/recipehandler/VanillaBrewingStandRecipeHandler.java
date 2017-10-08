@@ -24,7 +24,6 @@ import org.cyclops.commoncapabilities.api.capability.recipehandler.*;
 import org.cyclops.commoncapabilities.core.CompositeList;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -45,7 +44,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
         }
 
         @Override
-        public Collection<ItemStack> getMatchingInstances() {
+        public List<ItemStack> getMatchingInstances() {
             return Collections.emptyList();
         }
 
@@ -61,7 +60,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
         }
 
         @Override
-        public Collection<ItemStack> getMatchingInstances() {
+        public List<ItemStack> getMatchingInstances() {
             return Collections.emptyList();
         }
 
@@ -240,7 +239,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
         }
 
         @Override
-        public Collection<ItemStack> getMatchingInstances() {
+        public List<ItemStack> getMatchingInstances() {
             return Collections.emptyList();
         }
 
@@ -264,7 +263,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
         }
 
         @Override
-        public Collection<ItemStack> getMatchingInstances() {
+        public List<ItemStack> getMatchingInstances() {
             return Collections.emptyList();
         }
 
