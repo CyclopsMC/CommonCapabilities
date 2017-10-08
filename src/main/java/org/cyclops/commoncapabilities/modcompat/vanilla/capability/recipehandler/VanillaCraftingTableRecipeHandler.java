@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.*;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -57,7 +56,7 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
     }
 
     @Override
-    public Collection<RecipeDefinition> getRecipes() {
+    public List<RecipeDefinition> getRecipes() {
         return Lists.transform(ForgeRegistries.RECIPES.getValues(), new Function<IRecipe, RecipeDefinition>() {
             @Nullable
             @Override

@@ -3,6 +3,7 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandle
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
@@ -12,7 +13,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.*;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +27,7 @@ public class VanillaFurnaceRecipeHandler implements IRecipeHandler {
     private static final Set<RecipeComponent<?, ?>> COMPONENTS_OUTPUT = Sets.newHashSet(RecipeComponent.ITEMSTACK);
 
     private final TileEntityFurnace tile;
+    private List<RecipeDefinition> recipes = null;
 
     public VanillaFurnaceRecipeHandler(TileEntityFurnace tile) {
         this.tile = tile;
@@ -48,8 +49,11 @@ public class VanillaFurnaceRecipeHandler implements IRecipeHandler {
     }
 
     @Override
-    public Collection<RecipeDefinition> getRecipes() {
-        return Collections2.transform(FurnaceRecipes.instance().getSmeltingList().entrySet(),
+    public List<RecipeDefinition> getRecipes() {
+        if (recipes != null) {
+            return recipes;
+        }
+        return recipes = Lists.newArrayList(Collections2.transform(FurnaceRecipes.instance().getSmeltingList().entrySet(),
                 new Function<Map.Entry<ItemStack, ItemStack>, RecipeDefinition>() {
                     @Nullable
                     @Override
@@ -59,7 +63,7 @@ public class VanillaFurnaceRecipeHandler implements IRecipeHandler {
                                 new IRecipeIngredient[]{new RecipeIngredientItemStack(input.getValue())}
                         );
                     }
-                });
+                }));
     }
 
     @Nullable

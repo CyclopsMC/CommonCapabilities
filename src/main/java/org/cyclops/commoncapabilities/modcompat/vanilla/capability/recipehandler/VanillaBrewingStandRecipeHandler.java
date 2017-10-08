@@ -95,7 +95,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
     }
 
     @Override
-    public Collection<RecipeDefinition> getRecipes() {
+    public List<RecipeDefinition> getRecipes() {
         return new CompositeList<>(Lists.newArrayList(generateVanillaRecipes(),
                 Lists.newArrayList(Iterables.filter(Lists.transform(BrewingRecipeRegistry.getRecipes(),
                         new Function<IBrewingRecipe, RecipeDefinition>() {
