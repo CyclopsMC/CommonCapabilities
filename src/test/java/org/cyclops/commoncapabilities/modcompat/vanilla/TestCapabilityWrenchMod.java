@@ -49,7 +49,7 @@ public class TestCapabilityWrenchMod {
             @Override
             public ICapabilityProvider createProvider(Item hostType, ItemStack host) {
                 if(hostType == Items.STICK) {
-                    return new DefaultCapabilityProvider<>(getCapability(), new DefaultWrench());
+                    return new DefaultCapabilityProvider<>(this::getCapability, new DefaultWrench());
                 }
                 return null;
             }

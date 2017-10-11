@@ -97,7 +97,7 @@ public class VanillaModCompat implements IModCompat {
                         @Nullable
                         @Override
                         public ICapabilityProvider createProvider(TileEntityFurnace host) {
-                            return new DefaultCapabilityProvider<>(WorkerConfig.CAPABILITY, new VanillaFurnaceWorker(host));
+                            return new DefaultCapabilityProvider<>(this::getCapability, new VanillaFurnaceWorker(host));
                         }
                     });
             registry.registerTile(TileEntityBrewingStand.class,
@@ -109,7 +109,7 @@ public class VanillaModCompat implements IModCompat {
 
                         @Override
                         public ICapabilityProvider createProvider(TileEntityBrewingStand host) {
-                            return new DefaultCapabilityProvider<>(WorkerConfig.CAPABILITY, new VanillaBrewingStandWorker(host));
+                            return new DefaultCapabilityProvider<>(this::getCapability, new VanillaBrewingStandWorker(host));
                         }
                     });
 
@@ -124,7 +124,7 @@ public class VanillaModCompat implements IModCompat {
                         @Nullable
                         @Override
                         public ICapabilityProvider createProvider(TileEntityFurnace host) {
-                            return new DefaultCapabilityProvider<>(TemperatureConfig.CAPABILITY, new VanillaFurnaceTemperature(host));
+                            return new DefaultCapabilityProvider<>(this::getCapability, new VanillaFurnaceTemperature(host));
                         }
                     });
             registry.registerItem(UniversalBucket.class,
@@ -136,7 +136,7 @@ public class VanillaModCompat implements IModCompat {
 
                         @Override
                         public ICapabilityProvider createProvider(UniversalBucket hostType, ItemStack host) {
-                            return new DefaultCapabilityProvider<>(TemperatureConfig.CAPABILITY, new VanillaUniversalBucketTemperature(host));
+                            return new DefaultCapabilityProvider<>(this::getCapability, new VanillaUniversalBucketTemperature(host));
                         }
                     });
 
@@ -151,7 +151,7 @@ public class VanillaModCompat implements IModCompat {
                         @Nullable
                         @Override
                         public ICapabilityProvider createProvider(ItemShulkerBox hostType, ItemStack host) {
-                            return new DefaultCapabilityProvider<>(getCapability(), new VanillaItemShulkerBoxItemHandler(host));
+                            return new DefaultCapabilityProvider<>(this::getCapability, new VanillaItemShulkerBoxItemHandler(host));
                         }
                     });
             registry.registerEntity(EntityItem.class,
