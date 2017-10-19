@@ -132,7 +132,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
                     IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> ingredient =
                             new RecipeIngredientItemStack(getMixReagent(mixPredicate));
                     IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> output = new RecipeIngredientItemStack(PotionHelper.doReaction(
-                            inputItem, Iterables.getFirst(ingredient.getMatchingInstances(), ItemStack.EMPTY)));
+                            Iterables.getFirst(ingredient.getMatchingInstances(), ItemStack.EMPTY).copy(), inputItem.copy()));
                     VANILLA_RECIPES.add(new RecipeDefinition(
                             new RecipeIngredients(ingredient, item, item, item),
                             new RecipeIngredients(EMPTY, output, output, output))
@@ -142,7 +142,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
                     IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> ingredient =
                             new RecipeIngredientItemStack(getMixReagent(mixPredicate));
                     IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> output = new RecipeIngredientItemStack(PotionHelper.doReaction(
-                            inputItem, Iterables.getFirst(ingredient.getMatchingInstances(), ItemStack.EMPTY)));
+                            Iterables.getFirst(ingredient.getMatchingInstances(), ItemStack.EMPTY).copy(), inputItem.copy()));
                     VANILLA_RECIPES.add(new RecipeDefinition(
                                     new RecipeIngredients(ingredient, item, item, item),
                                     new RecipeIngredients(EMPTY, output, output, output))
