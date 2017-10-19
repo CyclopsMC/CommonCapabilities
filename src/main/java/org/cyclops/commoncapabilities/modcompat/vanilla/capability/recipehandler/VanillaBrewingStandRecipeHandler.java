@@ -6,11 +6,13 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.minecraft.init.Items;
+import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.potion.PotionType;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.tileentity.TileEntityBrewingStand;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
@@ -121,10 +123,10 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
         if (VANILLA_RECIPES == null) {
             VANILLA_RECIPES = Lists.newArrayList();
             List<ItemStack> inputItems = Lists.newArrayList(
+                    PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER),
                     new ItemStack(Items.POTIONITEM),
                     new ItemStack(Items.SPLASH_POTION),
-                    new ItemStack(Items.LINGERING_POTION),
-                    new ItemStack(Items.GLASS_BOTTLE)
+                    new ItemStack(Items.LINGERING_POTION)
             );
             for (ItemStack inputItem : inputItems) {
                 IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> item = new RecipeIngredientItemStack(inputItem);
