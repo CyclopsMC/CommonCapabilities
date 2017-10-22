@@ -129,12 +129,12 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
                     new ItemStack(Items.LINGERING_POTION)
             );
             for (ItemStack inputItem : inputItems) {
-                IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> item = new RecipeIngredientItemStack(inputItem);
+                IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> item = new RecipeIngredientItemStack(inputItem, true);
                 for (PotionHelper.MixPredicate<Item> mixPredicate : getPotionItems()) {
                     IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> ingredient =
                             new RecipeIngredientItemStack(getMixReagent(mixPredicate));
                     IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> output = new RecipeIngredientItemStack(PotionHelper.doReaction(
-                            Iterables.getFirst(ingredient.getMatchingInstances(), ItemStack.EMPTY).copy(), inputItem.copy()));
+                            Iterables.getFirst(ingredient.getMatchingInstances(), ItemStack.EMPTY).copy(), inputItem.copy()), true);
                     VANILLA_RECIPES.add(new RecipeDefinition(
                             new RecipeIngredients(ingredient, item, item, item),
                             new RecipeIngredients(EMPTY, output, output, output))
@@ -144,7 +144,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
                     IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> ingredient =
                             new RecipeIngredientItemStack(getMixReagent(mixPredicate));
                     IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> output = new RecipeIngredientItemStack(PotionHelper.doReaction(
-                            Iterables.getFirst(ingredient.getMatchingInstances(), ItemStack.EMPTY).copy(), inputItem.copy()));
+                            Iterables.getFirst(ingredient.getMatchingInstances(), ItemStack.EMPTY).copy(), inputItem.copy()), true);
                     VANILLA_RECIPES.add(new RecipeDefinition(
                                     new RecipeIngredients(ingredient, item, item, item),
                                     new RecipeIngredients(EMPTY, output, output, output))

@@ -60,7 +60,7 @@ public class VanillaFurnaceRecipeHandler implements IRecipeHandler {
                     public RecipeDefinition apply(Map.Entry<ItemStack, ItemStack> input) {
                         return new RecipeDefinition(
                                 new IRecipeIngredient[]{new RecipeIngredientItemStack(input.getKey())},
-                                new IRecipeIngredient[]{new RecipeIngredientItemStack(input.getValue())}
+                                new IRecipeIngredient[]{new RecipeIngredientItemStack(input.getValue(), true)}
                         );
                     }
                 }));

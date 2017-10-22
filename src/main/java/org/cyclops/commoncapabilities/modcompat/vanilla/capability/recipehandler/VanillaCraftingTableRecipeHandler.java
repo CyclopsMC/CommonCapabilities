@@ -66,7 +66,7 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
                     inputIngredients[i] = new RecipeIngredientItemStack(input.getIngredients().get(i));
                 }
                 return new RecipeDefinition(inputIngredients,
-                        new IRecipeIngredient[]{new RecipeIngredientItemStack(input.getRecipeOutput())});
+                        new IRecipeIngredient[]{new RecipeIngredientItemStack(input.getRecipeOutput(), true)});
             }
         });
     }
