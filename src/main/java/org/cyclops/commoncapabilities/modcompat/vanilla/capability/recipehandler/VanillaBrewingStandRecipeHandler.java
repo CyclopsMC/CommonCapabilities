@@ -19,6 +19,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.common.brewing.VanillaBrewingRecipe;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -28,7 +29,9 @@ import org.cyclops.commoncapabilities.core.CompositeList;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Recipe handler capability for the vanilla brewing stand.
@@ -122,38 +125,63 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
     protected List<RecipeDefinition> generateVanillaRecipes() {
         if (VANILLA_RECIPES == null) {
             VANILLA_RECIPES = Lists.newArrayList();
-            List<ItemStack> inputItems = Lists.newArrayList(
-                    PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER),
-                    new ItemStack(Items.POTIONITEM),
-                    new ItemStack(Items.SPLASH_POTION),
-                    new ItemStack(Items.LINGERING_POTION)
-            );
-            for (ItemStack inputItem : inputItems) {
-                IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> item = new RecipeIngredientItemStack(inputItem, true);
-                for (PotionHelper.MixPredicate<Item> mixPredicate : getPotionItems()) {
-                    IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> ingredient =
-                            new RecipeIngredientItemStack(getMixReagent(mixPredicate));
-                    IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> output = new RecipeIngredientItemStack(PotionHelper.doReaction(
-                            Iterables.getFirst(ingredient.getMatchingInstances(), ItemStack.EMPTY).copy(), inputItem.copy()), true);
-                    VANILLA_RECIPES.add(new RecipeDefinition(
-                            new RecipeIngredients(ingredient, item, item, item),
-                            new RecipeIngredients(EMPTY, output, output, output))
-                    );
+            List<ItemStack> inputItems = Lists.newArrayList(PotionUtils.addPotionToItemStack(
+                    new ItemStack(Items.POTIONITEM), PotionTypes.WATER));
+            List<IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget>> ingredients = Lists.newArrayList();
+            for (PotionHelper.MixPredicate<Item> mixPredicate : getPotionItems()) {
+                ingredients.add(new RecipeIngredientItemStack(getMixReagent(mixPredicate)));
+            }
+            for (PotionHelper.MixPredicate<PotionType> mixPredicate : getPotionTypes()) {
+                ingredients.add(new RecipeIngredientItemStack(getMixReagent(mixPredicate)));
+            }
+
+            List<ItemStack> checkInputItems = Lists.newArrayList(inputItems);
+            while (!checkInputItems.isEmpty()) {
+                List<ItemStack> newItems = Lists.newArrayList();
+                for (ItemStack inputItem : checkInputItems) {
+                    IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> item =
+                            new RecipeIngredientItemStack(inputItem, true);
+                    for (IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> ingredient : ingredients) {
+                        ItemStack outputItem = PotionHelper.doReaction(Iterables.getFirst(ingredient
+                                .getMatchingInstances(), ItemStack.EMPTY).copy(), inputItem.copy());
+                        IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> output = new RecipeIngredientItemStack(
+                                outputItem, true);
+                        if (isPotionOutputValid(inputItem, outputItem)) {
+                            addRecipeIfNew(ingredient, item, output, newItems);
+                        }
+                    }
+
+                    // Throw error if infinite loop detected
+                    if (VANILLA_RECIPES.size() > 7500) {
+                        throw new RuntimeException("Infinite loop detected! Please report this to the Integrated " +
+                                "Dynamics issue tracker with a list of (potion-changing) mods installed");
+                    }
                 }
-                for (PotionHelper.MixPredicate<PotionType> mixPredicate : getPotionTypes()) {
-                    IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> ingredient =
-                            new RecipeIngredientItemStack(getMixReagent(mixPredicate));
-                    IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> output = new RecipeIngredientItemStack(PotionHelper.doReaction(
-                            Iterables.getFirst(ingredient.getMatchingInstances(), ItemStack.EMPTY).copy(), inputItem.copy()), true);
-                    VANILLA_RECIPES.add(new RecipeDefinition(
-                                    new RecipeIngredients(ingredient, item, item, item),
-                                    new RecipeIngredients(EMPTY, output, output, output))
-                    );
-                }
+                checkInputItems = newItems;
             }
 
         }
         return VANILLA_RECIPES;
+    }
+
+    protected static void addRecipeIfNew(IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> ingredient,
+                                         IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> item,
+                                         IRecipeIngredient<ItemStack, ItemHandlerRecipeTarget> output,
+                                         List<ItemStack> newItems) {
+        RecipeDefinition recipe = new RecipeDefinition(
+                new RecipeIngredients(ingredient, item, item, item),
+                new RecipeIngredients(EMPTY, output, output, output));
+        if (!VANILLA_RECIPES.contains(recipe)) {
+            VANILLA_RECIPES.add(recipe);
+            newItems.addAll(output.getMatchingInstances());
+        }
+    }
+
+    protected static boolean isPotionOutputValid(ItemStack input, ItemStack output) {
+        return !input.isEmpty() && !output.isEmpty() && (input.getItem() != output.getItem()
+                || (PotionUtils.getPotionFromItem(output) != PotionTypes.WATER
+                && !Objects.equals(ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotionFromItem(output)),
+                ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotionFromItem(input)))));
     }
 
     @Nullable
