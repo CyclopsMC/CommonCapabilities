@@ -1,12 +1,18 @@
 package org.cyclops.commoncapabilities;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.Level;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeComponent;
 import org.cyclops.commoncapabilities.capability.inventorystate.InventoryStateConfig;
 import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
 import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
@@ -50,6 +56,15 @@ public class CommonCapabilities extends ModBaseVersionable {
 
     public CommonCapabilities() {
         super(Reference.MOD_ID, Reference.MOD_NAME, Reference.MOD_VERSION);
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    @SubscribeEvent
+    public void onRegistriesCreate(RegistryEvent.NewRegistry event) {
+        new RegistryBuilder<RecipeComponent<?, ?>>()
+                .setName(new ResourceLocation(Reference.MOD_ID, "registry:recipecomponents"))
+                .setType((Class<RecipeComponent<?, ?>>) (Class) RecipeComponent.class)
+                .create();
     }
 
     @Override
