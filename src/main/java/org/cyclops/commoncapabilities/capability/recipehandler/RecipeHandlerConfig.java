@@ -46,9 +46,9 @@ public class RecipeHandlerConfig extends CapabilityConfig<IRecipeHandler> {
     public void onRegister(RegistryEvent.Register event) {
         if (event.getRegistry() == RecipeComponent.REGISTRY) {
             event.getRegistry().registerAll(
-                    new RecipeComponent<>("minecraft:itemstack"),
-                    new RecipeComponent<>("minecraft:fluidstack"),
-                    new RecipeComponent<>("minecraft:energy")
+                    new RecipeComponent<>("minecraft:itemstack").setUnlocalizedName("recipecomponent.minecraft.itemstack"),
+                    new RecipeComponent<>("minecraft:fluidstack").setUnlocalizedName("recipecomponent.minecraft.fluidstack"),
+                    new RecipeComponent<>("minecraft:energy").setUnlocalizedName("recipecomponent.minecraft.energy")
             );
         }
     }
