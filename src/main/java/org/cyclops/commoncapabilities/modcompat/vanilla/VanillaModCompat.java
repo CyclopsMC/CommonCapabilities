@@ -331,19 +331,7 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public ICapabilityProvider createProvider(TileEntityBrewingStand hostType, TileEntityBrewingStand host) {
-                    IRecipeHandler recipeHandler = new VanillaBrewingStandRecipeHandler(host);
-                    return new ICapabilityProvider() {
-                        @Override
-                        public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-                            return capability == RecipeHandlerConfig.CAPABILITY;
-                        }
-
-                        @Nullable
-                        @Override
-                        public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-                            return RecipeHandlerConfig.CAPABILITY.cast(recipeHandler);
-                        }
-                    };
+                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaBrewingStandRecipeHandler(host));
                 }
             });
             registry.registerTile(TileEntityFurnace.class, new ICapabilityConstructor<IRecipeHandler, TileEntityFurnace, TileEntityFurnace>() {
@@ -355,19 +343,7 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public ICapabilityProvider createProvider(TileEntityFurnace hostType, TileEntityFurnace host) {
-                    IRecipeHandler recipeHandler = new VanillaFurnaceRecipeHandler(host);
-                    return new ICapabilityProvider() {
-                        @Override
-                        public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-                            return capability == RecipeHandlerConfig.CAPABILITY;
-                        }
-
-                        @Nullable
-                        @Override
-                        public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-                            return RecipeHandlerConfig.CAPABILITY.cast(recipeHandler);
-                        }
-                    };
+                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaFurnaceRecipeHandler(host));
                 }
             });
             BlockCapabilities.getInstance().register(new IBlockCapabilityConstructor() {
