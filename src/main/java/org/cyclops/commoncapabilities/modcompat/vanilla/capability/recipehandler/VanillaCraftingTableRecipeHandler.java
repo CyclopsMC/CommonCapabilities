@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -15,6 +15,8 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.*;
 
 import javax.annotation.Nullable;
+
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -56,8 +58,8 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
     }
 
     @Override
-    public List<RecipeDefinition> getRecipes() {
-        return Lists.transform(ForgeRegistries.RECIPES.getValues(), new Function<IRecipe, RecipeDefinition>() {
+    public Collection<RecipeDefinition> getRecipes() {
+        return Collections2.transform(ForgeRegistries.RECIPES.getValues(), new Function<IRecipe, RecipeDefinition>() {
             @Nullable
             @Override
             public RecipeDefinition apply(@Nullable IRecipe input) {
