@@ -59,7 +59,7 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
 
     @Override
     public Collection<RecipeDefinition> getRecipes() {
-        return Collections2.transform(ForgeRegistries.RECIPES.getValues(), new Function<IRecipe, RecipeDefinition>() {
+        return Collections2.transform(ForgeRegistries.RECIPES.getValuesCollection(), new Function<IRecipe, RecipeDefinition>() {
             @Nullable
             @Override
             public RecipeDefinition apply(@Nullable IRecipe input) {
