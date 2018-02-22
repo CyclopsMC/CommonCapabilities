@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.Level;
-import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeComponent;
+import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.capability.inventorystate.InventoryStateConfig;
 import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
 import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
@@ -62,9 +62,9 @@ public class CommonCapabilities extends ModBaseVersionable {
 
     @SubscribeEvent
     public void onRegistriesCreate(RegistryEvent.NewRegistry event) {
-        new RegistryBuilder<RecipeComponent<?, ?>>()
+        new RegistryBuilder<IngredientComponent<?, ?, ?>>()
                 .setName(new ResourceLocation(Reference.MOD_ID, "registry:recipecomponents"))
-                .setType((Class<RecipeComponent<?, ?>>) (Class) RecipeComponent.class)
+                .setType((Class<IngredientComponent<?, ?, ?>>) (Class) IngredientComponent.class)
                 .create();
     }
 

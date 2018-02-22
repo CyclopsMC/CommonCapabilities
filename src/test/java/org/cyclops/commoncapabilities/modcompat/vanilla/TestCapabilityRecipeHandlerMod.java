@@ -10,9 +10,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.cyclops.commoncapabilities.api.capability.block.BlockCapabilities;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
-import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeComponent;
-import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
+import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
+import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 
 import java.util.Arrays;
@@ -50,19 +51,19 @@ public class TestCapabilityRecipeHandlerMod {
             event.setCanceled(true);
             System.out.println("---Recipe Handler---");
             System.out.println("Recipe components input: ");
-            for (RecipeComponent<?, ?> recipeComponent : recipeHandler.getRecipeInputComponents()) {
+            for (IngredientComponent<?, ?, ?> recipeComponent : recipeHandler.getRecipeInputComponents()) {
                 System.out.println("  " + recipeComponent.toString());
                 System.out.println("    targets: " + Arrays.toString(recipeHandler.getInputComponentTargets(recipeComponent)));
             }
             System.out.println("Recipe components output: ");
-            for (RecipeComponent<?, ?> recipeComponent : recipeHandler.getRecipeOutputComponents()) {
+            for (IngredientComponent<?, ?, ?> recipeComponent : recipeHandler.getRecipeOutputComponents()) {
                 System.out.println("  " + recipeComponent.toString());
                 System.out.println("    targets: " + Arrays.toString(recipeHandler.getOutputComponentTargets(recipeComponent)));
             }
             System.out.println("Recipes: " + recipeHandler.getRecipes().size());
-            for (RecipeDefinition recipe : recipeHandler.getRecipes()) {
+            for (IRecipeDefinition recipe : recipeHandler.getRecipes()) {
                 System.out.println(recipe.toString());
-                System.out.println("  Simulated output: " + recipeHandler.simulate(recipe.getInput()));
+                System.out.println("  Simulated output: " + recipeHandler.simulate(MixedIngredients.fromRecipeInput(recipe)));
             }
             System.out.println("---     ---");
         }
