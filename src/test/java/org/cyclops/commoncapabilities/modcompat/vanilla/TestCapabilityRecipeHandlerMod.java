@@ -16,8 +16,6 @@ import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 
-import java.util.Arrays;
-
 /**
  * A simple test mod which will test the recipe handler of a block.
  * @author rubensworks
@@ -51,14 +49,12 @@ public class TestCapabilityRecipeHandlerMod {
             event.setCanceled(true);
             System.out.println("---Recipe Handler---");
             System.out.println("Recipe components input: ");
-            for (IngredientComponent<?, ?, ?> recipeComponent : recipeHandler.getRecipeInputComponents()) {
+            for (IngredientComponent<?, ?> recipeComponent : recipeHandler.getRecipeInputComponents()) {
                 System.out.println("  " + recipeComponent.toString());
-                System.out.println("    targets: " + Arrays.toString(recipeHandler.getInputComponentTargets(recipeComponent)));
             }
             System.out.println("Recipe components output: ");
-            for (IngredientComponent<?, ?, ?> recipeComponent : recipeHandler.getRecipeOutputComponents()) {
+            for (IngredientComponent<?, ?> recipeComponent : recipeHandler.getRecipeOutputComponents()) {
                 System.out.println("  " + recipeComponent.toString());
-                System.out.println("    targets: " + Arrays.toString(recipeHandler.getOutputComponentTargets(recipeComponent)));
             }
             System.out.println("Recipes: " + recipeHandler.getRecipes().size());
             for (IRecipeDefinition recipe : recipeHandler.getRecipes()) {

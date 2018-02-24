@@ -6,18 +6,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.items.CapabilityItemHandler;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
-import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
+import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
-import org.cyclops.commoncapabilities.api.ingredient.ItemHandlerRecipeTarget;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
-import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,23 +26,27 @@ import java.util.Set;
  */
 public class VanillaFurnaceRecipeHandler implements IRecipeHandler {
 
-    private static final Set<IngredientComponent<?, ?, ?>> COMPONENTS_INPUT  = Sets.newHashSet(IngredientComponent.ITEMSTACK);
-    private static final Set<IngredientComponent<?, ?, ?>> COMPONENTS_OUTPUT = Sets.newHashSet(IngredientComponent.ITEMSTACK);
+    private static final VanillaFurnaceRecipeHandler INSTANCE = new VanillaFurnaceRecipeHandler();
+    private static final Set<IngredientComponent<?, ?>> COMPONENTS_INPUT  = Sets.newHashSet(IngredientComponent.ITEMSTACK);
+    private static final Set<IngredientComponent<?, ?>> COMPONENTS_OUTPUT = Sets.newHashSet(IngredientComponent.ITEMSTACK);
 
-    private final TileEntityFurnace tile;
     private List<IRecipeDefinition> recipes = null;
 
-    public VanillaFurnaceRecipeHandler(TileEntityFurnace tile) {
-        this.tile = tile;
+    private VanillaFurnaceRecipeHandler() {
+
+    }
+
+    public static VanillaFurnaceRecipeHandler getInstance() {
+        return INSTANCE;
     }
 
     @Override
-    public Set<IngredientComponent<?, ?, ?>> getRecipeInputComponents() {
+    public Set<IngredientComponent<?, ?>> getRecipeInputComponents() {
         return COMPONENTS_INPUT;
     }
 
     @Override
-    public Set<IngredientComponent<?, ?, ?>> getRecipeOutputComponents() {
+    public Set<IngredientComponent<?, ?>> getRecipeOutputComponents() {
         return COMPONENTS_OUTPUT;
     }
 
@@ -81,29 +81,5 @@ public class VanillaFurnaceRecipeHandler implements IRecipeHandler {
         }
         ItemStack result = FurnaceRecipes.instance().getSmeltingResult(recipeIngredients.get(0));
         return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, result);
-    }
-
-    @Nullable
-    @Override
-    public <R> R[] getInputComponentTargets(IngredientComponent<?, R, ?> component) {
-        if (component == IngredientComponent.ITEMSTACK) {
-            return (R[]) new ItemHandlerRecipeTarget[]{
-                    new ItemHandlerRecipeTarget(
-                            tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP), 0)
-            };
-        }
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public <R> R[] getOutputComponentTargets(IngredientComponent<?, R, ?> component) {
-        if (component == IngredientComponent.ITEMSTACK) {
-            return (R[]) new ItemHandlerRecipeTarget[]{
-                    new ItemHandlerRecipeTarget(
-                            tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.DOWN), 0)
-            };
-        }
-        return null;
     }
 }

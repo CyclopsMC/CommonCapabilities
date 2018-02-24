@@ -16,15 +16,14 @@ import net.minecraftforge.common.crafting.IngredientNBT;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.oredict.OreIngredient;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
-import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
-import org.cyclops.commoncapabilities.api.ingredient.IPrototypedIngredient;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
+import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
+import org.cyclops.commoncapabilities.api.ingredient.IPrototypedIngredient;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
-import org.cyclops.commoncapabilities.api.ingredient.ItemHandlerRecipeTarget;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
-import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -39,8 +38,8 @@ import java.util.stream.Collectors;
  */
 public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
 
-    private static final Set<IngredientComponent<?, ?, ?>> COMPONENTS_INPUT  = Sets.newHashSet(IngredientComponent.ITEMSTACK);
-    private static final Set<IngredientComponent<?, ?, ?>> COMPONENTS_OUTPUT = Sets.newHashSet(IngredientComponent.ITEMSTACK);
+    private static final Set<IngredientComponent<?, ?>> COMPONENTS_INPUT  = Sets.newHashSet(IngredientComponent.ITEMSTACK);
+    private static final Set<IngredientComponent<?, ?>> COMPONENTS_OUTPUT = Sets.newHashSet(IngredientComponent.ITEMSTACK);
 
     private final Container DUMMY_CONTAINTER = new Container() {
         @Override
@@ -56,12 +55,12 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
     }
 
     @Override
-    public Set<IngredientComponent<?, ?, ?>> getRecipeInputComponents() {
+    public Set<IngredientComponent<?, ?>> getRecipeInputComponents() {
         return COMPONENTS_INPUT;
     }
 
     @Override
-    public Set<IngredientComponent<?, ?, ?>> getRecipeOutputComponents() {
+    public Set<IngredientComponent<?, ?>> getRecipeOutputComponents() {
         return COMPONENTS_OUTPUT;
     }
 
@@ -75,7 +74,7 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
      * @param ingredient An ingredient.
      * @return A list of prototyped ingredients.
      */
-    public static List<IPrototypedIngredient<ItemStack, ItemHandlerRecipeTarget, Integer>> getPrototypesFromIngredient(Ingredient ingredient) {
+    public static List<IPrototypedIngredient<ItemStack, Integer>> getPrototypesFromIngredient(Ingredient ingredient) {
         if (ingredient instanceof IngredientNBT) {
             return Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
                     ingredient.getMatchingStacks()[0], ItemMatch.DAMAGE | ItemMatch.NBT));
@@ -91,10 +90,10 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
     }
 
     public static IRecipeDefinition recipeToRecipeDefinition(IRecipe recipe) {
-        List<List<IPrototypedIngredient<ItemStack, ItemHandlerRecipeTarget, Integer>>> inputIngredients = Lists.newArrayListWithCapacity(recipe.getIngredients().size());
+        List<List<IPrototypedIngredient<ItemStack, Integer>>> inputIngredients = Lists.newArrayListWithCapacity(recipe.getIngredients().size());
         for (int i = 0; i < recipe.getIngredients().size(); i++) {
             Ingredient ingredient = recipe.getIngredients().get(i);
-            List<IPrototypedIngredient<ItemStack, ItemHandlerRecipeTarget, Integer>> prototypes = getPrototypesFromIngredient(ingredient);
+            List<IPrototypedIngredient<ItemStack, Integer>> prototypes = getPrototypesFromIngredient(ingredient);
             inputIngredients.add(i, prototypes);
         }
         return RecipeDefinition.ofIngredients(IngredientComponent.ITEMSTACK, inputIngredients,
@@ -137,17 +136,5 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
         }
 
         return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getRecipeOutput());
-    }
-
-    @Nullable
-    @Override
-    public <R> R[] getInputComponentTargets(IngredientComponent<?, R, ?> component) {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public <R> R[] getOutputComponentTargets(IngredientComponent<?, R, ?> component) {
-        return null;
     }
 }

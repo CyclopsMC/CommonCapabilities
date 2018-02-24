@@ -331,7 +331,7 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public ICapabilityProvider createProvider(TileEntityBrewingStand hostType, TileEntityBrewingStand host) {
-                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaBrewingStandRecipeHandler(host));
+                    return new DefaultCapabilityProvider<>(this::getCapability, VanillaBrewingStandRecipeHandler.getInstance());
                 }
             });
             registry.registerTile(TileEntityFurnace.class, new ICapabilityConstructor<IRecipeHandler, TileEntityFurnace, TileEntityFurnace>() {
@@ -343,7 +343,7 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public ICapabilityProvider createProvider(TileEntityFurnace hostType, TileEntityFurnace host) {
-                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaFurnaceRecipeHandler(host));
+                    return new DefaultCapabilityProvider<>(this::getCapability, VanillaFurnaceRecipeHandler.getInstance());
                 }
             });
             BlockCapabilities.getInstance().register(new IBlockCapabilityConstructor() {

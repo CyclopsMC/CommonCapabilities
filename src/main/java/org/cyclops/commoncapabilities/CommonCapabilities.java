@@ -62,9 +62,9 @@ public class CommonCapabilities extends ModBaseVersionable {
 
     @SubscribeEvent
     public void onRegistriesCreate(RegistryEvent.NewRegistry event) {
-        new RegistryBuilder<IngredientComponent<?, ?, ?>>()
+        new RegistryBuilder<IngredientComponent<?, ?>>()
                 .setName(new ResourceLocation(Reference.MOD_ID, "registry:recipecomponents"))
-                .setType((Class<IngredientComponent<?, ?, ?>>) (Class) IngredientComponent.class)
+                .setType((Class<IngredientComponent<?, ?>>) (Class) IngredientComponent.class)
                 .create();
     }
 

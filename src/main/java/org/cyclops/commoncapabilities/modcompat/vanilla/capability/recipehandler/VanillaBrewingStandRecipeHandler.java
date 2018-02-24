@@ -10,24 +10,19 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.potion.PotionType;
 import net.minecraft.potion.PotionUtils;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
-import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
-import org.cyclops.commoncapabilities.api.ingredient.IPrototypedIngredient;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
+import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
+import org.cyclops.commoncapabilities.api.ingredient.IPrototypedIngredient;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
-import org.cyclops.commoncapabilities.api.ingredient.ItemHandlerRecipeTarget;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
-import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -40,25 +35,28 @@ import java.util.Set;
  */
 public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
 
-    private static final Set<IngredientComponent<?, ?, ?>> COMPONENTS_INPUT  = Sets.newHashSet(IngredientComponent.ITEMSTACK);
-    private static final Set<IngredientComponent<?, ?, ?>> COMPONENTS_OUTPUT = Sets.newHashSet(IngredientComponent.ITEMSTACK);
+    private static final VanillaBrewingStandRecipeHandler INSTANCE = new VanillaBrewingStandRecipeHandler();
+    private static final Set<IngredientComponent<?, ?>> COMPONENTS_INPUT  = Sets.newHashSet(IngredientComponent.ITEMSTACK);
+    private static final Set<IngredientComponent<?, ?>> COMPONENTS_OUTPUT = Sets.newHashSet(IngredientComponent.ITEMSTACK);
     private static final int[] OUTPUT_SLOTS = new int[] {1, 2, 3};
 
     private static List<IRecipeDefinition> VANILLA_RECIPES = null;
 
-    private final TileEntityBrewingStand tile;
+    private VanillaBrewingStandRecipeHandler() {
 
-    public VanillaBrewingStandRecipeHandler(TileEntityBrewingStand tile) {
-        this.tile = tile;
+    }
+
+    public static VanillaBrewingStandRecipeHandler getInstance() {
+        return INSTANCE;
     }
 
     @Override
-    public Set<IngredientComponent<?, ?, ?>> getRecipeInputComponents() {
+    public Set<IngredientComponent<?, ?>> getRecipeInputComponents() {
         return COMPONENTS_INPUT;
     }
 
     @Override
-    public Set<IngredientComponent<?, ?, ?>> getRecipeOutputComponents() {
+    public Set<IngredientComponent<?, ?>> getRecipeOutputComponents() {
         return COMPONENTS_OUTPUT;
     }
 
@@ -77,7 +75,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
             VANILLA_RECIPES = Lists.newArrayList();
             List<ItemStack> inputItems = Lists.newArrayList(PotionUtils.addPotionToItemStack(
                     new ItemStack(Items.POTIONITEM), PotionTypes.WATER));
-            List<IPrototypedIngredient<ItemStack, ItemHandlerRecipeTarget, Integer>> ingredients = Lists.newArrayList();
+            List<IPrototypedIngredient<ItemStack, Integer>> ingredients = Lists.newArrayList();
             for (PotionHelper.MixPredicate<Item> mixPredicate : getPotionItems()) {
                 ingredients.addAll(VanillaCraftingTableRecipeHandler.getPrototypesFromIngredient(getMixReagent(mixPredicate)));
             }
@@ -89,9 +87,9 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
             while (!checkInputItems.isEmpty()) {
                 List<ItemStack> newItems = Lists.newArrayList();
                 for (ItemStack inputItem : checkInputItems) {
-                    IPrototypedIngredient<ItemStack, ItemHandlerRecipeTarget, Integer> item =
+                    IPrototypedIngredient<ItemStack, Integer> item =
                             new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, inputItem, ItemMatch.DAMAGE | ItemMatch.NBT);
-                    for (IPrototypedIngredient<ItemStack, ItemHandlerRecipeTarget, Integer> ingredient : ingredients) {
+                    for (IPrototypedIngredient<ItemStack, Integer> ingredient : ingredients) {
                         ItemStack output = PotionHelper.doReaction(ingredient.getPrototype().copy(), inputItem.copy());
                         if (isPotionOutputValid(inputItem, output)) {
                             addRecipeIfNew(ingredient, item, output, newItems);
@@ -111,8 +109,8 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
         return VANILLA_RECIPES;
     }
 
-    protected static void addRecipeIfNew(IPrototypedIngredient<ItemStack, ItemHandlerRecipeTarget, Integer> ingredient,
-                                         IPrototypedIngredient<ItemStack, ItemHandlerRecipeTarget, Integer> item,
+    protected static void addRecipeIfNew(IPrototypedIngredient<ItemStack, Integer> ingredient,
+                                         IPrototypedIngredient<ItemStack, Integer> item,
                                          ItemStack output,
                                          List<ItemStack> newItems) {
         IRecipeDefinition recipe = RecipeDefinition.ofIngredients(IngredientComponent.ITEMSTACK,
@@ -148,38 +146,6 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
         brewingItemStacks.set(0, ItemStack.EMPTY);
 
         return MixedIngredients.ofInstances(IngredientComponent.ITEMSTACK, brewingItemStacks);
-    }
-
-    @Nullable
-    @Override
-    public <R> R[] getInputComponentTargets(IngredientComponent<?, R, ?> component) {
-        if (component == IngredientComponent.ITEMSTACK) {
-            IItemHandler itemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                    EnumFacing.NORTH);
-            return (R[]) new ItemHandlerRecipeTarget[]{
-                    new ItemHandlerRecipeTarget(itemHandler, 3),
-                    new ItemHandlerRecipeTarget(itemHandler, 0),
-                    new ItemHandlerRecipeTarget(itemHandler, 1),
-                    new ItemHandlerRecipeTarget(itemHandler, 2)
-            };
-        }
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public <R> R[] getOutputComponentTargets(IngredientComponent<?, R, ?> component) {
-        if (component == IngredientComponent.ITEMSTACK) {
-            IItemHandler itemHandler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-                    EnumFacing.DOWN);
-            return (R[]) new ItemHandlerRecipeTarget[]{
-                    new ItemHandlerRecipeTarget(itemHandler, 3),
-                    new ItemHandlerRecipeTarget(itemHandler, 0),
-                    new ItemHandlerRecipeTarget(itemHandler, 1),
-                    new ItemHandlerRecipeTarget(itemHandler, 2)
-            };
-        }
-        return null;
     }
 
     private static List<PotionHelper.MixPredicate<PotionType>> getPotionTypes() {
