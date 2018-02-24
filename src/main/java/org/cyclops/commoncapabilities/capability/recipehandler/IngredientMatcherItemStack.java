@@ -21,6 +21,11 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     }
 
     @Override
+    public boolean isEmpty(ItemStack instance) {
+        return instance.isEmpty();
+    }
+
+    @Override
     public int hash(ItemStack instance) {
         return ItemStackHelpers.getItemStackHashCode(instance);
     }

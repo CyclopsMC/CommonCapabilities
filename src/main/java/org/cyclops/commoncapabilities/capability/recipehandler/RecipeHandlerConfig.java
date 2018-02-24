@@ -53,7 +53,7 @@ public class RecipeHandlerConfig extends CapabilityConfig<IRecipeHandler> {
                     new IngredientComponent<>("minecraft:fluidstack", new IngredientMatcherFluidStack(),
                             new IngredientSerializerFluidStack(), null)
                             .setUnlocalizedName("recipecomponent.minecraft.fluidstack"),
-                    new IngredientComponent<>("minecraft:energy", new IngredientMatcherVoid<>(),
+                    new IngredientComponent<>("minecraft:energy", new IngredientMatcherEnergy(),
                             new IngredientSerializerEnergy(), 0)
                             .setUnlocalizedName("recipecomponent.minecraft.energy")
             );
