@@ -26,7 +26,7 @@ Instead of adding the [CommonCapabilities API as a git submodule](https://github
 repositories {
   maven {
     name "Cyclops Repo"
-    url "https://dl.bintray.com/cyclopsmc/dev/"
+    url "https://oss.jfrog.org/artifactory/simple/libs-release/"
   }
 }
 
