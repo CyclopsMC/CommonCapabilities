@@ -83,6 +83,7 @@ public class TestIngredientMatcherItemStack {
     public void testInstance() {
         assertThat(M.isInstance("a"), is(false));
         assertThat(M.isInstance(W_0_1), is(true));
+        assertThat(M.isInstance(ItemStack.EMPTY), is(true));
     }
 
     @Test

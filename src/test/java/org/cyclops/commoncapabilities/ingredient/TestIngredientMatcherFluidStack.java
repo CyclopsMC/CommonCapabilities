@@ -53,6 +53,7 @@ public class TestIngredientMatcherFluidStack {
     public void testInstance() {
         assertThat(M.isInstance("a"), is(false));
         assertThat(M.isInstance(W_1), is(true));
+        assertThat(M.isInstance(null), is(true));
     }
 
     @Test

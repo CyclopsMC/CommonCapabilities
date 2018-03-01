@@ -19,7 +19,7 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
 
     @Override
     public boolean isInstance(Object object) {
-        return object instanceof FluidStack;
+        return object == null || object instanceof FluidStack;
     }
 
     @Override
