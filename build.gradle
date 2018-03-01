@@ -20,6 +20,7 @@ plugins {
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'jacoco'
 
 loadProperties()
 

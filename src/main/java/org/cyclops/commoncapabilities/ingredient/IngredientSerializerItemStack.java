@@ -1,27 +1,27 @@
-package org.cyclops.commoncapabilities.capability.recipehandler;
+package org.cyclops.commoncapabilities.ingredient;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
-import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 
 /**
- * Serializer for FluidStacks.
+ * Serializer for ItemStacks.
  * @author rubensworks
  */
-public class IngredientSerializerFluidStack implements IIngredientSerializer<FluidStack, Integer> {
+public class IngredientSerializerItemStack implements IIngredientSerializer<ItemStack, Integer> {
     @Override
-    public NBTBase serializeInstance(FluidStack instance) {
-        return instance == null ? new NBTTagCompound() : instance.writeToNBT(new NBTTagCompound());
+    public NBTBase serializeInstance(ItemStack instance) {
+        return instance.serializeNBT();
     }
 
     @Override
-    public FluidStack deserializeInstance(NBTBase tag) throws IllegalArgumentException {
+    public ItemStack deserializeInstance(NBTBase tag) throws IllegalArgumentException {
         if (!(tag instanceof NBTTagCompound)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagCompound");
         }
-        return FluidStack.loadFluidStackFromNBT((NBTTagCompound) tag);
+        return new ItemStack((NBTTagCompound) tag);
     }
 
     @Override

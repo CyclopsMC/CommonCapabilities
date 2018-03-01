@@ -1,4 +1,4 @@
-package org.cyclops.commoncapabilities.capability.recipehandler;
+package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagByte;

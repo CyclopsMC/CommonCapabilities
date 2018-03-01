@@ -1,6 +1,7 @@
 package org.cyclops.commoncapabilities;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -8,7 +9,12 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.Level;
@@ -19,6 +25,12 @@ import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConf
 import org.cyclops.commoncapabilities.capability.temperature.TemperatureConfig;
 import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 import org.cyclops.commoncapabilities.capability.wrench.WrenchConfig;
+import org.cyclops.commoncapabilities.ingredient.IngredientMatcherEnergy;
+import org.cyclops.commoncapabilities.ingredient.IngredientMatcherFluidStack;
+import org.cyclops.commoncapabilities.ingredient.IngredientMatcherItemStack;
+import org.cyclops.commoncapabilities.ingredient.IngredientSerializerEnergy;
+import org.cyclops.commoncapabilities.ingredient.IngredientSerializerFluidStack;
+import org.cyclops.commoncapabilities.ingredient.IngredientSerializerItemStack;
 import org.cyclops.commoncapabilities.modcompat.vanilla.VanillaModCompat;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
@@ -169,6 +181,23 @@ public class CommonCapabilities extends ModBaseVersionable {
     @Override
     public ICommonProxy getProxy() {
         return proxy;
+    }
+
+    @SubscribeEvent
+    public void onRegister(RegistryEvent.Register event) {
+        if (event.getRegistry() == IngredientComponent.REGISTRY) {
+            event.getRegistry().registerAll(
+                    new IngredientComponent<>("minecraft:itemstack", new IngredientMatcherItemStack(),
+                            new IngredientSerializerItemStack(), ItemStack.EMPTY)
+                            .setUnlocalizedName("recipecomponent.minecraft.itemstack"),
+                    new IngredientComponent<>("minecraft:fluidstack", new IngredientMatcherFluidStack(),
+                            new IngredientSerializerFluidStack(), null)
+                            .setUnlocalizedName("recipecomponent.minecraft.fluidstack"),
+                    new IngredientComponent<>("minecraft:energy", new IngredientMatcherEnergy(),
+                            new IngredientSerializerEnergy(), 0)
+                            .setUnlocalizedName("recipecomponent.minecraft.energy")
+            );
+        }
     }
 
     /**
