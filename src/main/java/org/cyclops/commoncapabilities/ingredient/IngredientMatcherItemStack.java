@@ -27,6 +27,11 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     }
 
     @Override
+    public ItemStack getEmptyInstance() {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
     public boolean isEmpty(ItemStack instance) {
         return instance.isEmpty();
     }

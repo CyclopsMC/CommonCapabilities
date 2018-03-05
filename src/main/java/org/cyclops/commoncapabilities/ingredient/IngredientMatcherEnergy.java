@@ -23,6 +23,11 @@ public class IngredientMatcherEnergy implements IIngredientMatcher<Integer, Void
     }
 
     @Override
+    public Integer getEmptyInstance() {
+        return 0;
+    }
+
+    @Override
     public boolean isEmpty(Integer instance) {
         return instance == 0;
     }

@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientMatcherFluidStack {
@@ -113,6 +114,11 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.matchesExactly(W_1, W_2_T2), is(false));
         assertThat(M.matchesExactly(W_1, L_1), is(false));
         assertThat(M.matchesExactly(W_1, L_1_T1), is(false));
+    }
+
+    @Test
+    public void testEmpty() {
+        assertThat(M.getEmptyInstance(), nullValue());
     }
 
     @Test

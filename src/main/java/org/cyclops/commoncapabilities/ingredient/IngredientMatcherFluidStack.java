@@ -33,6 +33,11 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     }
 
     @Override
+    public FluidStack getEmptyInstance() {
+        return null;
+    }
+
+    @Override
     public int hash(FluidStack instance) {
         if (instance == null) {
             return 0;

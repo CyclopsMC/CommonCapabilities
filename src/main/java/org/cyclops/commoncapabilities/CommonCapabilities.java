@@ -188,13 +188,13 @@ public class CommonCapabilities extends ModBaseVersionable {
         if (event.getRegistry() == IngredientComponent.REGISTRY) {
             event.getRegistry().registerAll(
                     new IngredientComponent<>("minecraft:itemstack", new IngredientMatcherItemStack(),
-                            new IngredientSerializerItemStack(), ItemStack.EMPTY)
+                            new IngredientSerializerItemStack())
                             .setUnlocalizedName("recipecomponent.minecraft.itemstack"),
                     new IngredientComponent<>("minecraft:fluidstack", new IngredientMatcherFluidStack(),
-                            new IngredientSerializerFluidStack(), null)
+                            new IngredientSerializerFluidStack())
                             .setUnlocalizedName("recipecomponent.minecraft.fluidstack"),
                     new IngredientComponent<>("minecraft:energy", new IngredientMatcherEnergy(),
-                            new IngredientSerializerEnergy(), 0)
+                            new IngredientSerializerEnergy())
                             .setUnlocalizedName("recipecomponent.minecraft.energy")
             );
         }

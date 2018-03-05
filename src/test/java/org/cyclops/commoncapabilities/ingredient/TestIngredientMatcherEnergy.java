@@ -35,6 +35,11 @@ public class TestIngredientMatcherEnergy {
     }
 
     @Test
+    public void testEmpty() {
+        assertThat(M.getEmptyInstance(), is(0));
+    }
+
+    @Test
     public void testIsEmpty() {
         assertThat(M.isEmpty(123), is(false));
         assertThat(M.isEmpty(0), is(true));

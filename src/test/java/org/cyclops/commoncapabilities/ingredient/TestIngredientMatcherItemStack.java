@@ -255,6 +255,11 @@ public class TestIngredientMatcherItemStack {
     }
 
     @Test
+    public void testEmpty() {
+        assertThat(M.getEmptyInstance(), is(ItemStack.EMPTY));
+    }
+
+    @Test
     public void testIsEmpty() {
         assertThat(M.isEmpty(W_0_1), is(false));
         assertThat(M.isEmpty(ItemStack.EMPTY), is(true));
