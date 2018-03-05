@@ -81,7 +81,7 @@ public class TestNBTBaseComparator {
     public static void init() {
         COMP = new NBTBaseComparator();
 
-        E = new NBTTagEnd();
+        E = (NBTTagEnd) new NBTTagList().get(-1);
 
         B_0 = new NBTTagByte((byte) 0);
         B_1 = new NBTTagByte((byte) 1);
