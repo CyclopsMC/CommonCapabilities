@@ -13,13 +13,13 @@ public class IngredientMatcherEnergy implements IIngredientMatcher<Integer, Void
     }
 
     @Override
-    public boolean matches(Integer a, Integer b, Void matchCondition) {
-        return a.intValue() == b.intValue();
+    public Void getExactMatchCondition() {
+        return null;
     }
 
     @Override
-    public boolean matchesExactly(Integer a, Integer b) {
-        return matches(a, b, null);
+    public boolean matches(Integer a, Integer b, Void matchCondition) {
+        return a.intValue() == b.intValue();
     }
 
     @Override

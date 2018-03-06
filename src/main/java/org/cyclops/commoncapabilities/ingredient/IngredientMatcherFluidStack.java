@@ -5,6 +5,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
+import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 
 import java.util.Map;
@@ -23,13 +24,13 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     }
 
     @Override
-    public boolean matches(FluidStack a, FluidStack b, Integer matchCondition) {
-        return FluidMatch.areFluidStacksEqual(a, b, matchCondition);
+    public Integer getExactMatchCondition() {
+        return ItemMatch.EXACT;
     }
 
     @Override
-    public boolean matchesExactly(FluidStack a, FluidStack b) {
-        return a == null ? b == null : a.equals(b) && a.amount == b.amount;
+    public boolean matches(FluidStack a, FluidStack b, Integer matchCondition) {
+        return FluidMatch.areFluidStacksEqual(a, b, matchCondition);
     }
 
     @Override

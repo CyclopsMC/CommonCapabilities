@@ -17,13 +17,13 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     }
 
     @Override
-    public boolean matches(ItemStack a, ItemStack b, Integer matchCondition) {
-        return ItemMatch.areItemStacksEqual(a, b, matchCondition);
+    public Integer getExactMatchCondition() {
+        return ItemMatch.EXACT;
     }
 
     @Override
-    public boolean matchesExactly(ItemStack a, ItemStack b) {
-        return matches(a, b, ItemMatch.EXACT);
+    public boolean matches(ItemStack a, ItemStack b, Integer matchCondition) {
+        return ItemMatch.areItemStacksEqual(a, b, matchCondition);
     }
 
     @Override
