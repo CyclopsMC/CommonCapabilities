@@ -9,7 +9,7 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
  * Serializer for energy.
  * @author rubensworks
  */
-public class IngredientSerializerEnergy implements IIngredientSerializer<Integer, Void> {
+public class IngredientSerializerEnergy implements IIngredientSerializer<Integer, Boolean> {
     @Override
     public NBTBase serializeInstance(Integer instance) {
         return new NBTTagInt(instance);
@@ -24,12 +24,15 @@ public class IngredientSerializerEnergy implements IIngredientSerializer<Integer
     }
 
     @Override
-    public NBTBase serializeCondition(Void matchCondition) {
-        return new NBTTagByte((byte) 0);
+    public NBTBase serializeCondition(Boolean matchCondition) {
+        return new NBTTagByte((byte) (matchCondition ? 1 : 0));
     }
 
     @Override
-    public Void deserializeCondition(NBTBase tag) throws IllegalArgumentException {
-        return null;
+    public Boolean deserializeCondition(NBTBase tag) throws IllegalArgumentException {
+        if (!(tag instanceof NBTTagByte)) {
+            throw new IllegalArgumentException("This deserializer only accepts NBTTagByte");
+        }
+        return ((NBTTagByte) tag).getByte() == 1;
     }
 }

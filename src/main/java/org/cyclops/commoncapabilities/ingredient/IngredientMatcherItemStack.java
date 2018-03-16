@@ -17,8 +17,28 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     }
 
     @Override
+    public Integer getAnyMatchCondition() {
+        return ItemMatch.ANY;
+    }
+
+    @Override
     public Integer getExactMatchCondition() {
         return ItemMatch.EXACT;
+    }
+
+    @Override
+    public Integer withCondition(Integer matchCondition, Integer with) {
+        return matchCondition | with;
+    }
+
+    @Override
+    public Integer withoutCondition(Integer matchCondition, Integer without) {
+        return matchCondition & ~without;
+    }
+
+    @Override
+    public boolean hasCondition(Integer matchCondition, Integer searchCondition) {
+        return (matchCondition & searchCondition) > 0;
     }
 
     @Override

@@ -1,26 +1,25 @@
 package org.cyclops.commoncapabilities.api.ingredient;
 
+import com.google.common.collect.Lists;
+import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.ingredient.IngredientMatcherEnergy;
 import org.cyclops.commoncapabilities.ingredient.IngredientSerializerEnergy;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientInstanceWrapper {
 
-    private static IngredientComponent<Integer, Void> C;
-    private static IngredientComponent<Integer, Void> C_OTHER;
+    private static IngredientComponent<Integer, Boolean> C;
+    private static IngredientComponent<Integer, Boolean> C_OTHER;
 
     @BeforeClass
     public static void init() {
-        C = new IngredientComponent<>("minecraft:energy", new IngredientMatcherEnergy(),
-                new IngredientSerializerEnergy());
+        C = IngredientComponents.ENERGY;
         C_OTHER = new IngredientComponent<>("minecraft:energyother", new IngredientMatcherEnergy(),
-                new IngredientSerializerEnergy());
+                new IngredientSerializerEnergy(), Lists.newArrayList());
     }
 
     @Test

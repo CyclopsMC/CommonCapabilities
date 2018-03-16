@@ -6,20 +6,40 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
  * Exact matcher for a void match condition.
  * @author rubensworks
  */
-public class IngredientMatcherEnergy implements IIngredientMatcher<Integer, Void> {
+public class IngredientMatcherEnergy implements IIngredientMatcher<Integer, Boolean> {
     @Override
     public boolean isInstance(Object object) {
         return object instanceof Integer;
     }
 
     @Override
-    public Void getExactMatchCondition() {
-        return null;
+    public Boolean getAnyMatchCondition() {
+        return false;
     }
 
     @Override
-    public boolean matches(Integer a, Integer b, Void matchCondition) {
-        return a.intValue() == b.intValue();
+    public Boolean getExactMatchCondition() {
+        return true;
+    }
+
+    @Override
+    public Boolean withCondition(Boolean matchCondition, Boolean with) {
+        return matchCondition || with;
+    }
+
+    @Override
+    public Boolean withoutCondition(Boolean matchCondition, Boolean without) {
+        return matchCondition == without ? false : matchCondition;
+    }
+
+    @Override
+    public boolean hasCondition(Boolean matchCondition, Boolean searchCondition) {
+        return matchCondition == searchCondition;
+    }
+
+    @Override
+    public boolean matches(Integer a, Integer b, Boolean matchCondition) {
+        return !matchCondition || a.intValue() == b.intValue();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package org.cyclops.commoncapabilities;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -25,12 +24,6 @@ import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConf
 import org.cyclops.commoncapabilities.capability.temperature.TemperatureConfig;
 import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 import org.cyclops.commoncapabilities.capability.wrench.WrenchConfig;
-import org.cyclops.commoncapabilities.ingredient.IngredientMatcherEnergy;
-import org.cyclops.commoncapabilities.ingredient.IngredientMatcherFluidStack;
-import org.cyclops.commoncapabilities.ingredient.IngredientMatcherItemStack;
-import org.cyclops.commoncapabilities.ingredient.IngredientSerializerEnergy;
-import org.cyclops.commoncapabilities.ingredient.IngredientSerializerFluidStack;
-import org.cyclops.commoncapabilities.ingredient.IngredientSerializerItemStack;
 import org.cyclops.commoncapabilities.modcompat.vanilla.VanillaModCompat;
 import org.cyclops.cyclopscore.config.ConfigHandler;
 import org.cyclops.cyclopscore.init.ModBaseVersionable;
@@ -187,15 +180,9 @@ public class CommonCapabilities extends ModBaseVersionable {
     public void onRegister(RegistryEvent.Register event) {
         if (event.getRegistry() == IngredientComponent.REGISTRY) {
             event.getRegistry().registerAll(
-                    new IngredientComponent<>("minecraft:itemstack", new IngredientMatcherItemStack(),
-                            new IngredientSerializerItemStack())
-                            .setUnlocalizedName("recipecomponent.minecraft.itemstack"),
-                    new IngredientComponent<>("minecraft:fluidstack", new IngredientMatcherFluidStack(),
-                            new IngredientSerializerFluidStack())
-                            .setUnlocalizedName("recipecomponent.minecraft.fluidstack"),
-                    new IngredientComponent<>("minecraft:energy", new IngredientMatcherEnergy(),
-                            new IngredientSerializerEnergy())
-                            .setUnlocalizedName("recipecomponent.minecraft.energy")
+                    IngredientComponents.ITEMSTACK,
+                    IngredientComponents.FLUIDSTACK,
+                    IngredientComponents.ENERGY
             );
         }
     }

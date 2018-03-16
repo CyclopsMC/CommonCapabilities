@@ -4,6 +4,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientMatcherEnergy {
@@ -13,7 +14,36 @@ public class TestIngredientMatcherEnergy {
     @BeforeClass
     public static void init() {
         M = new IngredientMatcherEnergy();
+    }
 
+    @Test
+    public void testGetAnyMatchCondition() {
+        assertThat(M.getAnyMatchCondition(), is(false));
+    }
+
+    @Test
+    public void testGetExactMatchCondition() {
+        assertThat(M.getExactMatchCondition(), is(true));
+    }
+
+    @Test
+    public void testWithCondition() {
+        assertThat(M.withCondition(M.getAnyMatchCondition(), true), is(true));
+        assertThat(M.withCondition(M.getAnyMatchCondition(), false), is(false));
+    }
+
+    @Test
+    public void testWithoutCondition() {
+        assertThat(M.withoutCondition(M.getExactMatchCondition(), true), is(false));
+        assertThat(M.withoutCondition(M.getExactMatchCondition(), false), is(true));
+    }
+
+    @Test
+    public void testHasCondition() {
+        assertThat(M.hasCondition(M.getExactMatchCondition(), true), is(true));
+        assertThat(M.hasCondition(M.getExactMatchCondition(), false), is(false));
+        assertThat(M.hasCondition(M.getAnyMatchCondition(), true), is(false));
+        assertThat(M.hasCondition(M.getAnyMatchCondition(), false), is(true));
     }
 
     @Test
@@ -24,8 +54,10 @@ public class TestIngredientMatcherEnergy {
 
     @Test
     public void testMatches() {
-        assertThat(M.matches(123, 124, null), is(false));
-        assertThat(M.matches(123, 123, null), is(true));
+        assertThat(M.matches(123, 124, true), is(false));
+        assertThat(M.matches(123, 123, true), is(true));
+        assertThat(M.matches(123, 124, false), is(true));
+        assertThat(M.matches(123, 123, false), is(true));
     }
 
     @Test

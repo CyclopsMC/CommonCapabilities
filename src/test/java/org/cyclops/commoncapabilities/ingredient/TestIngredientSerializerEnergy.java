@@ -38,12 +38,14 @@ public class TestIngredientSerializerEnergy {
 
     @Test
     public void serializeCondition() {
-        assertThat(S.serializeCondition(null), is(new NBTTagByte((byte) 0)));
+        assertThat(S.serializeCondition(true), is(new NBTTagByte((byte) 1)));
+        assertThat(S.serializeCondition(false), is(new NBTTagByte((byte) 0)));
     }
 
     @Test
     public void deserializeCondition() {
-        assertThat(S.deserializeCondition(new NBTTagByte((byte) 0)), nullValue());
+        assertThat(S.deserializeCondition(new NBTTagByte((byte) 1)), is(true));
+        assertThat(S.deserializeCondition(new NBTTagByte((byte) 0)), is(false));
     }
 
 }
