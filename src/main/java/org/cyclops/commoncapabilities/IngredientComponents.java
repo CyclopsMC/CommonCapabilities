@@ -28,7 +28,7 @@ public class IngredientComponents {
             new IngredientComponent<>("minecraft:itemstack", new IngredientMatcherItemStack(),
                     new IngredientSerializerItemStack(), Lists.newArrayList(
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/item"),
-                            Item.class, true,ItemStack::getItem, ItemMatch.ANY),
+                            Item.class, true,ItemStack::getItem, ItemMatch.ITEM),
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/metadata"),
                             Integer.class, false, ItemStack::getMetadata, ItemMatch.DAMAGE),
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/count"),
@@ -41,7 +41,7 @@ public class IngredientComponents {
             new IngredientComponent<>("minecraft:fluidstack", new IngredientMatcherFluidStack(),
                     new IngredientSerializerFluidStack(), Lists.newArrayList(
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/fluid"),
-                            Fluid.class, true, FluidStack::getFluid, FluidMatch.ANY),
+                            Fluid.class, true, FluidStack::getFluid, FluidMatch.FLUID),
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/amount"),
                             Integer.class, false, fluidStack -> fluidStack.amount, FluidMatch.AMOUNT),
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/tag"),
