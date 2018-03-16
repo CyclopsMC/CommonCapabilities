@@ -35,19 +35,19 @@ public class TestFilteredItemHandlerItemStackIterator {
 
     @Test
     public void testEmpty() {
-        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER_EMPTY, new ItemStack(Items.APPLE), ItemMatch.ANY);
+        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER_EMPTY, new ItemStack(Items.APPLE), ItemMatch.ITEM);
         assertThat(it.hasNext(), is(false));
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testEmptyNext() {
-        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER_EMPTY, new ItemStack(Items.APPLE), ItemMatch.ANY);
+        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER_EMPTY, new ItemStack(Items.APPLE), ItemMatch.ITEM);
         it.next();
     }
 
     @Test
     public void testNonEmptyApple() {
-        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.APPLE), ItemMatch.ANY);
+        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.APPLE), ItemMatch.ITEM);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.APPLE));
         assertThat(it.hasNext(), is(false));
@@ -55,7 +55,7 @@ public class TestFilteredItemHandlerItemStackIterator {
 
     @Test(expected = NoSuchElementException.class)
     public void testNonEmptyAppleOutOfRange() {
-        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.APPLE), ItemMatch.ANY);
+        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.APPLE), ItemMatch.ITEM);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.APPLE));
         assertThat(it.hasNext(), is(false));
@@ -65,7 +65,7 @@ public class TestFilteredItemHandlerItemStackIterator {
 
     @Test
     public void testNonEmptyLead() {
-        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.LEAD), ItemMatch.ANY);
+        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.LEAD), ItemMatch.ITEM);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.LEAD));
         assertThat(it.hasNext(), is(true));
@@ -75,7 +75,7 @@ public class TestFilteredItemHandlerItemStackIterator {
 
     @Test(expected = NoSuchElementException.class)
     public void testNonEmptyLeadOutOfRange() {
-        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.LEAD), ItemMatch.ANY);
+        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.LEAD), ItemMatch.ITEM);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.LEAD));
         assertThat(it.hasNext(), is(true));

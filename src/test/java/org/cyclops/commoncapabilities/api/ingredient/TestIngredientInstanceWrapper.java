@@ -1,6 +1,7 @@
 package org.cyclops.commoncapabilities.api.ingredient;
 
 import com.google.common.collect.Lists;
+import net.minecraft.util.ResourceLocation;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.ingredient.IngredientMatcherEnergy;
 import org.cyclops.commoncapabilities.ingredient.IngredientSerializerEnergy;
@@ -19,7 +20,10 @@ public class TestIngredientInstanceWrapper {
     public static void init() {
         C = IngredientComponents.ENERGY;
         C_OTHER = new IngredientComponent<>("minecraft:energyother", new IngredientMatcherEnergy(),
-                new IngredientSerializerEnergy(), Lists.newArrayList());
+                new IngredientSerializerEnergy(), Lists.newArrayList(
+                new IngredientComponentCategoryType<>(new ResourceLocation("energy/amount"),
+                        Integer.class, false, amount -> amount, true)
+        ));
     }
 
     @Test

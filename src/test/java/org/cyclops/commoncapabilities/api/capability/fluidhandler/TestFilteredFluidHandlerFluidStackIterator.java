@@ -34,19 +34,19 @@ public class TestFilteredFluidHandlerFluidStackIterator {
 
     @Test
     public void testEmpty() {
-        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER_EMPTY, new FluidStack(FluidRegistry.WATER, 123), FluidMatch.ANY);
+        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER_EMPTY, new FluidStack(FluidRegistry.WATER, 123), FluidMatch.FLUID);
         assertThat(it.hasNext(), is(false));
     }
 
     @Test(expected = NoSuchElementException.class)
     public void testEmptyNext() {
-        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER_EMPTY, new FluidStack(FluidRegistry.WATER, 123), FluidMatch.ANY);
+        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER_EMPTY, new FluidStack(FluidRegistry.WATER, 123), FluidMatch.FLUID);
         it.next();
     }
 
     @Test
     public void testNonEmptyWater() {
-        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(FluidRegistry.WATER, 123), FluidMatch.ANY);
+        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(FluidRegistry.WATER, 123), FluidMatch.FLUID);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next(), is(new FluidStack(FluidRegistry.WATER, 1000)));
         assertThat(it.hasNext(), is(true));
@@ -56,7 +56,7 @@ public class TestFilteredFluidHandlerFluidStackIterator {
 
     @Test(expected = NoSuchElementException.class)
     public void testNonEmptyWaterOutOfRange() {
-        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(FluidRegistry.WATER, 123), FluidMatch.ANY);
+        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(FluidRegistry.WATER, 123), FluidMatch.FLUID);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next(), is(new FluidStack(FluidRegistry.WATER, 1000)));
         assertThat(it.hasNext(), is(true));
@@ -68,7 +68,7 @@ public class TestFilteredFluidHandlerFluidStackIterator {
 
     @Test
     public void testNonEmptyLava() {
-        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(FluidRegistry.LAVA, 123), FluidMatch.ANY);
+        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(FluidRegistry.LAVA, 123), FluidMatch.FLUID);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next(), is(new FluidStack(FluidRegistry.LAVA, 1000)));
         assertThat(it.hasNext(), is(false));
@@ -76,7 +76,7 @@ public class TestFilteredFluidHandlerFluidStackIterator {
 
     @Test(expected = NoSuchElementException.class)
     public void testNonEmptyLavaOutOfRange() {
-        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(FluidRegistry.LAVA, 123), FluidMatch.ANY);
+        Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(FluidRegistry.LAVA, 123), FluidMatch.FLUID);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next(), is(new FluidStack(FluidRegistry.LAVA, 1000)));
         assertThat(it.hasNext(), is(false));
