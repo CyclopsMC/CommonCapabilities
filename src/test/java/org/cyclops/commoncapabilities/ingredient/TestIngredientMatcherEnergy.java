@@ -4,7 +4,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientMatcherEnergy {
@@ -107,6 +106,11 @@ public class TestIngredientMatcherEnergy {
     public void testSetQuantity() {
         assertThat(M.withQuantity(123, 234L), is(234));
         assertThat(M.withQuantity(124, 235L), is(235));
+    }
+
+    @Test
+    public void testGetMaximumQuantity() {
+        assertThat(M.getMaximumQuantity(), is((long) Integer.MAX_VALUE));
     }
 
 }

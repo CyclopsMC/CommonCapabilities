@@ -801,4 +801,9 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.matchesExactly(M.withQuantity(W_0_1, 123L), W_0_123), is(true));
     }
 
+    @Test
+    public void testGetMaximumQuantity() {
+        assertThat(M.getMaximumQuantity(), is((long) Integer.MAX_VALUE));
+    }
+
 }

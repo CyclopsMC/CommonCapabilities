@@ -323,4 +323,9 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.matchesExactly(M.withQuantity(W_1, 123L), W_123), is(true));
     }
 
+    @Test
+    public void testGetMaximumQuantity() {
+        assertThat(M.getMaximumQuantity(), is((long) Integer.MAX_VALUE));
+    }
+
 }
