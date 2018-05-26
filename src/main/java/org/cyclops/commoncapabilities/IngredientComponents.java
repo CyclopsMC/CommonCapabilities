@@ -28,31 +28,31 @@ public class IngredientComponents {
             new IngredientComponent<>("minecraft:itemstack", new IngredientMatcherItemStack(),
                     new IngredientSerializerItemStack(), Lists.newArrayList(
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/item"),
-                            Item.class, true,ItemStack::getItem, ItemMatch.ITEM),
+                            Item.class, true,ItemStack::getItem, ItemMatch.ITEM, false),
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/metadata"),
-                            Integer.class, false, ItemStack::getMetadata, ItemMatch.DAMAGE),
+                            Integer.class, false, ItemStack::getMetadata, ItemMatch.DAMAGE, false),
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/count"),
-                            Integer.class, false, ItemStack::getCount, ItemMatch.STACKSIZE),
+                            Integer.class, false, ItemStack::getCount, ItemMatch.STACKSIZE, true),
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/tag"),
-                            NBTTagCompound.class, false, ItemStack::getTagCompound, ItemMatch.NBT)
+                            NBTTagCompound.class, false, ItemStack::getTagCompound, ItemMatch.NBT, false)
             )).setUnlocalizedName("recipecomponent.minecraft.itemstack");
 
     public static final IngredientComponent<FluidStack, Integer> FLUIDSTACK =
             new IngredientComponent<>("minecraft:fluidstack", new IngredientMatcherFluidStack(),
                     new IngredientSerializerFluidStack(), Lists.newArrayList(
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/fluid"),
-                            Fluid.class, true, FluidStack::getFluid, FluidMatch.FLUID),
+                            Fluid.class, true, FluidStack::getFluid, FluidMatch.FLUID, false),
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/amount"),
-                            Integer.class, false, fluidStack -> fluidStack.amount, FluidMatch.AMOUNT),
+                            Integer.class, false, fluidStack -> fluidStack.amount, FluidMatch.AMOUNT, true),
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/tag"),
-                            NBTTagCompound.class, false, fluidStack -> fluidStack.tag, FluidMatch.NBT)
+                            NBTTagCompound.class, false, fluidStack -> fluidStack.tag, FluidMatch.NBT, false)
             )).setUnlocalizedName("recipecomponent.minecraft.fluidstack");
 
     public static final IngredientComponent<Integer, Boolean> ENERGY =
             new IngredientComponent<>("minecraft:energy", new IngredientMatcherEnergy(),
                     new IngredientSerializerEnergy(), Lists.newArrayList(
                     new IngredientComponentCategoryType<>(new ResourceLocation("energy/amount"),
-                            Integer.class, false, amount -> amount, true)
+                            Integer.class, false, amount -> amount, true, true)
             )).setUnlocalizedName("recipecomponent.minecraft.energy");
 
 }
