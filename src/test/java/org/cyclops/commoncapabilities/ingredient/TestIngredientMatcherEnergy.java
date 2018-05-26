@@ -96,4 +96,17 @@ public class TestIngredientMatcherEnergy {
         assertThat(M.compare(125, 124), is(1));
     }
 
+    @Test
+    public void testGetQuantity() {
+        assertThat(M.getQuantity(123), is(123L));
+        assertThat(M.getQuantity(124), is(124L));
+        assertThat(M.getQuantity(125), is(125L));
+    }
+
+    @Test
+    public void testSetQuantity() {
+        assertThat(M.withQuantity(123, 234L), is(234));
+        assertThat(M.withQuantity(124, 235L), is(235));
+    }
+
 }

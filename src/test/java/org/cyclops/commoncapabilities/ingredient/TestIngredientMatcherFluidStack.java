@@ -17,6 +17,8 @@ public class TestIngredientMatcherFluidStack {
     private static IngredientMatcherFluidStack M;
 
     private static FluidStack W_1;
+    private static FluidStack W_100;
+    private static FluidStack W_123;
     private static FluidStack W_2;
     private static FluidStack W_1_T1;
     private static FluidStack W_2_T1;
@@ -40,6 +42,8 @@ public class TestIngredientMatcherFluidStack {
         tag2.setInteger("key", 2);
 
         W_1 = new FluidStack(FluidRegistry.WATER, 1);
+        W_100 = new FluidStack(FluidRegistry.WATER, 100);
+        W_123 = new FluidStack(FluidRegistry.WATER, 123);
         W_2 = new FluidStack(FluidRegistry.WATER, 2);
         W_1_T1 = new FluidStack(FluidRegistry.WATER, 1, tag1);
         W_2_T1 = new FluidStack(FluidRegistry.WATER, 2, tag1);
@@ -305,6 +309,18 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.compare(L_1_T1, W_2_T2), is(1));
         assertThat(M.compare(L_1_T1, L_1), is(1));
         assertThat(M.compare(L_1_T1, L_1_T1), is(0));
+    }
+
+    @Test
+    public void testGetQuantity() {
+        assertThat(M.getQuantity(W_1), is(1L));
+        assertThat(M.getQuantity(W_2), is(2L));
+    }
+
+    @Test
+    public void testSetQuantity() {
+        assertThat(M.matchesExactly(M.withQuantity(W_1, 100L), W_100), is(true));
+        assertThat(M.matchesExactly(M.withQuantity(W_1, 123L), W_123), is(true));
     }
 
 }

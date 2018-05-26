@@ -17,6 +17,8 @@ public class TestIngredientMatcherItemStack {
 
     private static ItemStack W_0_1;
     private static ItemStack W_0_2;
+    private static ItemStack W_0_100;
+    private static ItemStack W_0_123;
     private static ItemStack W_0_1_T1;
     private static ItemStack W_0_2_T1;
     private static ItemStack W_0_1_T2;
@@ -50,6 +52,8 @@ public class TestIngredientMatcherItemStack {
 
         W_0_1 = new ItemStack(Items.WOODEN_AXE, 1, 0);
         W_0_2 = new ItemStack(Items.WOODEN_AXE, 2, 0);
+        W_0_100 = new ItemStack(Items.WOODEN_AXE, 100, 0);
+        W_0_123 = new ItemStack(Items.WOODEN_AXE, 123, 0);
         W_0_1_T1 = new ItemStack(Items.WOODEN_AXE, 1, 0);
         W_0_1_T1.setTagCompound(tag1);
         W_0_2_T1 = new ItemStack(Items.WOODEN_AXE, 2, 0);
@@ -783,6 +787,18 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(L_1_1_T1, L_0_1_T1), is(1));
         assertThat(M.compare(L_1_1_T1, L_1_1), is(1));
         assertThat(M.compare(L_1_1_T1, L_1_1_T1), is(0));
+    }
+
+    @Test
+    public void testGetQuantity() {
+        assertThat(M.getQuantity(W_0_1), is(1L));
+        assertThat(M.getQuantity(W_0_2), is(2L));
+    }
+
+    @Test
+    public void testSetQuantity() {
+        assertThat(M.matchesExactly(M.withQuantity(W_0_1, 100L), W_0_100), is(true));
+        assertThat(M.matchesExactly(M.withQuantity(W_0_1, 123L), W_0_123), is(true));
     }
 
 }

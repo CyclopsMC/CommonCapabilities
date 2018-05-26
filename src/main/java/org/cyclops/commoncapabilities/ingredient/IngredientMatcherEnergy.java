@@ -63,6 +63,16 @@ public class IngredientMatcherEnergy implements IIngredientMatcher<Integer, Bool
     }
 
     @Override
+    public long getQuantity(Integer instance) {
+        return instance;
+    }
+
+    @Override
+    public Integer withQuantity(Integer instance, long quantity) {
+        return Math.toIntExact(quantity);
+    }
+
+    @Override
     public int compare(Integer o1, Integer o2) {
         return o1 - o2;
     }
