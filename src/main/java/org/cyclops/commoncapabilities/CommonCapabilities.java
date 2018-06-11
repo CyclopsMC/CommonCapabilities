@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
+import org.cyclops.commoncapabilities.capability.ingredient.storage.IngredientComponentStorageHandlerConfig;
 import org.cyclops.commoncapabilities.capability.inventorystate.InventoryStateConfig;
 import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
 import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
@@ -169,6 +170,7 @@ public class CommonCapabilities extends ModBaseVersionable {
         configHandler.add(new InventoryStateConfig());
         configHandler.add(new SlotlessItemHandlerConfig());
         configHandler.add(new RecipeHandlerConfig());
+        configHandler.add(new IngredientComponentStorageHandlerConfig());
     }
 
     @Override
