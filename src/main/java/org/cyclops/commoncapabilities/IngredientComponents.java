@@ -5,8 +5,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
@@ -17,9 +20,15 @@ import org.cyclops.commoncapabilities.ingredient.IngredientMatcherItemStack;
 import org.cyclops.commoncapabilities.ingredient.IngredientSerializerEnergy;
 import org.cyclops.commoncapabilities.ingredient.IngredientSerializerFluidStack;
 import org.cyclops.commoncapabilities.ingredient.IngredientSerializerItemStack;
+import org.cyclops.commoncapabilities.ingredient.storage.IngredientComponentStorageWrapperHandlerEnergyStorage;
+import org.cyclops.commoncapabilities.ingredient.storage.IngredientComponentStorageWrapperHandlerFluidStack;
+import org.cyclops.commoncapabilities.ingredient.storage.IngredientComponentStorageWrapperHandlerItemStack;
 
 /**
  * The ingredient components that will be registered by this mod.
+ *
+ * These should not be used directly, get their instances via the registry instead!
+ *
  * @author rubensworks
  */
 public class IngredientComponents {
@@ -54,5 +63,13 @@ public class IngredientComponents {
                     new IngredientComponentCategoryType<>(new ResourceLocation("energy/amount"),
                             Integer.class, false, amount -> amount, true, true)
             )).setUnlocalizedName("recipecomponent.minecraft.energy");
+
+    static {
+        ENERGY.setStorageWrapperHandler(CapabilityEnergy.ENERGY, new IngredientComponentStorageWrapperHandlerEnergyStorage(ENERGY));
+        ITEMSTACK.setStorageWrapperHandler(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, new IngredientComponentStorageWrapperHandlerItemStack(ITEMSTACK));
+        IngredientComponentStorageWrapperHandlerFluidStack fluidWrapper = new IngredientComponentStorageWrapperHandlerFluidStack(FLUIDSTACK);
+        FLUIDSTACK.setStorageWrapperHandler(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, fluidWrapper);
+        FLUIDSTACK.setStorageWrapperHandler(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, fluidWrapper);
+    }
 
 }
