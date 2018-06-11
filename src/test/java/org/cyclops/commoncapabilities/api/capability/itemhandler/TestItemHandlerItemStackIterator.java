@@ -57,6 +57,24 @@ public class TestItemHandlerItemStackIterator {
         assertThat(it.hasNext(), is(false));
     }
 
+    @Test
+    public void testNonEmptyOffset() {
+        Iterator<ItemStack> it1 = new ItemHandlerItemStackIterator(HANDLER, 1);
+        assertThat(it1.hasNext(), is(true));
+        assertThat(it1.next().getItem(), is(Items.LEAD));
+        assertThat(it1.hasNext(), is(true));
+        assertThat(it1.next().getItem(), is(Items.BOWL));
+        assertThat(it1.hasNext(), is(false));
+
+        Iterator<ItemStack> it2 = new ItemHandlerItemStackIterator(HANDLER, 2);
+        assertThat(it2.hasNext(), is(true));
+        assertThat(it2.next().getItem(), is(Items.BOWL));
+        assertThat(it2.hasNext(), is(false));
+
+        Iterator<ItemStack> it3 = new ItemHandlerItemStackIterator(HANDLER, 3);
+        assertThat(it3.hasNext(), is(false));
+    }
+
     @Test(expected = NoSuchElementException.class)
     public void testNonEmptyOutOfRange() {
         Iterator<ItemStack> it = new ItemHandlerItemStackIterator(HANDLER);
