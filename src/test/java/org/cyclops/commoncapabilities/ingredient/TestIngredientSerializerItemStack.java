@@ -18,9 +18,13 @@ public class TestIngredientSerializerItemStack {
     private static NBTTagCompound TAG;
     private static NBTTagCompound I_TAG1;
     private static NBTTagCompound I_TAG2;
+    private static NBTTagCompound I_TAG1L;
+    private static NBTTagCompound I_TAG2L;
     private static NBTTagCompound I_TAG_EMPTY;
     private static ItemStack I1;
     private static ItemStack I2;
+    private static ItemStack I1L;
+    private static ItemStack I2L;
 
     @BeforeClass
     public static void init() {
@@ -43,6 +47,19 @@ public class TestIngredientSerializerItemStack {
         I_TAG2.setShort("Damage", (short) 3);
         I_TAG2.setTag("tag", TAG);
 
+        I_TAG1L = new NBTTagCompound();
+        I_TAG1L.setString("id", "minecraft:apple");
+        I_TAG1L.setByte("Count", (byte) -128);
+        I_TAG1L.setShort("Damage", (short) 0);
+        I_TAG1L.setInteger("ExtendedCount", 128);
+
+        I_TAG2L = new NBTTagCompound();
+        I_TAG2L.setString("id", "minecraft:lead");
+        I_TAG2L.setByte("Count", (byte) -48);
+        I_TAG2L.setShort("Damage", (short) 3);
+        I_TAG2L.setTag("tag", TAG);
+        I_TAG2L.setInteger("ExtendedCount", 2000);
+
         I_TAG_EMPTY = new NBTTagCompound();
         I_TAG_EMPTY.setString("id", "minecraft:air");
         I_TAG_EMPTY.setByte("Count", (byte) 1);
@@ -51,6 +68,9 @@ public class TestIngredientSerializerItemStack {
         I1 = new ItemStack(Items.APPLE);
         I2 = new ItemStack(Items.LEAD, 2, 3);
         I2.setTagCompound(TAG);
+        I1L = new ItemStack(Items.APPLE, 128);
+        I2L = new ItemStack(Items.LEAD, 2000, 3);
+        I2L.setTagCompound(TAG);
     }
 
     @Test
@@ -61,10 +81,21 @@ public class TestIngredientSerializerItemStack {
     }
 
     @Test
+    public void serializeInstanceLarge() {
+        assertThat(S.serializeInstance(I1L), is(I_TAG1L));
+        assertThat(S.serializeInstance(I2L), is(I_TAG2L));
+    }
+
+    @Test
     public void deserializeInstance() {
         assertThat(ItemStack.areItemStacksEqual(I1, S.deserializeInstance(I_TAG1)), is(true));
         assertThat(ItemStack.areItemStacksEqual(I2, S.deserializeInstance(I_TAG2)), is(true));
-        assertThat(ItemStack.areItemStacksEqual(ItemStack.EMPTY, S.deserializeInstance(I_TAG_EMPTY)), is(true));
+    }
+
+    @Test
+    public void deserializeInstanceLarge() {
+        assertThat(ItemStack.areItemStacksEqual(I1L, S.deserializeInstance(I_TAG1L)), is(true));
+        assertThat(ItemStack.areItemStacksEqual(I2L, S.deserializeInstance(I_TAG2L)), is(true));
     }
 
     @Test(expected = IllegalArgumentException.class)

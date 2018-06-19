@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
+import net.minecraftforge.common.util.Constants;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 
 /**
@@ -13,7 +14,11 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 public class IngredientSerializerItemStack implements IIngredientSerializer<ItemStack, Integer> {
     @Override
     public NBTBase serializeInstance(ItemStack instance) {
-        return instance.serializeNBT();
+        NBTTagCompound tag = instance.serializeNBT();
+        if (instance.getCount() > 127) {
+            tag.setInteger("ExtendedCount", instance.getCount());
+        }
+        return tag;
     }
 
     @Override
@@ -21,7 +26,12 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
         if (!(tag instanceof NBTTagCompound)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagCompound");
         }
-        return new ItemStack((NBTTagCompound) tag);
+        NBTTagCompound stackTag = (NBTTagCompound) tag;
+        ItemStack itemStack = new ItemStack(stackTag);
+        if (stackTag.hasKey("ExtendedCount", Constants.NBT.TAG_INT)) {
+            itemStack.setCount(stackTag.getInteger("ExtendedCount"));
+        }
+        return itemStack;
     }
 
     @Override
