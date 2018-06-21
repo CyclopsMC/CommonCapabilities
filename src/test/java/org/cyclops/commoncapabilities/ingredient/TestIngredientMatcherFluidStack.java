@@ -315,12 +315,14 @@ public class TestIngredientMatcherFluidStack {
     public void testGetQuantity() {
         assertThat(M.getQuantity(W_1), is(1L));
         assertThat(M.getQuantity(W_2), is(2L));
+        assertThat(M.getQuantity(null), is(0L));
     }
 
     @Test
     public void testSetQuantity() {
         assertThat(M.matchesExactly(M.withQuantity(W_1, 100L), W_100), is(true));
         assertThat(M.matchesExactly(M.withQuantity(W_1, 123L), W_123), is(true));
+        assertThat(M.matchesExactly(M.withQuantity(null, 123L), W_123), is(true));
     }
 
     @Test

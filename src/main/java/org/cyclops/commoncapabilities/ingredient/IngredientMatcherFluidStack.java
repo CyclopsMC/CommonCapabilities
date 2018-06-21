@@ -75,11 +75,17 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
 
     @Override
     public long getQuantity(FluidStack instance) {
+        if (instance == null) {
+            return 0;
+        }
         return instance.amount;
     }
 
     @Override
     public FluidStack withQuantity(FluidStack instance, long quantity) {
+        if (instance == null) {
+            return new FluidStack(FluidRegistry.WATER, Math.toIntExact(quantity));
+        }
         FluidStack copy = instance.copy();
         copy.amount = Math.toIntExact(quantity);
         return copy;
