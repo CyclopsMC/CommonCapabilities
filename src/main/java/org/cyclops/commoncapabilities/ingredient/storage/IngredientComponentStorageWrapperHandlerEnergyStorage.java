@@ -8,6 +8,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
+import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.ingredient.collection.FilteredIngredientCollectionIterator;
 
 import javax.annotation.Nonnull;
@@ -102,7 +103,7 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage implements
 
         @Override
         public Integer extract(long maxQuantity, boolean simulate) {
-            return storage.extractEnergy((int) maxQuantity, simulate);
+            return storage.extractEnergy(Helpers.castSafe(maxQuantity), simulate);
         }
     }
 
@@ -135,7 +136,7 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage implements
 
         @Override
         public int getMaxEnergyStored() {
-            return (int) storage.getMaxQuantity();
+            return Helpers.castSafe(storage.getMaxQuantity());
         }
 
         @Override

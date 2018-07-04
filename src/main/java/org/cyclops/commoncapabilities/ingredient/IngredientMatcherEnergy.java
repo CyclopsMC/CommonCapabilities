@@ -1,6 +1,7 @@
 package org.cyclops.commoncapabilities.ingredient;
 
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
+import org.cyclops.cyclopscore.helper.Helpers;
 
 /**
  * Exact matcher for a void match condition.
@@ -69,7 +70,7 @@ public class IngredientMatcherEnergy implements IIngredientMatcher<Integer, Bool
 
     @Override
     public Integer withQuantity(Integer instance, long quantity) {
-        return Math.toIntExact(quantity);
+        return Helpers.castSafe(quantity);
     }
 
     @Override

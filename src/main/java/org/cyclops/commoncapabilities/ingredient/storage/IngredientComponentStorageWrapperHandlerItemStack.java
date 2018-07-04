@@ -15,6 +15,7 @@ import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
 import org.cyclops.cyclopscore.datastructure.Wrapper;
+import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.ingredient.collection.FilteredIngredientCollectionIterator;
 import org.cyclops.cyclopscore.ingredient.collection.IIngredientMapMutable;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientHashMap;
@@ -171,11 +172,10 @@ public class IngredientComponentStorageWrapperHandlerItemStack
         @Override
         public ItemStack extract(long maxQuantity, boolean simulate) {
             int slots = storage.getSlots();
-            int amount = (int) maxQuantity;
+            int amount = Helpers.castSafe(maxQuantity);
             for (int slot = 0; slot < slots; slot++) {
                 ItemStack extractedSimulated = storage.extractItem(slot, amount, true);
                 if (!extractedSimulated.isEmpty()) {
-                    // TODO?
                     return simulate ? extractedSimulated : storage.extractItem(slot, amount, false);
                 }
             }
@@ -219,7 +219,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack
 
         @Override
         public int getSlotLimit(int slot) {
-            return (int) ingredientComponent.getMatcher().getMaximumQuantity();
+            return Helpers.castSafe(ingredientComponent.getMatcher().getMaximumQuantity());
         }
     }
 }

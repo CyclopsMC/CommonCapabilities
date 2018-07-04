@@ -6,6 +6,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
+import org.cyclops.cyclopscore.helper.Helpers;
 
 import java.util.Map;
 
@@ -84,10 +85,10 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     @Override
     public FluidStack withQuantity(FluidStack instance, long quantity) {
         if (instance == null) {
-            return new FluidStack(FluidRegistry.WATER, Math.toIntExact(quantity));
+            return new FluidStack(FluidRegistry.WATER, Helpers.castSafe(quantity));
         }
         FluidStack copy = instance.copy();
-        copy.amount = Math.toIntExact(quantity);
+        copy.amount = Helpers.castSafe(quantity);
         return copy;
     }
 

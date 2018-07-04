@@ -4,6 +4,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
+import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.helper.ItemStackHelpers;
 
 /**
@@ -74,7 +75,7 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     @Override
     public ItemStack withQuantity(ItemStack instance, long quantity) {
         ItemStack copy = instance.copy();
-        copy.setCount(Math.toIntExact(quantity));
+        copy.setCount(Helpers.castSafe(quantity));
         return copy;
     }
 

@@ -12,6 +12,7 @@ import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
+import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.ingredient.collection.FilteredIngredientCollectionIterator;
 
 import javax.annotation.Nonnull;
@@ -148,7 +149,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
 
         @Override
         public FluidStack extract(long maxQuantity, boolean simulate) {
-            return storage.drain((int) maxQuantity, !simulate);
+            return storage.drain(Helpers.castSafe(maxQuantity), !simulate);
         }
     }
 
