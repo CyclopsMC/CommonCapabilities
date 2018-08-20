@@ -14,6 +14,7 @@ import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponentCategoryType;
+import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
 import org.cyclops.commoncapabilities.ingredient.IngredientMatcherEnergy;
 import org.cyclops.commoncapabilities.ingredient.IngredientMatcherFluidStack;
 import org.cyclops.commoncapabilities.ingredient.IngredientMatcherItemStack;
@@ -23,6 +24,7 @@ import org.cyclops.commoncapabilities.ingredient.IngredientSerializerItemStack;
 import org.cyclops.commoncapabilities.ingredient.storage.IngredientComponentStorageWrapperHandlerEnergyStorage;
 import org.cyclops.commoncapabilities.ingredient.storage.IngredientComponentStorageWrapperHandlerFluidStack;
 import org.cyclops.commoncapabilities.ingredient.storage.IngredientComponentStorageWrapperHandlerItemStack;
+import org.cyclops.commoncapabilities.ingredient.storage.IngredientComponentStorageWrapperHandlerItemStackSlotless;
 
 /**
  * The ingredient components that will be registered by this mod.
@@ -67,6 +69,7 @@ public class IngredientComponents {
     static {
         ENERGY.setStorageWrapperHandler(CapabilityEnergy.ENERGY, new IngredientComponentStorageWrapperHandlerEnergyStorage(ENERGY));
         ITEMSTACK.setStorageWrapperHandler(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, new IngredientComponentStorageWrapperHandlerItemStack(ITEMSTACK));
+        ITEMSTACK.setStorageWrapperHandler(SlotlessItemHandlerConfig.CAPABILITY, new IngredientComponentStorageWrapperHandlerItemStackSlotless(ITEMSTACK));
         IngredientComponentStorageWrapperHandlerFluidStack fluidWrapper = new IngredientComponentStorageWrapperHandlerFluidStack(FLUIDSTACK);
         FLUIDSTACK.setStorageWrapperHandler(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, fluidWrapper);
         FLUIDSTACK.setStorageWrapperHandler(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, fluidWrapper);
