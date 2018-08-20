@@ -13,6 +13,7 @@ import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemHandlerItem
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
+import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageSlotted;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
 import org.cyclops.cyclopscore.datastructure.Wrapper;
 import org.cyclops.cyclopscore.helper.Helpers;
@@ -46,6 +47,10 @@ public class IngredientComponentStorageWrapperHandlerItemStack
 
     @Override
     public IItemHandler wrapStorage(IIngredientComponentStorage<ItemStack, Integer> componentStorage) {
+        if (componentStorage instanceof IIngredientComponentStorageSlotted) {
+            return new ItemStorageWrapperSlotted(getComponent(),
+                    (IIngredientComponentStorageSlotted<ItemStack, Integer>) componentStorage);
+        }
         return new ItemStorageWrapper(getComponent(), componentStorage);
     }
 
@@ -63,7 +68,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack
         return this.ingredientComponent;
     }
 
-    public static class ComponentStorageWrapper implements IIngredientComponentStorage<ItemStack, Integer> {
+    public static class ComponentStorageWrapper implements IIngredientComponentStorageSlotted<ItemStack, Integer> {
 
         private final IngredientComponent<ItemStack, Integer> ingredientComponent;
         private final IItemHandler storage;
@@ -181,6 +186,31 @@ public class IngredientComponentStorageWrapperHandlerItemStack
             }
             return ItemStack.EMPTY;
         }
+
+        @Override
+        public int getSlots() {
+            return storage.getSlots();
+        }
+
+        @Override
+        public ItemStack getSlotContents(int slot) {
+            return storage.getStackInSlot(slot);
+        }
+
+        @Override
+        public long getMaxQuantity(int slot) {
+            return storage.getSlotLimit(slot);
+        }
+
+        @Override
+        public ItemStack insert(int slot, @Nonnull ItemStack ingredient, boolean simulate) {
+            return storage.insertItem(slot, ingredient, simulate);
+        }
+
+        @Override
+        public ItemStack extract(int slot, long maxQuantity, boolean simulate) {
+            return storage.extractItem(slot, Helpers.castSafe(maxQuantity), simulate);
+        }
     }
 
     public static class ItemStorageWrapper implements IItemHandler {
@@ -220,6 +250,57 @@ public class IngredientComponentStorageWrapperHandlerItemStack
         @Override
         public int getSlotLimit(int slot) {
             return Helpers.castSafe(ingredientComponent.getMatcher().getMaximumQuantity());
+        }
+    }
+
+    public static class ItemStorageWrapperSlotted implements IItemHandler {
+
+        private final IngredientComponent<ItemStack, Integer> ingredientComponent;
+        private final IIngredientComponentStorageSlotted<ItemStack, Integer> storage;
+
+        public ItemStorageWrapperSlotted(IngredientComponent<ItemStack, Integer> ingredientComponent,
+                                         IIngredientComponentStorageSlotted<ItemStack, Integer> storage) {
+            this.ingredientComponent = ingredientComponent;
+            this.storage = storage;
+        }
+
+        @Override
+        public int getSlots() {
+            return storage.getSlots();
+        }
+
+        protected void validateSlotIndex(int slot) throws IndexOutOfBoundsException {
+            int slots = getSlots();
+            if (slot < 0 || slot >= slots) {
+                throw new IndexOutOfBoundsException("Slot " + slot + " not in valid range - [0," + slots + ")");
+            }
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            validateSlotIndex(slot);
+            return storage.getSlotContents(slot);
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+            validateSlotIndex(slot);
+            return storage.insert(slot, stack, simulate);
+        }
+
+        @Nonnull
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            validateSlotIndex(slot);
+            return storage.extract(slot, amount, simulate);
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            validateSlotIndex(slot);
+            return Helpers.castSafe(storage.getMaxQuantity(slot));
         }
     }
 }
