@@ -9,12 +9,15 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
+import org.cyclops.commoncapabilities.api.capability.itemhandler.ISlotlessItemHandler;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemHandlerItemStackIterator;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageSlotted;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
+import org.cyclops.commoncapabilities.api.ingredient.storage.IngredientComponentStorageEmpty;
+import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
 import org.cyclops.cyclopscore.datastructure.Wrapper;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.ingredient.collection.FilteredIngredientCollectionIterator;
@@ -45,6 +48,11 @@ public class IngredientComponentStorageWrapperHandlerItemStack
         return new ComponentStorageWrapper(getComponent(), storage);
     }
 
+    public IIngredientComponentStorage<ItemStack, Integer> wrapComponentStorage(IItemHandler storage,
+                                                                                ISlotlessItemHandler slotlessStorage) {
+        return new ComponentStorageWrapperCombined(getComponent(), storage, slotlessStorage);
+    }
+
     @Override
     public IItemHandler wrapStorage(IIngredientComponentStorage<ItemStack, Integer> componentStorage) {
         if (componentStorage instanceof IIngredientComponentStorageSlotted) {
@@ -61,6 +69,22 @@ public class IngredientComponentStorageWrapperHandlerItemStack
             return capabilityProvider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
         }
         return null;
+    }
+
+    @Override
+    public IIngredientComponentStorage<ItemStack, Integer> getComponentStorage(ICapabilityProvider capabilityProvider,
+                                                                               @Nullable EnumFacing facing) {
+        if (capabilityProvider.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
+            if (capabilityProvider.hasCapability(SlotlessItemHandlerConfig.CAPABILITY, facing)) {
+                return wrapComponentStorage(
+                        capabilityProvider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing),
+                        capabilityProvider.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing)
+                );
+            } else {
+                return wrapComponentStorage(getStorage(capabilityProvider, facing));
+            }
+        }
+        return new IngredientComponentStorageEmpty<>(getComponent());
     }
 
     @Override
@@ -210,6 +234,47 @@ public class IngredientComponentStorageWrapperHandlerItemStack
         @Override
         public ItemStack extract(int slot, long maxQuantity, boolean simulate) {
             return storage.extractItem(slot, Helpers.castSafe(maxQuantity), simulate);
+        }
+    }
+
+    public static class ComponentStorageWrapperCombined extends ComponentStorageWrapper {
+
+        private final ISlotlessItemHandler storageSlotless;
+
+        public ComponentStorageWrapperCombined(IngredientComponent<ItemStack, Integer> ingredientComponent,
+                                               IItemHandler storage, ISlotlessItemHandler storageSlotless) {
+            super(ingredientComponent, storage);
+            this.storageSlotless = storageSlotless;
+        }
+
+        @Override
+        public Iterator<ItemStack> iterator() {
+            return storageSlotless.getItems();
+        }
+
+        @Override
+        public Iterator<ItemStack> iterator(@Nonnull ItemStack prototype, Integer matchFlags) {
+            return storageSlotless.findItems(prototype, matchFlags);
+        }
+
+        @Override
+        public long getMaxQuantity() {
+            return storageSlotless.getLimit();
+        }
+
+        @Override
+        public ItemStack insert(@Nonnull ItemStack ingredient, boolean simulate) {
+            return storageSlotless.insertItem(ingredient, simulate);
+        }
+
+        @Override
+        public ItemStack extract(long maxQuantity, boolean simulate) {
+            return storageSlotless.extractItem(Helpers.castSafe(maxQuantity), simulate);
+        }
+
+        @Override
+        public ItemStack extract(@Nonnull ItemStack prototype, Integer matchFlags, boolean simulate) {
+            return storageSlotless.extractItem(prototype, matchFlags, simulate);
         }
     }
 
