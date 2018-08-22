@@ -188,10 +188,10 @@ public class IngredientComponentStorageWrapperHandlerItemStack
                 }
             } else {
                 for (int slot = 0; slot < slots; slot++) {
-                    ItemStack extractedSimulated = storage.extractItem(slot, Integer.MAX_VALUE, true);
+                    ItemStack extractedSimulated = storage.extractItem(slot, prototype.getCount(), true);
                     if (!extractedSimulated.isEmpty()
                             && getComponent().getMatcher().matches(prototype, extractedSimulated, matchFlags)) {
-                        return simulate ? extractedSimulated : storage.extractItem(slot, Integer.MAX_VALUE, false);
+                        return simulate ? extractedSimulated : storage.extractItem(slot, prototype.getCount(), false);
                     }
                 }
             }

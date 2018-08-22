@@ -81,9 +81,9 @@ public class TestEnergyComponentStorageWrapper {
         assertThat(wrapper.extract(11, true, true), is(0));
         assertThat(storage.getEnergyStored(), is(100));
 
-        assertThat(wrapper.extract(0, false, true), is(10));
+        assertThat(wrapper.extract(0, false, true), is(0));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(1, false, true), is(10));
+        assertThat(wrapper.extract(1, false, true), is(1));
         assertThat(storage.getEnergyStored(), is(100));
         assertThat(wrapper.extract(10, false, true), is(10));
         assertThat(storage.getEnergyStored(), is(100));
@@ -99,14 +99,14 @@ public class TestEnergyComponentStorageWrapper {
         assertThat(wrapper.extract(11, true, false), is(0));
         assertThat(storage.getEnergyStored(), is(89));
 
-        assertThat(wrapper.extract(0, false, false), is(10));
-        assertThat(storage.getEnergyStored(), is(79));
-        assertThat(wrapper.extract(1, false, false), is(10));
-        assertThat(storage.getEnergyStored(), is(69));
+        assertThat(wrapper.extract(0, false, false), is(0));
+        assertThat(storage.getEnergyStored(), is(89));
+        assertThat(wrapper.extract(1, false, false), is(1));
+        assertThat(storage.getEnergyStored(), is(88));
         assertThat(wrapper.extract(10, false, false), is(10));
-        assertThat(storage.getEnergyStored(), is(59));
+        assertThat(storage.getEnergyStored(), is(78));
         assertThat(wrapper.extract(11, false, false), is(10));
-        assertThat(storage.getEnergyStored(), is(49));
+        assertThat(storage.getEnergyStored(), is(68));
     }
 
     @Test

@@ -195,12 +195,12 @@ public class TestItemStackSlotlessComponentStorageWrapper {
         assertThat(eq(storage.getStackInSlot(4), ItemStack.EMPTY), is(true));
         assertThat(eq(storage.getStackInSlot(6), APPLE_10_10), is(true));
         assertThat(eq(storage.getStackInSlot(8), ItemStack.EMPTY), is(true));
-        assertThat(eq(wrapper.extract(APPLE_10_10, ItemMatch.ITEM | ItemMatch.DAMAGE, false), APPLE_10_10), is(true));
+        assertThat(eq(wrapper.extract(APPLE_1_10, ItemMatch.ITEM | ItemMatch.DAMAGE, false), APPLE_1_10), is(true));
         assertThat(eq(storage.getStackInSlot(2), ItemStack.EMPTY), is(true));
         assertThat(eq(storage.getStackInSlot(4), ItemStack.EMPTY), is(true));
-        assertThat(eq(storage.getStackInSlot(6), ItemStack.EMPTY), is(true));
+        assertThat(eq(storage.getStackInSlot(6), APPLE_9_10), is(true));
         assertThat(eq(storage.getStackInSlot(8), ItemStack.EMPTY), is(true));
-        assertThat(eq(wrapper.extract(APPLE_10_10, ItemMatch.ITEM | ItemMatch.DAMAGE, false), ItemStack.EMPTY), is(true));
+        assertThat(eq(wrapper.extract(APPLE_10_10, ItemMatch.ITEM | ItemMatch.DAMAGE, false), APPLE_9_10), is(true));
         assertThat(eq(storage.getStackInSlot(2), ItemStack.EMPTY), is(true));
         assertThat(eq(storage.getStackInSlot(4), ItemStack.EMPTY), is(true));
         assertThat(eq(storage.getStackInSlot(6), ItemStack.EMPTY), is(true));

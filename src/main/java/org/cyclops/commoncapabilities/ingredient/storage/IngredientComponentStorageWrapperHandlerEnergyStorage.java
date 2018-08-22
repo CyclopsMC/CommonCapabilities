@@ -95,8 +95,6 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage implements
                 if (extractable != prototype) {
                     return 0;
                 }
-            } else {
-                prototype = Integer.MAX_VALUE;
             }
             return storage.extractEnergy(prototype, simulate);
         }

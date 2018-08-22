@@ -12,6 +12,7 @@ import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
+import org.cyclops.cyclopscore.helper.FluidHelpers;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.ingredient.collection.FilteredIngredientCollectionIterator;
 
@@ -111,7 +112,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
             // Optimize if ANY condition
             if (matchFlags == FluidMatch.ANY) {
                 // Drain as much as possible
-                return storage.drain(Integer.MAX_VALUE, !simulate);
+                return storage.drain(FluidHelpers.getAmount(prototype), !simulate);
             }
 
             // Optimize if AMOUNT condition
@@ -127,16 +128,11 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
             // In all other cases, we have to iterate over the tank contents,
             // and drain based on their contents.
             for (IFluidTankProperties properties : storage.getTankProperties()) {
-                if (FluidMatch.areFluidStacksEqual(properties.getContents(), prototype, matchFlags & ~FluidMatch.AMOUNT)) {
+                if (properties.getContents() != null
+                        && FluidMatch.areFluidStacksEqual(properties.getContents(), prototype, matchFlags & ~FluidMatch.AMOUNT)) {
                     FluidStack toDrain = properties.getContents();
                     toDrain = toDrain.copy();
-                    if ((matchFlags & FluidMatch.AMOUNT) == 0) {
-                        // Drain as much as possible
-                        toDrain.amount = Integer.MAX_VALUE;
-                    } else {
-                        // Only drain the max given amount
-                        toDrain.amount = prototype.amount;
-                    }
+                    toDrain.amount = prototype.amount;
                     FluidStack drained = storage.drain(toDrain, !simulate);
                     if (FluidMatch.areFluidStacksEqual(drained, prototype, matchFlags)) {
                         return drained;
