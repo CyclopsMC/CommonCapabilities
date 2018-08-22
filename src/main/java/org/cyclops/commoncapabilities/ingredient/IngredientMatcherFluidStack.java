@@ -34,6 +34,11 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     }
 
     @Override
+    public Integer getExactMatchNoQuantityCondition() {
+        return FluidMatch.FLUID | FluidMatch.NBT;
+    }
+
+    @Override
     public Integer withCondition(Integer matchCondition, Integer with) {
         return matchCondition | with;
     }

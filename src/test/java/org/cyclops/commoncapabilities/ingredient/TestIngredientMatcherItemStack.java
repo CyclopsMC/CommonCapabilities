@@ -101,6 +101,11 @@ public class TestIngredientMatcherItemStack {
     }
 
     @Test
+    public void testGetExactNoQuantityMatchCondition() {
+        assertThat(M.getExactMatchNoQuantityCondition(), is(ItemMatch.ITEM | ItemMatch.DAMAGE | ItemMatch.NBT));
+    }
+
+    @Test
     public void testWithCondition() {
         assertThat(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ANY), is(ItemMatch.ANY));
         assertThat(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ITEM), is(ItemMatch.ITEM));

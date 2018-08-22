@@ -72,6 +72,11 @@ public class TestIngredientMatcherFluidStack {
     }
 
     @Test
+    public void testGetExactNoQuantityMatchCondition() {
+        assertThat(M.getExactMatchNoQuantityCondition(), is(FluidMatch.FLUID | FluidMatch.NBT));
+    }
+
+    @Test
     public void testWithCondition() {
         assertThat(M.withCondition(M.getAnyMatchCondition(), FluidMatch.ANY), is(FluidMatch.ANY));
         assertThat(M.withCondition(M.getAnyMatchCondition(), FluidMatch.FLUID), is(FluidMatch.FLUID));

@@ -28,6 +28,11 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     }
 
     @Override
+    public Integer getExactMatchNoQuantityCondition() {
+        return ItemMatch.ITEM | ItemMatch.DAMAGE | ItemMatch.NBT;
+    }
+
+    @Override
     public Integer withCondition(Integer matchCondition, Integer with) {
         return matchCondition | with;
     }

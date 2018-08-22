@@ -26,6 +26,11 @@ public class TestIngredientMatcherEnergy {
     }
 
     @Test
+    public void testGetExactNoQuantityMatchCondition() {
+        assertThat(M.getExactMatchNoQuantityCondition(), is(false));
+    }
+
+    @Test
     public void testWithCondition() {
         assertThat(M.withCondition(M.getAnyMatchCondition(), true), is(true));
         assertThat(M.withCondition(M.getAnyMatchCondition(), false), is(false));
