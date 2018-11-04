@@ -811,4 +811,11 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.getMaximumQuantity(), is((long) Integer.MAX_VALUE));
     }
 
+    @Test
+    public void testConditionCompare() {
+        assertThat(M.conditionCompare(0, 0), is(0));
+        assertThat(M.conditionCompare(10, 2), is(1));
+        assertThat(M.conditionCompare(2, 10), is(-1));
+    }
+
 }

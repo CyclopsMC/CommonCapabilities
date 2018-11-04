@@ -103,6 +103,11 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     }
 
     @Override
+    public int conditionCompare(Integer a, Integer b) {
+        return Integer.compare(a, b);
+    }
+
+    @Override
     public int compare(FluidStack o1, FluidStack o2) {
         if (o1 == null) {
             if (o2 == null) {

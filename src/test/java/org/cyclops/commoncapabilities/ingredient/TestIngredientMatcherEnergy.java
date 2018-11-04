@@ -118,4 +118,12 @@ public class TestIngredientMatcherEnergy {
         assertThat(M.getMaximumQuantity(), is((long) Integer.MAX_VALUE));
     }
 
+    @Test
+    public void testConditionCompare() {
+        assertThat(M.conditionCompare(true, true), is(0));
+        assertThat(M.conditionCompare(true, false), is(1));
+        assertThat(M.conditionCompare(false, true), is(-1));
+        assertThat(M.conditionCompare(false, false), is(0));
+    }
+
 }

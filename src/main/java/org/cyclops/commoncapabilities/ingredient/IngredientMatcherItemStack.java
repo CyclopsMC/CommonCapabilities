@@ -90,6 +90,11 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     }
 
     @Override
+    public int conditionCompare(Integer a, Integer b) {
+        return Integer.compare(a, b);
+    }
+
+    @Override
     public int compare(ItemStack o1, ItemStack o2) {
         if (o1.isEmpty()) {
             if (o2.isEmpty()) {
