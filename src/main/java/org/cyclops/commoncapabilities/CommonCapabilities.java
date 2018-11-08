@@ -66,14 +66,6 @@ public class CommonCapabilities extends ModBaseVersionable {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @SubscribeEvent
-    public void onRegistriesCreate(RegistryEvent.NewRegistry event) {
-        new RegistryBuilder<IngredientComponent<?, ?>>()
-                .setName(new ResourceLocation(Reference.MOD_ID, "registry:recipecomponents"))
-                .setType((Class<IngredientComponent<?, ?>>) (Class) IngredientComponent.class)
-                .create();
-    }
-
     @Override
     protected RecipeHandler constructRecipeHandler() {
         return new RecipeHandler(this);
