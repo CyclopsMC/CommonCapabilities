@@ -95,6 +95,11 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     }
 
     @Override
+    public String localize(ItemStack instance) {
+        return instance.getDisplayName();
+    }
+
+    @Override
     public int compare(ItemStack o1, ItemStack o2) {
         if (o1.isEmpty()) {
             if (o2.isEmpty()) {

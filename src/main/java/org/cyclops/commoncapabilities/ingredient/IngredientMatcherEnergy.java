@@ -2,6 +2,7 @@ package org.cyclops.commoncapabilities.ingredient;
 
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.cyclopscore.helper.Helpers;
+import org.cyclops.cyclopscore.helper.L10NHelpers;
 
 /**
  * Exact matcher for a void match condition.
@@ -86,6 +87,11 @@ public class IngredientMatcherEnergy implements IIngredientMatcher<Integer, Bool
     @Override
     public int conditionCompare(Boolean a, Boolean b) {
         return (a ? 1 : 0) - (b ? 1 : 0);
+    }
+
+    @Override
+    public String localize(Integer instance) {
+        return L10NHelpers.localize("recipecomponent.minecraft.energy");
     }
 
     @Override

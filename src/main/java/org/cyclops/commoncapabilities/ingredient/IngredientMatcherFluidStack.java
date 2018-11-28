@@ -108,6 +108,11 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     }
 
     @Override
+    public String localize(FluidStack instance) {
+        return instance.getLocalizedName();
+    }
+
+    @Override
     public int compare(FluidStack o1, FluidStack o2) {
         if (o1 == null) {
             if (o2 == null) {
