@@ -140,62 +140,76 @@ public class IngredientComponentStorageWrapperHandlerItemStack
         @Override
         public ItemStack extract(@Nonnull ItemStack prototype, Integer matchFlags, boolean simulate) {
             int slots = storage.getSlots();
-            if ((matchFlags & ItemMatch.STACKSIZE) > 0) {
-                int requiredStackSize = prototype.getCount();
+            boolean checkStackSize = (matchFlags & ItemMatch.STACKSIZE) > 0;
+            int requiredStackSize = prototype.getCount();
 
-                // Maintain a temporary mapping of prototype items to their total count over all slots,
-                // plus the list of slots in which they are present.
-                IIngredientMapMutable<ItemStack, Integer, Pair<Wrapper<Integer>, List<Integer>>> validInstancesCollapsed = new IngredientHashMap<>(getComponent());
-                int subMatchFlags = matchFlags & ~ItemMatch.STACKSIZE;
+            // Maintain a temporary mapping of prototype items to their total count over all slots,
+            // plus the list of slots in which they are present.
+            IIngredientMapMutable<ItemStack, Integer, Pair<Wrapper<Integer>, List<Integer>>> validInstancesCollapsed = new IngredientHashMap<>(getComponent());
+            int subMatchFlags = matchFlags & ~ItemMatch.STACKSIZE;
 
-                for (int slot = 0; slot < slots; slot++) {
-                    ItemStack extractedSimulated = storage.extractItem(slot, Integer.MAX_VALUE, true);
-                    if (!extractedSimulated.isEmpty()
-                            && getComponent().getMatcher().matches(prototype, extractedSimulated, subMatchFlags)) {
-                        ItemStack storagePrototype = getComponent().getMatcher().withQuantity(extractedSimulated, 1);
+            for (int slot = 0; slot < slots; slot++) {
+                ItemStack extractedSimulated = storage.extractItem(slot, Integer.MAX_VALUE, true);
+                if (!extractedSimulated.isEmpty()
+                        && getComponent().getMatcher().matches(prototype, extractedSimulated, subMatchFlags)) {
+                    ItemStack storagePrototype = getComponent().getMatcher().withQuantity(extractedSimulated, 1);
 
-                        // Get existing value from temporary mapping
-                        Pair<Wrapper<Integer>, List<Integer>> existingValue = validInstancesCollapsed.get(storagePrototype);
-                        if (existingValue == null) {
-                            existingValue = Pair.of(new Wrapper<>(0), Lists.newLinkedList());
-                            validInstancesCollapsed.put(storagePrototype, existingValue);
-                        }
-
-                        // Update the counter and slot-list for our prototype
-                        int newCount = existingValue.getLeft().get() + extractedSimulated.getCount();
-                        existingValue.getLeft().set(newCount);
-                        existingValue.getRight().add(slot);
-
-                        // If the count is sufficient for our query, return
-                        if (newCount >= requiredStackSize) {
-                            // Actually extract if we are not simulating the extraction
-                            // We assume that the simulated extraction resulted in the same output
-                            // as the non-simulated output, so we ignore its output
-                            if (!simulate) {
-                                int toExtract = requiredStackSize;
-                                for (Integer finalSlot : existingValue.getRight()) {
-                                    ItemStack extractedActual = storage.extractItem(finalSlot, toExtract, false);
-                                    toExtract -= extractedActual.getCount();
-                                }
-                                // Quick heuristic check to see if 'storage' did not lie during its simulation
-                                if (toExtract != 0) {
-                                    throw new IllegalStateException("An item storage resulted in inconsistent simulated and non-simulated output.");
-                                }
-                            }
-                            return getComponent().getMatcher().withQuantity(storagePrototype, requiredStackSize);
-                        }
+                    // Get existing value from temporary mapping
+                    Pair<Wrapper<Integer>, List<Integer>> existingValue = validInstancesCollapsed.get(storagePrototype);
+                    if (existingValue == null) {
+                        existingValue = Pair.of(new Wrapper<>(0), Lists.newLinkedList());
+                        validInstancesCollapsed.put(storagePrototype, existingValue);
                     }
-                }
-            } else {
-                for (int slot = 0; slot < slots; slot++) {
-                    ItemStack extractedSimulated = storage.extractItem(slot, prototype.getCount(), true);
-                    if (!extractedSimulated.isEmpty()
-                            && getComponent().getMatcher().matches(prototype, extractedSimulated, matchFlags)) {
-                        return simulate ? extractedSimulated : storage.extractItem(slot, prototype.getCount(), false);
+
+                    // Update the counter and slot-list for our prototype
+                    int newCount = existingValue.getLeft().get() + extractedSimulated.getCount();
+                    existingValue.getLeft().set(newCount);
+                    existingValue.getRight().add(slot);
+
+                    // If the count is sufficient for our query, return
+                    if (newCount >= requiredStackSize) {
+                        // Actually extract if we are not simulating the extraction
+                        // We assume that the simulated extraction resulted in the same output
+                        // as the non-simulated output, so we ignore its output
+                        if (!simulate) {
+                            int toExtract = requiredStackSize;
+                            for (Integer finalSlot : existingValue.getRight()) {
+                                ItemStack extractedActual = storage.extractItem(finalSlot, toExtract, false);
+                                toExtract -= extractedActual.getCount();
+                            }
+                            // Quick heuristic check to see if 'storage' did not lie during its simulation
+                            if (toExtract != 0) {
+                                throw new IllegalStateException("An item storage resulted in inconsistent simulated and non-simulated output.");
+                            }
+                        }
+                        return getComponent().getMatcher().withQuantity(storagePrototype, requiredStackSize);
                     }
                 }
             }
-            return ItemStack.EMPTY;
+
+            // If we reach this point, then our effective count is below requiredStackSize
+
+            // Fail if we required an exact quantity
+            if (checkStackSize) {
+                return ItemStack.EMPTY;
+            }
+
+            // Extract from all valid slots if we didn't require an exact quantity
+            ItemStack storagePrototype = getComponent().getMatcher().withQuantity(prototype, 1);
+            Pair<Wrapper<Integer>, List<Integer>> existingValue = validInstancesCollapsed.get(storagePrototype);
+            int extractedCount = existingValue != null ? existingValue.getLeft().get() : 0;
+            if (!simulate && existingValue != null) {
+                int toExtract = requiredStackSize;
+                for (Integer finalSlot : existingValue.getRight()) {
+                    ItemStack extractedActual = storage.extractItem(finalSlot, toExtract, false);
+                    toExtract -= extractedActual.getCount();
+                }
+                // Quick heuristic check to see if 'storage' did not lie during its simulation
+                if (toExtract != requiredStackSize - extractedCount) {
+                    throw new IllegalStateException("An item storage resulted in inconsistent simulated and non-simulated output.");
+                }
+            }
+            return getComponent().getMatcher().withQuantity(storagePrototype, extractedCount);
         }
 
         @Override
