@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -194,13 +195,19 @@ public class IngredientComponentStorageWrapperHandlerItemStack
                 return ItemStack.EMPTY;
             }
 
-            // Extract from all valid slots if we didn't require an exact quantity
-            ItemStack storagePrototype = getComponent().getMatcher().withQuantity(prototype, 1);
-            Pair<Wrapper<Integer>, List<Integer>> existingValue = validInstancesCollapsed.get(storagePrototype);
-            int extractedCount = existingValue != null ? existingValue.getLeft().get() : 0;
-            if (!simulate && existingValue != null) {
+            // Extract for the instance that had the most matches if we didn't require an exact quantity
+            Pair<Wrapper<Integer>, List<Integer>> maxValue = Pair.of(new Wrapper<>(0), Lists.newArrayList());
+            ItemStack maxInstance = ItemStack.EMPTY;
+            for (Map.Entry<ItemStack, Pair<Wrapper<Integer>, List<Integer>>> entry : validInstancesCollapsed) {
+                if (entry.getValue().getLeft().get() > maxValue.getLeft().get()) {
+                    maxInstance = entry.getKey();
+                    maxValue = entry.getValue();
+                }
+            }
+            int extractedCount = maxValue.getLeft().get();
+            if (!simulate && extractedCount > 0) {
                 int toExtract = requiredStackSize;
-                for (Integer finalSlot : existingValue.getRight()) {
+                for (Integer finalSlot : maxValue.getRight()) {
                     ItemStack extractedActual = storage.extractItem(finalSlot, toExtract, false);
                     toExtract -= extractedActual.getCount();
                 }
@@ -209,7 +216,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack
                     throw new IllegalStateException("An item storage resulted in inconsistent simulated and non-simulated output.");
                 }
             }
-            return getComponent().getMatcher().withQuantity(storagePrototype, extractedCount);
+            return getComponent().getMatcher().withQuantity(maxInstance, extractedCount);
         }
 
         @Override
