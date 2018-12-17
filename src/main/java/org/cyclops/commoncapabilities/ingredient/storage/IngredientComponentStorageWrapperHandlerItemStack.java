@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ISlotlessItemHandler;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemHandlerItemStackIterator;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
+import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageSlotted;
@@ -150,7 +151,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack
             int subMatchFlags = matchFlags & ~ItemMatch.STACKSIZE;
 
             for (int slot = 0; slot < slots; slot++) {
-                ItemStack extractedSimulated = storage.extractItem(slot, Integer.MAX_VALUE, true);
+                ItemStack extractedSimulated = storage.extractItem(slot, requiredStackSize, true);
                 if (!extractedSimulated.isEmpty()
                         && getComponent().getMatcher().matches(prototype, extractedSimulated, subMatchFlags)) {
                     ItemStack storagePrototype = getComponent().getMatcher().withQuantity(extractedSimulated, 1);
@@ -172,18 +173,8 @@ public class IngredientComponentStorageWrapperHandlerItemStack
                         // Actually extract if we are not simulating the extraction
                         // We assume that the simulated extraction resulted in the same output
                         // as the non-simulated output, so we ignore its output
-                        if (!simulate) {
-                            int toExtract = requiredStackSize;
-                            for (Integer finalSlot : existingValue.getRight()) {
-                                ItemStack extractedActual = storage.extractItem(finalSlot, toExtract, false);
-                                toExtract -= extractedActual.getCount();
-                            }
-                            // Quick heuristic check to see if 'storage' did not lie during its simulation
-                            if (toExtract != 0) {
-                                throw new IllegalStateException("An item storage resulted in inconsistent simulated and non-simulated output.");
-                            }
-                        }
-                        return getComponent().getMatcher().withQuantity(storagePrototype, requiredStackSize);
+                        existingValue.getLeft().set(requiredStackSize);
+                        return finalizeExtraction(storagePrototype, existingValue, requiredStackSize, simulate);
                     }
                 }
             }
@@ -204,19 +195,24 @@ public class IngredientComponentStorageWrapperHandlerItemStack
                     maxValue = entry.getValue();
                 }
             }
-            int extractedCount = maxValue.getLeft().get();
+            return finalizeExtraction(maxInstance, maxValue, requiredStackSize, simulate);
+        }
+
+        protected ItemStack finalizeExtraction(ItemStack instancePrototype, Pair<Wrapper<Integer>, List<Integer>> value,
+                                               int requiredQuantity, boolean simulate) {
+            long extractedCount = value.getLeft().get();
             if (!simulate && extractedCount > 0) {
-                int toExtract = requiredStackSize;
-                for (Integer finalSlot : maxValue.getRight()) {
+                int toExtract = requiredQuantity;
+                for (Integer finalSlot : value.getRight()) {
                     ItemStack extractedActual = storage.extractItem(finalSlot, toExtract, false);
                     toExtract -= extractedActual.getCount();
                 }
                 // Quick heuristic check to see if 'storage' did not lie during its simulation
-                if (toExtract != requiredStackSize - extractedCount) {
+                if (toExtract != requiredQuantity - extractedCount) {
                     throw new IllegalStateException("An item storage resulted in inconsistent simulated and non-simulated output.");
                 }
             }
-            return getComponent().getMatcher().withQuantity(maxInstance, extractedCount);
+            return getComponent().getMatcher().withQuantity(instancePrototype, extractedCount);
         }
 
         @Override
