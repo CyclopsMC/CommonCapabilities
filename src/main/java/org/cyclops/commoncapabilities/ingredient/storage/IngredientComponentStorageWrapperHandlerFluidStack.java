@@ -97,6 +97,11 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
 
         @Override
         public FluidStack insert(@Nonnull FluidStack ingredient, boolean simulate) {
+            // Null-check, because the empty fluidstack is null
+            if (ingredient == null) {
+                return null;
+            }
+
             int totalAmount = ingredient.amount;
             int filledAmount = storage.fill(ingredient, !simulate);
             if (filledAmount >= totalAmount) {
@@ -109,6 +114,11 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
 
         @Override
         public FluidStack extract(@Nonnull FluidStack prototype, Integer matchFlags, boolean simulate) {
+            // Null-check, because the empty fluidstack is null
+            if (prototype == null) {
+                return null;
+            }
+
             // Optimize if ANY condition
             if (matchFlags == FluidMatch.ANY) {
                 // Drain as much as possible
@@ -166,6 +176,11 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
 
         @Override
         public int fill(FluidStack resource, boolean doFill) {
+            // Null-check, because the empty fluidstack is null
+            if (resource == null) {
+                return 0;
+            }
+
             FluidStack inserted = storage.insert(resource, !doFill);
             return inserted == null ? resource.amount : resource.amount - inserted.amount;
         }
@@ -173,6 +188,11 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
         @Nullable
         @Override
         public FluidStack drain(FluidStack resource, boolean doDrain) {
+            // Null-check, because the empty fluidstack is null
+            if (resource == null) {
+                return null;
+            }
+
             FluidStack extractSimulated = storage.extract(resource, FluidMatch.FLUID | FluidMatch.NBT, true);
             if (extractSimulated != null) {
                 FluidStack prototype = resource;
