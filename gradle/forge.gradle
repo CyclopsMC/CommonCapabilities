@@ -10,10 +10,6 @@ repositories {
         url = "http://jenkins.bdew.net/maven"
     }
     maven {
-        name = "Dankhax"
-        url = "http://maven.epoxide.xyz"
-    }
-    maven {
         name = "Terrag"
         url = "http://maven.tterrag.com/"
     }
