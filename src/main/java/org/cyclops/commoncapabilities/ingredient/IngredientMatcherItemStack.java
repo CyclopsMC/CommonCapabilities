@@ -79,6 +79,9 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
 
     @Override
     public ItemStack withQuantity(ItemStack instance, long quantity) {
+        if (instance.getCount() == quantity) {
+            return instance;
+        }
         ItemStack copy = instance.copy();
         copy.setCount(Helpers.castSafe(quantity));
         return copy;

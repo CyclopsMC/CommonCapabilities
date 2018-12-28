@@ -92,6 +92,9 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
         if (instance == null) {
             return new FluidStack(FluidRegistry.WATER, Helpers.castSafe(quantity));
         }
+        if (instance.amount == quantity) {
+            return instance;
+        }
         FluidStack copy = instance.copy();
         copy.amount = Helpers.castSafe(quantity);
         return copy;
