@@ -77,14 +77,14 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
     public static List<IPrototypedIngredient<ItemStack, Integer>> getPrototypesFromIngredient(Ingredient ingredient) {
         if (ingredient instanceof IngredientNBT) {
             return Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
-                    ingredient.getMatchingStacks()[0], ItemMatch.DAMAGE | ItemMatch.NBT));
+                    ingredient.getMatchingStacks()[0], ItemMatch.ITEM | ItemMatch.DAMAGE | ItemMatch.NBT));
         } else if (ingredient instanceof OreIngredient) {
             return Arrays.stream(ingredient.getMatchingStacks())
-                    .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.DAMAGE))
+                    .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.ITEM | ItemMatch.DAMAGE))
                     .collect(Collectors.toList());
         } else {
             return Arrays.stream(ingredient.getMatchingStacks())
-                    .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.DAMAGE))
+                    .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.ITEM | ItemMatch.DAMAGE))
                     .collect(Collectors.toList());
         }
     }

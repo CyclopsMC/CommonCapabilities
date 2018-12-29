@@ -66,7 +66,7 @@ public class VanillaFurnaceRecipeHandler implements IRecipeHandler {
                     @Override
                     public IRecipeDefinition apply(Map.Entry<ItemStack, ItemStack> input) {
                         return RecipeDefinition.ofIngredient(IngredientComponent.ITEMSTACK, Lists.newArrayList(
-                                new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, input.getKey(), ItemMatch.DAMAGE | ItemMatch.NBT)),
+                                new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, input.getKey(), ItemMatch.ITEM | ItemMatch.DAMAGE | ItemMatch.NBT)),
                                 MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, input.getValue()));
                     }
                 }));

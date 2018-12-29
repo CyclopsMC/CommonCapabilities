@@ -88,7 +88,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
                 List<ItemStack> newItems = Lists.newArrayList();
                 for (ItemStack inputItem : checkInputItems) {
                     IPrototypedIngredient<ItemStack, Integer> item =
-                            new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, inputItem, ItemMatch.DAMAGE | ItemMatch.NBT);
+                            new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, inputItem, ItemMatch.ITEM | ItemMatch.DAMAGE | ItemMatch.NBT);
                     for (IPrototypedIngredient<ItemStack, Integer> ingredient : ingredients) {
                         ItemStack output = PotionHelper.doReaction(ingredient.getPrototype().copy(), inputItem.copy());
                         if (isPotionOutputValid(inputItem, output)) {
