@@ -94,6 +94,9 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
         for (int i = 0; i < recipe.getIngredients().size(); i++) {
             Ingredient ingredient = recipe.getIngredients().get(i);
             List<IPrototypedIngredient<ItemStack, Integer>> prototypes = getPrototypesFromIngredient(ingredient);
+            if (prototypes.isEmpty()) {
+                prototypes.add(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, ItemStack.EMPTY, ItemMatch.ITEM | ItemMatch.DAMAGE));
+            }
             inputIngredients.add(i, prototypes);
         }
         return RecipeDefinition.ofIngredients(IngredientComponent.ITEMSTACK, inputIngredients,
