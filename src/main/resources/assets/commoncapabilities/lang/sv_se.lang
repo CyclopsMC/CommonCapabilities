@@ -1,0 +1,32 @@
+# Configuration
+config.commoncapabilities=Konfiguration av %s
+
+## Config categories
+config.commoncapabilities.general=Allmänna inställningar
+config.commoncapabilities.general.tooltip=Allmänna inställningar
+config.commoncapabilities.core=Kärninställningar
+config.commoncapabilities.core.tooltip=Kärninställningar
+config.commoncapabilities.modcompat=Modkompatibiltetsinställningar
+config.commoncapabilities.modcompat.tooltip=Modkompatibiltetsinställningar
+config.commoncapabilities.capability=Kapacitetsinställningar
+config.commoncapabilities.capability.tooltip=Kapacitetsinställningar
+
+## Capability settings
+capability.commoncapabilities.inventoryState=Utrustningstillstånd
+capability.commoncapabilities.temperature=Temperatur
+capability.commoncapabilities.worker=Arbetare
+capability.commoncapabilities.worldNameable=Värld kan byta namn
+capability.commoncapabilities.wrench=Blocknyckel
+
+## Core settings
+config.commoncapabilities.general.analytics=Skicka anonym statistik
+config.commoncapabilities.general.crashOnInvalidRecipe=Krascha vid ogiltigt recept
+config.commoncapabilities.general.crashOnModCompatCrash=Krascha vid kompatibilitetsproblem
+config.commoncapabilities.general.debug=Utvecklarläge
+config.commoncapabilities.general.version=Version
+config.commoncapabilities.general.versionChecker=Versionskontroll
+
+## Mod compatibility settings
+config.commoncapabilities.forestry=Forestry
+config.commoncapabilities.CharsetWrench=Charsets blocknyckel
+config.commoncapabilities.tconstruct=Tinkers' Construct
