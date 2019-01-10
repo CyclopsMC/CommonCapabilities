@@ -308,13 +308,18 @@ public class IngredientComponentStorageWrapperHandlerItemStack
 
         @Override
         public int getSlots() {
-            return Iterators.size(storage.iterator());
+            // +1 so that at least one slot appears empty, for when others want to insert
+            return Iterators.size(storage.iterator()) + 1;
         }
 
         @Nonnull
         @Override
         public ItemStack getStackInSlot(int slot) {
-            return Iterators.get(storage.iterator(), slot);
+            try {
+                return Iterators.get(storage.iterator(), slot);
+            } catch (IndexOutOfBoundsException e) {
+                return ItemStack.EMPTY;
+            }
         }
 
         @Nonnull
