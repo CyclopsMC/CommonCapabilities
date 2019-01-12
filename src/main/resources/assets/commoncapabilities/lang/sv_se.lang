@@ -6,8 +6,8 @@ config.commoncapabilities.general=Allmänna inställningar
 config.commoncapabilities.general.tooltip=Allmänna inställningar
 config.commoncapabilities.core=Kärninställningar
 config.commoncapabilities.core.tooltip=Kärninställningar
-config.commoncapabilities.modcompat=Modkompatibiltetsinställningar
-config.commoncapabilities.modcompat.tooltip=Modkompatibiltetsinställningar
+config.commoncapabilities.modcompat=Modkompatibilitetsinställningar
+config.commoncapabilities.modcompat.tooltip=Modkompatibilitetsinställningar
 config.commoncapabilities.capability=Kapacitetsinställningar
 config.commoncapabilities.capability.tooltip=Kapacitetsinställningar
 
