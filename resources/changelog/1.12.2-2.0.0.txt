@@ -1,0 +1,13 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.0.0 or higher.
+
+Additions:
+* Add Ingredient Components API: https://github.com/CyclopsMC/CommonCapabilitiesAPI/wiki/Ingredient-Components
+* Add Recipe Handler capability
+* Add Recipe Handler implementations for Crafting Table, Furnace and Brewing Stand
+* Create sv_se.lang
+
+Changes:
+* Sign jars
+* Add pack.mcmeta
+* Lowercase language file names
