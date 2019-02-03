@@ -61,6 +61,7 @@ public class TestNBTBaseComparator {
     private static NBTTagCompound CMP_AB_BB;
     private static NBTTagCompound CMP_AI_BB;
     private static NBTTagCompound CMP_AB_BI;
+    private static NBTTagCompound CMP_AB_CI;
 
     private static NBTTagIntArray IA_0;
     private static NBTTagIntArray IA_1;
@@ -154,6 +155,9 @@ public class TestNBTBaseComparator {
         CMP_AB_BI = new NBTTagCompound();
         CMP_AB_BI.setTag("A", B_0);
         CMP_AB_BI.setTag("B", I_0);
+        CMP_AB_CI = new NBTTagCompound();
+        CMP_AB_CI.setTag("A", B_0);
+        CMP_AB_CI.setTag("C", I_0);
 
         IA_0 = new NBTTagIntArray(new int[]{0});
         IA_1 = new NBTTagIntArray(new int[]{1});
@@ -399,6 +403,7 @@ public class TestNBTBaseComparator {
         assertThat(COMP.compare(CMP_, CMP_AB_BI), is(-2));
         assertThat(COMP.compare(CMP_, CMP_AI_BB), is(-2));
         assertThat(COMP.compare(CMP_, CMP_AI_BI), is(-2));
+        assertThat(COMP.compare(CMP_, CMP_AB_CI), is(-2));
 
         assertThat(COMP.compare(CMP_AB, CMP_), is(1));
         assertThat(COMP.compare(CMP_AB, CMP_AB), is(0));
@@ -407,6 +412,7 @@ public class TestNBTBaseComparator {
         assertThat(COMP.compare(CMP_AB, CMP_AB_BI), is(-1));
         assertThat(COMP.compare(CMP_AB, CMP_AI_BB), is(-1));
         assertThat(COMP.compare(CMP_AB, CMP_AI_BI), is(-1));
+        assertThat(COMP.compare(CMP_AB, CMP_AB_CI), is(-1));
 
         assertThat(COMP.compare(CMP_AI, CMP_), is(1));
         assertThat(COMP.compare(CMP_AI, CMP_AB), is(2));
@@ -415,6 +421,7 @@ public class TestNBTBaseComparator {
         assertThat(COMP.compare(CMP_AI, CMP_AB_BI), is(-1));
         assertThat(COMP.compare(CMP_AI, CMP_AI_BB), is(-1));
         assertThat(COMP.compare(CMP_AI, CMP_AI_BI), is(-1));
+        assertThat(COMP.compare(CMP_AI, CMP_AB_CI), is(-1));
 
         assertThat(COMP.compare(CMP_AB_BB, CMP_), is(2));
         assertThat(COMP.compare(CMP_AB_BB, CMP_AB), is(1));
@@ -423,6 +430,7 @@ public class TestNBTBaseComparator {
         assertThat(COMP.compare(CMP_AB_BB, CMP_AB_BI), is(-2));
         assertThat(COMP.compare(CMP_AB_BB, CMP_AI_BB), is(-2));
         assertThat(COMP.compare(CMP_AB_BB, CMP_AI_BI), is(-2));
+        assertThat(COMP.compare(CMP_AB_BB, CMP_AB_CI), is(-1));
 
         assertThat(COMP.compare(CMP_AB_BI, CMP_), is(2));
         assertThat(COMP.compare(CMP_AB_BI, CMP_AB), is(1));
@@ -431,6 +439,7 @@ public class TestNBTBaseComparator {
         assertThat(COMP.compare(CMP_AB_BI, CMP_AB_BI), is(0));
         assertThat(COMP.compare(CMP_AB_BI, CMP_AI_BB), is(-2));
         assertThat(COMP.compare(CMP_AB_BI, CMP_AI_BI), is(-2));
+        assertThat(COMP.compare(CMP_AB_BI, CMP_AB_CI), is(-1));
 
         assertThat(COMP.compare(CMP_AI_BB, CMP_), is(2));
         assertThat(COMP.compare(CMP_AI_BB, CMP_AB), is(1));
@@ -439,6 +448,7 @@ public class TestNBTBaseComparator {
         assertThat(COMP.compare(CMP_AI_BB, CMP_AB_BI), is(2));
         assertThat(COMP.compare(CMP_AI_BB, CMP_AI_BB), is(0));
         assertThat(COMP.compare(CMP_AI_BB, CMP_AI_BI), is(-2));
+        assertThat(COMP.compare(CMP_AI_BB, CMP_AB_CI), is(-1));
 
         assertThat(COMP.compare(CMP_AI_BI, CMP_), is(2));
         assertThat(COMP.compare(CMP_AI_BI, CMP_AB), is(1));
@@ -447,6 +457,16 @@ public class TestNBTBaseComparator {
         assertThat(COMP.compare(CMP_AI_BI, CMP_AB_BI), is(2));
         assertThat(COMP.compare(CMP_AI_BI, CMP_AI_BB), is(2));
         assertThat(COMP.compare(CMP_AI_BI, CMP_AI_BI), is(0));
+        assertThat(COMP.compare(CMP_AI_BI, CMP_AB_CI), is(-1));
+
+        assertThat(COMP.compare(CMP_AB_CI, CMP_), is(2));
+        assertThat(COMP.compare(CMP_AB_CI, CMP_AB), is(1));
+        assertThat(COMP.compare(CMP_AB_CI, CMP_AI), is(1));
+        assertThat(COMP.compare(CMP_AB_CI, CMP_AB_BB), is(1));
+        assertThat(COMP.compare(CMP_AB_CI, CMP_AB_BI), is(1));
+        assertThat(COMP.compare(CMP_AB_CI, CMP_AI_BB), is(1));
+        assertThat(COMP.compare(CMP_AB_CI, CMP_AI_BI), is(1));
+        assertThat(COMP.compare(CMP_AB_CI, CMP_AB_CI), is(0));
     }
 
     @Test

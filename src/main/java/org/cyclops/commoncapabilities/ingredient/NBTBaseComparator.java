@@ -7,6 +7,7 @@ import net.minecraft.nbt.*;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Set;
@@ -65,10 +66,19 @@ public class NBTBaseComparator implements Comparator<NBTBase> {
                     NBTTagCompound t2 = (NBTTagCompound) o2;
                     Set<String> k1 = t1.getKeySet();
                     Set<String> k2 = t2.getKeySet();
-                    int k1s = k1.size();
-                    int k2s = k2.size();
-                    if (k1s != k2s) {
-                        return k1s - k2s;
+                    if (!k1.equals(k2)) {
+                        String[] k1a = k1.toArray(new String[0]);
+                        String[] k2a = k2.toArray(new String[0]);
+                        Arrays.sort(k1a);
+                        Arrays.sort(k2a);
+                        int minLength = Math.min(k1a.length, k2a.length);
+                        for (int i = 0; i < minLength; i++) {
+                            int result = k1a[i].compareTo(k2a[i]);
+                            if (result != 0) {
+                                return result;
+                            }
+                        }
+                        return k1a.length - k2a.length;
                     }
                     for (String key : k1) {
                         int comp = this.compare(t1.getTag(key), t2.getTag(key));
