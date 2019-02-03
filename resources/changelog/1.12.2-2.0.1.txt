@@ -1,0 +1,5 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.0.0 or higher.
+
+Fixes:
+* Fix crash comparing NBTTagCompound with different keys but same length, Closes CyclopsMC/IntegratedTerminals#15
