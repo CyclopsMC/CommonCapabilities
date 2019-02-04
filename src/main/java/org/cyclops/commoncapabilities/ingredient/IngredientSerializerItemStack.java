@@ -17,6 +17,7 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
         NBTTagCompound tag = instance.serializeNBT();
         if (instance.getCount() > 127) {
             tag.setInteger("ExtendedCount", instance.getCount());
+            tag.setByte("Count", (byte)1);
         }
         return tag;
     }
