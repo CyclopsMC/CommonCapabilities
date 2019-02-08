@@ -49,13 +49,13 @@ public class TestIngredientSerializerItemStack {
 
         I_TAG1L = new NBTTagCompound();
         I_TAG1L.setString("id", "minecraft:apple");
-        I_TAG1L.setByte("Count", (byte) -128);
+        I_TAG1L.setByte("Count", (byte) 1);
         I_TAG1L.setShort("Damage", (short) 0);
         I_TAG1L.setInteger("ExtendedCount", 128);
 
         I_TAG2L = new NBTTagCompound();
         I_TAG2L.setString("id", "minecraft:lead");
-        I_TAG2L.setByte("Count", (byte) -48);
+        I_TAG2L.setByte("Count", (byte) 1);
         I_TAG2L.setShort("Damage", (short) 3);
         I_TAG2L.setTag("tag", TAG);
         I_TAG2L.setInteger("ExtendedCount", 2000);
