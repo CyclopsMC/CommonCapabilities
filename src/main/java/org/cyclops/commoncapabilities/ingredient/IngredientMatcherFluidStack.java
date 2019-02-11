@@ -68,7 +68,13 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
         if (instance == null) {
             return 0;
         }
-        return instance.hashCode();
+
+        int code = 1;
+        code = 31 * code + instance.getFluid().hashCode();
+        code = 31 * code + instance.amount;
+        if (instance.tag != null)
+            code = 31 * code + instance.tag.hashCode();
+        return code;
     }
 
     @Override
