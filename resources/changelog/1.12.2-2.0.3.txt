@@ -1,0 +1,8 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.0.0 or higher.
+
+Changes:
+* Implement custom FluidStack hashcode function
+  As of MinecraftForge/MinecraftForge@41a098e2f789a507d8d56f4aa3facfe9c8088164,
+  FluidStack#hashcode has been changed, while we depended on the old
+  implementation., Closes #18
