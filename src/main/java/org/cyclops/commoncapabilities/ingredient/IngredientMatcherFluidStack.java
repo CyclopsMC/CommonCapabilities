@@ -95,6 +95,9 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
 
     @Override
     public FluidStack withQuantity(FluidStack instance, long quantity) {
+        if (quantity == 0) {
+            return null;
+        }
         if (instance == null) {
             return new FluidStack(FluidRegistry.WATER, Helpers.castSafe(quantity));
         }
