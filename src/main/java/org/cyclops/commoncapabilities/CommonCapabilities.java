@@ -1,7 +1,6 @@
 package org.cyclops.commoncapabilities;
 
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -15,8 +14,10 @@ import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.registries.RegistryBuilder;
 import org.apache.logging.log4j.Level;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.IPrototypedIngredientAlternatives;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesItemStackOredictionary;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesList;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.capability.ingredient.storage.IngredientComponentStorageHandlerConfig;
 import org.cyclops.commoncapabilities.capability.inventorystate.InventoryStateConfig;
@@ -173,6 +174,13 @@ public class CommonCapabilities extends ModBaseVersionable {
     @SubscribeEvent
     public void onRegister(RegistryEvent.Register event) {
         if (event.getRegistry() == IngredientComponent.REGISTRY) {
+            IPrototypedIngredientAlternatives.SERIALIZERS.put(
+                    PrototypedIngredientAlternativesList.SERIALIZER.getId(),
+                    PrototypedIngredientAlternativesList.SERIALIZER);
+            IPrototypedIngredientAlternatives.SERIALIZERS.put(
+                    PrototypedIngredientAlternativesItemStackOredictionary.SERIALIZER.getId(),
+                    PrototypedIngredientAlternativesItemStackOredictionary.SERIALIZER);
+
             event.getRegistry().registerAll(
                     IngredientComponents.ITEMSTACK,
                     IngredientComponents.FLUIDSTACK,
