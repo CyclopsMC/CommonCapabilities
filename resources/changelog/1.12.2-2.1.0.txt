@@ -1,0 +1,8 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.0.0 or higher.
+
+Changes:
+* Store recipe ingredients with IPrototypedIngredientAlternatives
+  Backwards compatible with the old format.
+  Needed for storing oredict recipe ingredients more efficiently:
+  CyclopsMC/IntegratedDynamics#694
