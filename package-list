@@ -1,3 +1,4 @@
+net.minecraft.potion
 org.cyclops.commoncapabilities
 org.cyclops.commoncapabilities.api.capability
 org.cyclops.commoncapabilities.api.capability.block
