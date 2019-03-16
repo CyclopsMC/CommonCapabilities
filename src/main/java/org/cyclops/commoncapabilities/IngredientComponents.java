@@ -46,7 +46,7 @@ public class IngredientComponents {
                             Integer.class, false, ItemStack::getCount, ItemMatch.STACKSIZE, true),
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/tag"),
                             NBTTagCompound.class, false, ItemStack::getTagCompound, ItemMatch.NBT, false)
-            )).setUnlocalizedName("recipecomponent.minecraft.itemstack");
+            )).setTranslationKey("recipecomponent.minecraft.itemstack");
 
     public static final IngredientComponent<FluidStack, Integer> FLUIDSTACK =
             new IngredientComponent<>("minecraft:fluidstack", new IngredientMatcherFluidStack(),
@@ -57,14 +57,14 @@ public class IngredientComponents {
                             Integer.class, false, fluidStack -> fluidStack.amount, FluidMatch.AMOUNT, true),
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/tag"),
                             NBTTagCompound.class, false, fluidStack -> fluidStack.tag, FluidMatch.NBT, false)
-            )).setUnlocalizedName("recipecomponent.minecraft.fluidstack");
+            )).setTranslationKey("recipecomponent.minecraft.fluidstack");
 
     public static final IngredientComponent<Integer, Boolean> ENERGY =
             new IngredientComponent<>("minecraft:energy", new IngredientMatcherEnergy(),
                     new IngredientSerializerEnergy(), Lists.newArrayList(
                     new IngredientComponentCategoryType<>(new ResourceLocation("energy/amount"),
                             Integer.class, false, amount -> amount, true, true)
-            )).setUnlocalizedName("recipecomponent.minecraft.energy");
+            )).setTranslationKey("recipecomponent.minecraft.energy");
 
     static {
         ENERGY.setStorageWrapperHandler(CapabilityEnergy.ENERGY, new IngredientComponentStorageWrapperHandlerEnergyStorage(ENERGY));
