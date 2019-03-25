@@ -18,7 +18,7 @@ public class TileSmelteryWorker implements IWorker {
     @Override
     public boolean hasWork() {
         for(int i = 0; i < tile.getSizeInventory(); i++) {
-            if (tile.getStackInSlot(i) != null) {
+            if (!tile.getStackInSlot(i).isEmpty()) {
                 return true;
             }
         }
