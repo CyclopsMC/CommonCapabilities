@@ -81,7 +81,6 @@ public class CommonCapabilities extends ModBaseVersionable {
         //modCompatLoader.addModCompat(new TConstructModCompat());
         //modCompatLoader.addModCompat(new ForestryModCompat());
         //modCompatLoader.addModCompat(new Ic2ModCompat());
-        //modCompatLoader.addModCompat(new CharsetWrenchModCompat());
     }
 
     /**

@@ -40,11 +40,6 @@ dependencies {
     //deobfCompile "slimeknights:TConstruct:${config.minecraft_version}-${config.tconstruct_version}" // http://dvs1.progwml6.com/files/maven/slimeknights/TConstruct/maven-metadata.xml
     //deobfCompile "net.sengir.forestry:forestry_${config.minecraft_version}:${config.forestry_version}" // http://maven.ic2.player.to/
     //deobfCompile "net.industrial-craft:industrialcraft-2:${config.IC2_version}:dev" // http://maven.ic2.player.to/
-    //deobfCompile "pl.asie.charset:charset-api:${config.charset_version}" // http://charset.asie.pl/maven/pl/asie/charset/charset-api/maven-metadata.xml
-
-    // Only needed for testing
-    //deobfCompile "pl.asie.charset:charset-lib:${config.charset_version}" // http://charset.asie.pl/maven/pl/asie/charset/charset-lib/maven-metadata.xml
-    //deobfCompile "pl.asie.charset:charset-wrench:${config.charset_version}" // http://charset.asie.pl/maven/pl/asie/charset/charset-wrench/maven-metadata.xml
 
     // Project lombok
     provided "org.projectlombok:lombok:1.14.4"
