@@ -104,7 +104,7 @@ public class ForestryModCompat implements IModCompat {
                         @Nullable
                         @Override
                         public ICapabilityProvider createProvider(TileMoistener host) {
-                            return new DefaultCapabilityProvider<>(WorkerConfig.CAPABILITY, new TileMoistenerWorker(host));
+                            return new DefaultCapabilityProvider<>(this::getCapability, new TileMoistenerWorker(host));
                         }
                     });
             registry.registerTile(TileMillRainmaker.class,
@@ -117,7 +117,7 @@ public class ForestryModCompat implements IModCompat {
                         @Nullable
                         @Override
                         public ICapabilityProvider createProvider(TileMillRainmaker host) {
-                            return new DefaultCapabilityProvider<>(WorkerConfig.CAPABILITY, new TileRainmakerWorker(host));
+                            return new DefaultCapabilityProvider<>(this::getCapability, new TileRainmakerWorker(host));
                         }
                     });
             registry.registerTile(TileRaintank.class,
@@ -130,7 +130,7 @@ public class ForestryModCompat implements IModCompat {
                         @Nullable
                         @Override
                         public ICapabilityProvider createProvider(TileRaintank host) {
-                            return new DefaultCapabilityProvider<>(WorkerConfig.CAPABILITY, new TileRaintankWorker(host));
+                            return new DefaultCapabilityProvider<>(this::getCapability, new TileRaintankWorker(host));
                         }
                     });
             registry.registerTile(TileFarmGearbox.class,
@@ -143,7 +143,7 @@ public class ForestryModCompat implements IModCompat {
                         @Nullable
                         @Override
                         public ICapabilityProvider createProvider(TileFarmGearbox host) {
-                            return new DefaultCapabilityProvider<>(WorkerConfig.CAPABILITY, new TileFarmGearboxWorker(host));
+                            return new DefaultCapabilityProvider<>(this::getCapability, new TileFarmGearboxWorker(host));
                         }
                     });
         }
@@ -161,7 +161,7 @@ public class ForestryModCompat implements IModCompat {
                     @Nullable
                     @Override
                     public ICapabilityProvider createProvider(T host) {
-                        return new DefaultCapabilityProvider<>(TemperatureConfig.CAPABILITY,
+                        return new DefaultCapabilityProvider<>(this::getCapability,
                                 new TileEngineTemperature(host, maximumTemperature,
                                         ITemperature.ZERO_CELCIUS, ITemperature.ZERO_CELCIUS));
                     }
@@ -180,7 +180,7 @@ public class ForestryModCompat implements IModCompat {
                     @Nullable
                     @Override
                     public ICapabilityProvider createProvider(T host) {
-                        return new DefaultCapabilityProvider<>(WorkerConfig.CAPABILITY, new TilePoweredWorker(host));
+                        return new DefaultCapabilityProvider<>(this::getCapability, new TilePoweredWorker(host));
                     }
                 });
     }
@@ -197,7 +197,7 @@ public class ForestryModCompat implements IModCompat {
                     @Nullable
                     @Override
                     public ICapabilityProvider createProvider(T host) {
-                        return new DefaultCapabilityProvider<>(WorkerConfig.CAPABILITY, new TileEngineWorker(host));
+                        return new DefaultCapabilityProvider<>(this::getCapability, new TileEngineWorker(host));
                     }
                 });
     }

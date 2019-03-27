@@ -26,7 +26,7 @@ public class TilePoweredWorker implements IWorker {
     }
 
     protected boolean isRedstoneEnabled() {
-        return tile.getWorld().isBlockIndirectlyGettingPowered(tile.getPos()) > 0;
+        return tile.getWorld().getRedstonePowerFromNeighbors(tile.getPos()) > 0;
     }
 
     protected boolean hasEnoughEnergy() {

@@ -71,7 +71,6 @@ sourceSets {
     main {
         java {
             exclude '**/modcompat/enderio/**'
-            exclude '**/modcompat/forestry/**'
             exclude '**/modcompat/ic2/**'
         }
     }
