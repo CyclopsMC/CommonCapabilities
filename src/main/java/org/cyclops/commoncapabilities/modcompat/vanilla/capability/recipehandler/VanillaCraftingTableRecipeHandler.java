@@ -41,7 +41,7 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
     private static final Set<IngredientComponent<?, ?>> COMPONENTS_INPUT  = Sets.newHashSet(IngredientComponent.ITEMSTACK);
     private static final Set<IngredientComponent<?, ?>> COMPONENTS_OUTPUT = Sets.newHashSet(IngredientComponent.ITEMSTACK);
 
-    private final Container DUMMY_CONTAINTER = new Container() {
+    public static final Container DUMMY_CONTAINTER = new Container() {
         @Override
         public boolean canInteractWith(EntityPlayer playerIn) {
             return true;

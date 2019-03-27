@@ -15,15 +15,29 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.cyclops.commoncapabilities.CommonCapabilities;
 import org.cyclops.commoncapabilities.Reference;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.api.capability.wrench.DefaultWrench;
 import org.cyclops.commoncapabilities.api.capability.wrench.IWrench;
+import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 import org.cyclops.commoncapabilities.capability.temperature.TemperatureConfig;
 import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 import org.cyclops.commoncapabilities.capability.wrench.WrenchConfig;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler.TileCarpenterRecipeHandler;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler.TileCentrifugeRecipeHandler;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler.TileFabricatorRecipeHandler;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler.TileFermenterRecipeHandler;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler.TileSqueezerRecipeHandler;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler.TileStillRecipeHandler;
 import org.cyclops.commoncapabilities.modcompat.forestry.capability.temperature.TileEngineTemperature;
-import org.cyclops.commoncapabilities.modcompat.forestry.capability.work.*;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.work.TileEngineWorker;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.work.TileFarmGearboxWorker;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.work.TileMoistenerWorker;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.work.TilePoweredWorker;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.work.TileRainmakerWorker;
+import org.cyclops.commoncapabilities.modcompat.forestry.capability.work.TileRaintankWorker;
+import org.cyclops.cyclopscore.datastructure.Wrapper;
 import org.cyclops.cyclopscore.modcompat.IModCompat;
 import org.cyclops.cyclopscore.modcompat.capabilities.CapabilityConstructorRegistry;
 import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityProvider;
@@ -31,6 +45,7 @@ import org.cyclops.cyclopscore.modcompat.capabilities.ICapabilityConstructor;
 import org.cyclops.cyclopscore.modcompat.capabilities.SimpleCapabilityConstructor;
 
 import javax.annotation.Nullable;
+import java.util.function.Supplier;
 
 /**
  * Capabilities for EnderIO.
@@ -146,6 +161,15 @@ public class ForestryModCompat implements IModCompat {
                             return new DefaultCapabilityProvider<>(this::getCapability, new TileFarmGearboxWorker(host));
                         }
                     });
+
+            // Recipe Handler
+            registerTileRecipeHandler(registry, TileStill.class, TileStillRecipeHandler::new);
+            registerTileRecipeHandler(registry, TileCarpenter.class, TileCarpenterRecipeHandler::new);
+            registerTileRecipeHandler(registry, TileFermenter.class, TileFermenterRecipeHandler::new);
+            registerTileRecipeHandler(registry, TileSqueezer.class, TileSqueezerRecipeHandler::new);
+            //registerTileRecipeHandler(registry, TileBottler.class, TileBottlerRecipeHandler::new);
+            registerTileRecipeHandler(registry, TileCentrifuge.class, TileCentrifugeRecipeHandler::new);
+            registerTileRecipeHandler(registry, TileFabricator.class, TileFabricatorRecipeHandler::new);
         }
     }
 
@@ -198,6 +222,27 @@ public class ForestryModCompat implements IModCompat {
                     @Override
                     public ICapabilityProvider createProvider(T host) {
                         return new DefaultCapabilityProvider<>(this::getCapability, new TileEngineWorker(host));
+                    }
+                });
+    }
+
+    protected static <T extends TilePowered> void registerTileRecipeHandler(
+            CapabilityConstructorRegistry registry, Class<T> clazz, Supplier<IRecipeHandler> recipeHandlerSupplier) {
+        Wrapper<IRecipeHandler> recipeHandler = new Wrapper<>();
+        registry.registerTile(clazz,
+                new SimpleCapabilityConstructor<IRecipeHandler, T>() {
+                    @Override
+                    public Capability<IRecipeHandler> getCapability() {
+                        return RecipeHandlerConfig.CAPABILITY;
+                    }
+
+                    @Nullable
+                    @Override
+                    public ICapabilityProvider createProvider(T host) {
+                        if (recipeHandler.get() == null) {
+                            recipeHandler.set(recipeHandlerSupplier.get());
+                        }
+                        return new DefaultCapabilityProvider<>(this::getCapability, recipeHandler.get());
                     }
                 });
     }
