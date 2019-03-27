@@ -22,6 +22,10 @@ org.cyclops.commoncapabilities.capability.wrench
 org.cyclops.commoncapabilities.core
 org.cyclops.commoncapabilities.ingredient
 org.cyclops.commoncapabilities.ingredient.storage
+org.cyclops.commoncapabilities.modcompat.forestry
+org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler
+org.cyclops.commoncapabilities.modcompat.forestry.capability.temperature
+org.cyclops.commoncapabilities.modcompat.forestry.capability.work
 org.cyclops.commoncapabilities.modcompat.tconstruct
 org.cyclops.commoncapabilities.modcompat.tconstruct.capability.recipehandler
 org.cyclops.commoncapabilities.modcompat.tconstruct.capability.work
