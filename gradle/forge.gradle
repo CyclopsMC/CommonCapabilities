@@ -29,6 +29,14 @@ repositories {
         name = "BuildCraft Maven"
         url = "https://mod-buildcraft.com/maven"
     }
+    maven {
+        name = "CoFH Maven"
+        url = "http://maven.covers1624.net"
+    }
+    maven {
+        name = "ChickenBones Maven"
+        url = "http://chickenbones.net/maven/"
+    }
 }
 dependencies {
     // Add something like 'cyclopscore_version_local=0.1.0-DEV' to your gradle.properties if you want to use a custom local CyclopsCore version.
@@ -45,6 +53,16 @@ dependencies {
     deobfCompile "net.sengir.forestry:forestry_${config.minecraft_version}:${config.forestry_version}" // http://maven.ic2.player.to/
     deobfCompile "com.mod-buildcraft:buildcraft-api:${config.buildcraft_version}" // https://mod-buildcraft.com/maven/com/mod-buildcraft/buildcraft-api/
     //deobfCompile "net.industrial-craft:industrialcraft-2:${config.IC2_version}:dev" // http://maven.ic2.player.to/
+    deobfCompile ("cofh:ThermalExpansion:${config.thermalexpansion_version}:universal") { // https://maven.covers1624.net/cofh/ThermalExpansion/
+        exclude group: 'mezz.jei', module: 'jei_1.12.2'
+    }
+    deobfCompile ("cofh:CoFHCore:${config.cofhcore_version}:universal") { // https://maven.covers1624.net/cofh/CoFHCore/
+        exclude group: 'mezz.jei', module: 'jei_1.12.2'
+    }
+    deobfCompile "cofh:ThermalFoundation:${config.thermalfoundation_version}:universal" // https://maven.covers1624.net/cofh/ThermalFoundation/
+    deobfCompile "cofh:CoFHWorld:${config.cofhworld_version}:universal" // https://maven.covers1624.net/cofh/CoFHWorld/
+    deobfCompile "cofh:RedstoneFlux:${config.rfapi_version}:universal" // https://maven.covers1624.net/cofh/RedstoneFlux/
+    deobfCompile "codechicken:CodeChickenLib:${config.codechickenlib_version}:universal" // http://chickenbones.net/maven/codechicken/CodeChickenLib/
 
     // Project lombok
     provided "org.projectlombok:lombok:1.14.4"
