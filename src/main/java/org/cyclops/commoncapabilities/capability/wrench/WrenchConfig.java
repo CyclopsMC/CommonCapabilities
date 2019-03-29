@@ -1,6 +1,5 @@
 package org.cyclops.commoncapabilities.capability.wrench;
 
-import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import org.cyclops.commoncapabilities.CommonCapabilities;
@@ -21,7 +20,7 @@ public class WrenchConfig extends CapabilityConfig<IWrench> {
      */
     public static WrenchConfig _instance;
 
-    @CapabilityInject(IWorldNameable.class)
+    @CapabilityInject(IWrench.class)
     public static Capability<IWrench> CAPABILITY = null;
 
     /**
