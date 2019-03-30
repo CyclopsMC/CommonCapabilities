@@ -1,10 +1,7 @@
 package org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler;
 
-import com.google.common.collect.Iterables;
 import forestry.api.recipes.ICraftingProvider;
 import forestry.api.recipes.IForestryRecipe;
-import forestry.api.recipes.IStillRecipe;
-import forestry.factory.recipes.StillRecipeManager;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;

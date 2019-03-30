@@ -7,20 +7,24 @@ import cofh.thermalexpansion.block.storage.ItemBlockStrongbox;
 import cofh.thermalexpansion.item.ItemSatchel;
 import cofh.thermalfoundation.item.ItemWrench;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.cyclops.commoncapabilities.CommonCapabilities;
 import org.cyclops.commoncapabilities.Reference;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.api.capability.wrench.DefaultWrench;
 import org.cyclops.commoncapabilities.api.capability.wrench.IWrench;
+import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 import org.cyclops.commoncapabilities.capability.wrench.WrenchConfig;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler.InventoryContainerItemItemHandler;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler.ItemBlockCacheItemHandler;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler.ItemBlockStrongboxItemHandler;
+import org.cyclops.commoncapabilities.modcompat.thermalexpansion.recipehandler.*;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.work.TileDeviceBaseWorker;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.work.TileMachineBaseWorker;
 import org.cyclops.cyclopscore.modcompat.IModCompat;
@@ -141,6 +145,81 @@ public class ThermalExpansionModCompat implements IModCompat {
             registerTileDeviceBaseWorker(registry, TileTapper.class);
             registerTileDeviceBaseWorker(registry, TileWaterGen.class);
             registerTileDeviceBaseWorker(registry, TileXpCollector.class);
+
+            // Recipe Handler
+            registry.registerTile(TileFurnace.class,
+                    new SimpleCapabilityConstructor<IRecipeHandler, TileFurnace>() {
+                        @Override
+                        public Capability<IRecipeHandler> getCapability() {
+                            return RecipeHandlerConfig.CAPABILITY;
+                        }
+
+                        @Nullable
+                        @Override
+                        public ICapabilityProvider createProvider(TileFurnace host) {
+                            return new DefaultCapabilityProvider<>(this, new TileFurnaceRecipeHandler(host));
+                        }
+                    });
+            registerTileRecipeHandler(registry, TilePulverizer.class, new TilePulverizerRecipeHandler());
+            registerTileRecipeHandler(registry, TileSawmill.class, new TileSawmillRecipeHandler());
+            registerTileRecipeHandler(registry, TileSmelter.class, new TileSmelterRecipeHandler());
+            registerTileRecipeHandler(registry, TileInsolator.class, new TileInsolatorRecipeHandler());
+            registry.registerTile(TileCompactor.class,
+                    new SimpleCapabilityConstructor<IRecipeHandler, TileCompactor>() {
+                        @Override
+                        public Capability<IRecipeHandler> getCapability() {
+                            return RecipeHandlerConfig.CAPABILITY;
+                        }
+
+                        @Nullable
+                        @Override
+                        public ICapabilityProvider createProvider(TileCompactor host) {
+                            return new DefaultCapabilityProvider<>(this, new TileCompactorRecipeHandler(host));
+                        }
+                    });
+            registerTileRecipeHandler(registry, TileCrucible.class, new TileCrucibleRecipeHandler());
+            registry.registerTile(TileRefinery.class,
+                    new SimpleCapabilityConstructor<IRecipeHandler, TileRefinery>() {
+                        @Override
+                        public Capability<IRecipeHandler> getCapability() {
+                            return RecipeHandlerConfig.CAPABILITY;
+                        }
+
+                        @Nullable
+                        @Override
+                        public ICapabilityProvider createProvider(TileRefinery host) {
+                            return new DefaultCapabilityProvider<>(this, new TileRefineryRecipeHandler(host));
+                        }
+                    });
+            registry.registerTile(TileCentrifuge.class,
+                    new SimpleCapabilityConstructor<IRecipeHandler, TileCentrifuge>() {
+                        @Override
+                        public Capability<IRecipeHandler> getCapability() {
+                            return RecipeHandlerConfig.CAPABILITY;
+                        }
+
+                        @Nullable
+                        @Override
+                        public ICapabilityProvider createProvider(TileCentrifuge host) {
+                            return new DefaultCapabilityProvider<>(this, new TileCentrifugeRecipeHandler(host));
+                        }
+                    });
+            registerTileRecipeHandler(registry, TileBrewer.class, new TileBrewerRecipeHandler());
+            registerTileRecipeHandler(registry, TileEnchanter.class, new TileEnchanterRecipeHandler());
+            registerTileRecipeHandler(registry, TilePrecipitator.class, new TilePrecipitatorRecipeHandler());
+            registry.registerTile(TileExtruder.class,
+                    new SimpleCapabilityConstructor<IRecipeHandler, TileExtruder>() {
+                        @Override
+                        public Capability<IRecipeHandler> getCapability() {
+                            return RecipeHandlerConfig.CAPABILITY;
+                        }
+
+                        @Nullable
+                        @Override
+                        public ICapabilityProvider createProvider(TileExtruder host) {
+                            return new DefaultCapabilityProvider<>(this, new TileExtruderRecipeHandler(host));
+                        }
+                    });
         }
     }
 
@@ -156,7 +235,7 @@ public class ThermalExpansionModCompat implements IModCompat {
                     @Nullable
                     @Override
                     public ICapabilityProvider createProvider(T host) {
-                        return new DefaultCapabilityProvider<>(this::getCapability, new TileMachineBaseWorker(host));
+                        return new DefaultCapabilityProvider<>(this, new TileMachineBaseWorker(host));
                     }
                 });
     }
@@ -173,7 +252,24 @@ public class ThermalExpansionModCompat implements IModCompat {
                     @Nullable
                     @Override
                     public ICapabilityProvider createProvider(T host) {
-                        return new DefaultCapabilityProvider<>(this::getCapability, new TileDeviceBaseWorker(host));
+                        return new DefaultCapabilityProvider<>(this, new TileDeviceBaseWorker(host));
+                    }
+                });
+    }
+
+    protected static <T extends TileEntity> void registerTileRecipeHandler(
+            CapabilityConstructorRegistry registry, Class<T> clazz, IRecipeHandler recipeHandler) {
+        registry.registerTile(clazz,
+                new SimpleCapabilityConstructor<IRecipeHandler, T>() {
+                    @Override
+                    public Capability<IRecipeHandler> getCapability() {
+                        return RecipeHandlerConfig.CAPABILITY;
+                    }
+
+                    @Nullable
+                    @Override
+                    public ICapabilityProvider createProvider(T host) {
+                        return new DefaultCapabilityProvider<>(this, recipeHandler);
                     }
                 });
     }
