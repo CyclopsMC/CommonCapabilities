@@ -1,0 +1,14 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.1.0 or higher.
+
+Additions:
+* Add integration for Thermal Expansion
+  * Add recipe handler capabilities for TE machines
+  * Add worker capabilities to all TE machines
+  * Add item handler capabilities to TE items (satchel, strongbox, cache)
+  * Add wrench capability to the Cresent Hammer
+* Restore Forestry compat
+* Add recipe handler capabilities for Forestry machines
+* Restore TCon compat
+* Add worker capability for TCon's Drying Rack
+* Add recipe handler capabilities for TCon machines
