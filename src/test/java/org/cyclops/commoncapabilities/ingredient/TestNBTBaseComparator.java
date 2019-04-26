@@ -1,6 +1,8 @@
 package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.nbt.*;
+import org.cyclops.cyclopscore.nbt.path.NbtParseException;
+import org.cyclops.cyclopscore.nbt.path.NbtPath;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -80,7 +82,7 @@ public class TestNBTBaseComparator {
 
     @BeforeClass
     public static void init() {
-        COMP = new NBTBaseComparator();
+        COMP = new NBTBaseComparator(null);
 
         E = (NBTTagEnd) new NBTTagList().get(-1);
 
@@ -524,6 +526,72 @@ public class TestNBTBaseComparator {
         assertThat(COMP.compare(CMP_NESTED0.copy(), CMP_NESTED0.copy()), is(0));
         assertThat(COMP.compare(CMP_NESTED1.copy(), CMP_NESTED1.copy()), is(0));
         assertThat(COMP.compare(CMP_NESTED2.copy(), CMP_NESTED2.copy()), is(0));
+    }
+
+    @Test
+    public void testCompoundNestedFilteredMatchExact() throws NbtParseException {
+        NBTBaseComparator comp = new NBTBaseComparator(NbtPath
+                .parse("[\"another thing\"][\"and another thing\"].value").asNavigation());
+
+        assertThat(comp.compare(CMP_NESTED0, CMP_NESTED0), is(0));
+        assertThat(comp.compare(CMP_NESTED1, CMP_NESTED0), is(0));
+        assertThat(comp.compare(CMP_NESTED2, CMP_NESTED0), is(0));
+
+        assertThat(comp.compare(CMP_NESTED0, CMP_NESTED1), is(0));
+        assertThat(comp.compare(CMP_NESTED1, CMP_NESTED1), is(0));
+        assertThat(comp.compare(CMP_NESTED2, CMP_NESTED1), is(0));
+
+        assertThat(comp.compare(CMP_NESTED0, CMP_NESTED2), is(0));
+        assertThat(comp.compare(CMP_NESTED1, CMP_NESTED2), is(0));
+        assertThat(comp.compare(CMP_NESTED2, CMP_NESTED2), is(0));
+
+        assertThat(comp.compare(CMP_NESTED0.copy(), CMP_NESTED0.copy()), is(0));
+        assertThat(comp.compare(CMP_NESTED1.copy(), CMP_NESTED1.copy()), is(0));
+        assertThat(comp.compare(CMP_NESTED2.copy(), CMP_NESTED2.copy()), is(0));
+    }
+
+    @Test
+    public void testCompoundNestedFilteredMatchWildcard() throws NbtParseException {
+        NBTBaseComparator comp = new NBTBaseComparator(NbtPath
+                .parse("[\"another thing\"][\"and another thing\"]*").asNavigation());
+
+        assertThat(comp.compare(CMP_NESTED0, CMP_NESTED0), is(0));
+        assertThat(comp.compare(CMP_NESTED1, CMP_NESTED0), is(0));
+        assertThat(comp.compare(CMP_NESTED2, CMP_NESTED0), is(0));
+
+        assertThat(comp.compare(CMP_NESTED0, CMP_NESTED1), is(0));
+        assertThat(comp.compare(CMP_NESTED1, CMP_NESTED1), is(0));
+        assertThat(comp.compare(CMP_NESTED2, CMP_NESTED1), is(0));
+
+        assertThat(comp.compare(CMP_NESTED0, CMP_NESTED2), is(0));
+        assertThat(comp.compare(CMP_NESTED1, CMP_NESTED2), is(0));
+        assertThat(comp.compare(CMP_NESTED2, CMP_NESTED2), is(0));
+
+        assertThat(comp.compare(CMP_NESTED0.copy(), CMP_NESTED0.copy()), is(0));
+        assertThat(comp.compare(CMP_NESTED1.copy(), CMP_NESTED1.copy()), is(0));
+        assertThat(comp.compare(CMP_NESTED2.copy(), CMP_NESTED2.copy()), is(0));
+    }
+
+    @Test
+    public void testCompoundNestedFilteredNoMatch() throws NbtParseException {
+        NBTBaseComparator comp = new NBTBaseComparator(NbtPath
+                .parse("[\"another thing\"][\"and another thing\"].noMatch").asNavigation());
+
+        assertThat(comp.compare(CMP_NESTED0, CMP_NESTED0), is(0));
+        assertThat(comp.compare(CMP_NESTED1, CMP_NESTED0), is(1));
+        assertThat(comp.compare(CMP_NESTED2, CMP_NESTED0), is(1));
+
+        assertThat(comp.compare(CMP_NESTED0, CMP_NESTED1), is(-1));
+        assertThat(comp.compare(CMP_NESTED1, CMP_NESTED1), is(0));
+        assertThat(comp.compare(CMP_NESTED2, CMP_NESTED1), is(1));
+
+        assertThat(comp.compare(CMP_NESTED0, CMP_NESTED2), is(-1));
+        assertThat(comp.compare(CMP_NESTED1, CMP_NESTED2), is(-1));
+        assertThat(comp.compare(CMP_NESTED2, CMP_NESTED2), is(0));
+
+        assertThat(comp.compare(CMP_NESTED0.copy(), CMP_NESTED0.copy()), is(0));
+        assertThat(comp.compare(CMP_NESTED1.copy(), CMP_NESTED1.copy()), is(0));
+        assertThat(comp.compare(CMP_NESTED2.copy(), CMP_NESTED2.copy()), is(0));
     }
 
     @Test

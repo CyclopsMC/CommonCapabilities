@@ -1,13 +1,22 @@
 package org.cyclops.commoncapabilities;
 
+import com.google.common.collect.Lists;
 import org.apache.logging.log4j.Level;
+import org.cyclops.commoncapabilities.ingredient.NBTBaseComparator;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.ConfigurableType;
 import org.cyclops.cyclopscore.config.ConfigurableTypeCategory;
+import org.cyclops.cyclopscore.config.IChangedCallback;
 import org.cyclops.cyclopscore.config.extendedconfig.DummyConfig;
 import org.cyclops.cyclopscore.init.ModBase;
+import org.cyclops.cyclopscore.nbt.path.NbtParseException;
+import org.cyclops.cyclopscore.nbt.path.NbtPath;
+import org.cyclops.cyclopscore.nbt.path.navigate.INbtPathNavigation;
+import org.cyclops.cyclopscore.nbt.path.navigate.NbtPathNavigationList;
 import org.cyclops.cyclopscore.tracking.Analytics;
 import org.cyclops.cyclopscore.tracking.Versions;
+
+import java.util.List;
 
 /**
  * A config with general options for this mod.
@@ -54,6 +63,14 @@ public class GeneralConfig extends DummyConfig {
     public static boolean versionChecker = true;
 
     /**
+     * The NBT Paths that should be filtered away when checking equality.
+     */
+    @ConfigurableProperty(category = ConfigurableTypeCategory.MACHINE, comment = "The NBT Paths that should be filtered away when checking equality.", changedCallback = IgnoreNbtPathsForEqualityChangedCallback.class)
+    public static String[] ignoreNbtPathsForEqualityFilters = {
+            "$.ForgeCaps[\"astralsorcery:cap_item_amulet_holder\"]"
+    };
+
+    /**
      * The type of this config.
      */
     public static ConfigurableType TYPE = ConfigurableType.DUMMY;
@@ -82,5 +99,26 @@ public class GeneralConfig extends DummyConfig {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public static class IgnoreNbtPathsForEqualityChangedCallback implements IChangedCallback {
+
+        @Override
+        public void onChanged(Object value) {
+            List<INbtPathNavigation> navigations = Lists.newArrayList();
+            for (String path : (String[]) value) {
+                try {
+                    navigations.add(NbtPath.parse(path).asNavigation());
+                } catch (NbtParseException e) {
+                    CommonCapabilities.clog(Level.ERROR, String.format("Failed to parse NBT path to filter: %s", path));
+                }
+            }
+            NBTBaseComparator.INSTANCE = new NBTBaseComparator(new NbtPathNavigationList(navigations));
+        }
+
+        @Override
+        public void onRegisteredPostInit(Object value) {
+
+        }
     }
 }

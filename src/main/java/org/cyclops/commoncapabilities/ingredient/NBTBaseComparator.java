@@ -5,12 +5,15 @@ import com.google.common.primitives.Longs;
 import com.google.common.primitives.UnsignedBytes;
 import net.minecraft.nbt.*;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.cyclops.cyclopscore.nbt.path.navigate.INbtPathNavigation;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A comparator implementation for NBT tags.
@@ -18,10 +21,25 @@ import java.util.Set;
  */
 public class NBTBaseComparator implements Comparator<NBTBase> {
 
+    /**
+     * A comparator for NBT tags.
+     */
+    public static Comparator<NBTBase> INSTANCE = new NBTBaseComparator(null);
+
     private static final Field FIELD_NBT_LONG_ARRAY_DATA = ReflectionHelper.findField(NBTTagLongArray.class, "field_193587_b", "data");
+
+    private final INbtPathNavigation ignoreNbtNavigation;
+
+    public NBTBaseComparator(@Nullable INbtPathNavigation ignoreNbtNavigation) {
+        this.ignoreNbtNavigation = ignoreNbtNavigation;
+    }
 
     @Override
     public int compare(NBTBase o1, NBTBase o2) {
+        return this.compare(o1, o2, this.ignoreNbtNavigation);
+    }
+
+    protected int compare(NBTBase o1, NBTBase o2, @Nullable INbtPathNavigation ignoreNbtNavigation) {
         if (o1.getId() == o2.getId()) {
             switch (o1.getId()) {
                 case 0:
@@ -55,7 +73,7 @@ public class NBTBaseComparator implements Comparator<NBTBase> {
                     Iterator<NBTBase> it1 = l1.iterator();
                     Iterator<NBTBase> it2 = l2.iterator();
                     while (it1.hasNext()) {
-                        int comp = this.compare(it1.next(), it2.next());
+                        int comp = this.compare(it1.next(), it2.next(), null);
                         if (comp != 0) {
                             return comp;
                         }
@@ -66,6 +84,10 @@ public class NBTBaseComparator implements Comparator<NBTBase> {
                     NBTTagCompound t2 = (NBTTagCompound) o2;
                     Set<String> k1 = t1.getKeySet();
                     Set<String> k2 = t2.getKeySet();
+                    if (ignoreNbtNavigation != null) {
+                        k1 = k1.stream().filter(k -> !ignoreNbtNavigation.isLeafKey(k)).collect(Collectors.toSet());
+                        k2 = k2.stream().filter(k -> !ignoreNbtNavigation.isLeafKey(k)).collect(Collectors.toSet());
+                    }
                     if (!k1.equals(k2)) {
                         String[] k1a = k1.toArray(new String[0]);
                         String[] k2a = k2.toArray(new String[0]);
@@ -81,7 +103,8 @@ public class NBTBaseComparator implements Comparator<NBTBase> {
                         return k1a.length - k2a.length;
                     }
                     for (String key : k1) {
-                        int comp = this.compare(t1.getTag(key), t2.getTag(key));
+                        int comp = this.compare(t1.getTag(key), t2.getTag(key),
+                                ignoreNbtNavigation != null ? ignoreNbtNavigation.getNext(key) : null);
                         if (comp != 0) {
                             return comp;
                         }

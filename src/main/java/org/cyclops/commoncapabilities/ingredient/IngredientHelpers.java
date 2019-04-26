@@ -12,11 +12,6 @@ import java.util.Comparator;
 public final class IngredientHelpers {
 
     /**
-     * A comparator for NBT tags.
-     */
-    public static final Comparator<NBTBase> NBT_COMPARATOR = new NBTBaseComparator();
-
-    /**
      * Compare the given NBT tags with each other for order.
      * @param tag1 An NBT tag.
      * @param tag2 An NBT tag.
@@ -34,7 +29,7 @@ public final class IngredientHelpers {
         } else if (tag2 == null) {
             return 1;
         } else {
-            return NBT_COMPARATOR.compare(tag1, tag2);
+            return NBTBaseComparator.INSTANCE.compare(tag1, tag2);
         }
     }
 
