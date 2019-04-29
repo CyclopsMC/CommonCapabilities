@@ -21,7 +21,7 @@ import org.cyclops.commoncapabilities.api.capability.wrench.IWrench;
 import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 import org.cyclops.commoncapabilities.capability.wrench.WrenchConfig;
-import org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler.InventoryContainerItemItemHandler;
+import org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler.ItemSatchelItemHandler;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler.ItemBlockCacheItemHandler;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler.ItemBlockStrongboxItemHandler;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.recipehandler.*;
@@ -86,7 +86,7 @@ public class ThermalExpansionModCompat implements IModCompat {
                         @Nullable
                         @Override
                         public ICapabilityProvider createProvider(ItemSatchel hostType, ItemStack host) {
-                            return new DefaultCapabilityProvider<>(this, new InventoryContainerItemItemHandler(host));
+                            return new DefaultCapabilityProvider<>(this, new ItemSatchelItemHandler(host));
                         }
                     });
             registry.registerItem(ItemBlockCache.class,
