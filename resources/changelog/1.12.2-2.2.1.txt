@@ -1,0 +1,9 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.2.0 or higher.
+
+Fixes:
+* Fix invalid item capabilities on (upgraded) TE Satchels, Closes #20
+* Add config option to ignore NBT paths inside NBT tags during comparisons.
+  Fixes a problem where Astral Sorcery (capabilities) would break Integrated Crafting recipes.
+  CyclopsMC/IntegratedCrafting#17
+
