@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class NBTBaseComparator implements Comparator<NBTBase> {
 
     /**
-     * A comparator for NBT tags.
+     * A comparator for NBT tags. (This is set in GeneralConfig)
      */
     public static Comparator<NBTBase> INSTANCE = new NBTBaseComparator(null);
 

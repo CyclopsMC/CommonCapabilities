@@ -2,6 +2,7 @@ package org.cyclops.commoncapabilities;
 
 import com.google.common.collect.Lists;
 import org.apache.logging.log4j.Level;
+import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.ingredient.NBTBaseComparator;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.ConfigurableType;
@@ -113,7 +114,7 @@ public class GeneralConfig extends DummyConfig {
                     CommonCapabilities.clog(Level.ERROR, String.format("Failed to parse NBT path to filter: %s", path));
                 }
             }
-            NBTBaseComparator.INSTANCE = new NBTBaseComparator(new NbtPathNavigationList(navigations));
+            ItemMatch.NBT_COMPARATOR = NBTBaseComparator.INSTANCE = new NBTBaseComparator(new NbtPathNavigationList(navigations));
         }
 
         @Override
