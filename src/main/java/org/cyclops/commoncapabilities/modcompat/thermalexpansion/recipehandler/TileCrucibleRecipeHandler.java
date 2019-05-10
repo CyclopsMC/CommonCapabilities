@@ -54,7 +54,7 @@ public class TileCrucibleRecipeHandler extends TransformedRecipeHandlerAdapter<C
 
     @Override
     protected CrucibleManager.CrucibleRecipe findRecipe(IMixedIngredients input) {
-        return CrucibleManager.getRecipe(Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY));
+        return CrucibleManager.getRecipe(input.getFirstNonEmpty(IngredientComponent.ITEMSTACK));
     }
 
     @Override

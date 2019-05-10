@@ -75,11 +75,11 @@ public class VanillaFurnaceRecipeHandler implements IRecipeHandler {
     @Nullable
     @Override
     public IMixedIngredients simulate(IMixedIngredients input) {
-        List<ItemStack> recipeIngredients = input.getInstances(IngredientComponent.ITEMSTACK);
-        if (input.getComponents().size() != 1 || recipeIngredients.size() != 1) {
+        ItemStack recipeIngredient = input.getFirstNonEmpty(IngredientComponent.ITEMSTACK);
+        if (input.getComponents().size() != 1 && !recipeIngredient.isEmpty()) {
             return null;
         }
-        ItemStack result = FurnaceRecipes.instance().getSmeltingResult(recipeIngredients.get(0));
+        ItemStack result = FurnaceRecipes.instance().getSmeltingResult(recipeIngredient);
         return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, result);
     }
 }

@@ -74,9 +74,9 @@ public class TileCentrifugeRecipeHandler extends TransformedRecipeHandlerAdapter
     @Override
     protected CentrifugeManager.CentrifugeRecipe findRecipe(IMixedIngredients input) {
         if (isAugmentMobs()) {
-            return CentrifugeManager.getRecipeMob(Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), null));
+            return CentrifugeManager.getRecipeMob(input.getFirstNonEmpty(IngredientComponent.ITEMSTACK));
         } else {
-            return CentrifugeManager.getRecipe(Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), null));
+            return CentrifugeManager.getRecipe(input.getFirstNonEmpty(IngredientComponent.ITEMSTACK));
         }
     }
 

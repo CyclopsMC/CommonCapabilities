@@ -1,6 +1,5 @@
 package org.cyclops.commoncapabilities.modcompat.tconstruct.capability.recipehandler;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -81,7 +80,7 @@ public class TileDryingRackRecipeHandler implements IRecipeHandler {
     @Nullable
     @Override
     public IMixedIngredients simulate(IMixedIngredients input) {
-        ItemStack itemStack = Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY);
+        ItemStack itemStack = input.getFirstNonEmpty(IngredientComponent.ITEMSTACK);
 
         ItemStack result = TinkerRegistry.getDryingResult(itemStack);
         if (result.isEmpty()) {

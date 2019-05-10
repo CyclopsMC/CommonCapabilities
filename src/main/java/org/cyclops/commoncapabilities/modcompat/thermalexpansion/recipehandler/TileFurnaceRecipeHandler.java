@@ -58,7 +58,7 @@ public class TileFurnaceRecipeHandler extends TransformedRecipeHandlerAdapter<Fu
 
     @Override
     protected FurnaceManager.FurnaceRecipe findRecipe(IMixedIngredients input) {
-        return FurnaceManager.getRecipe(Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY), tile.augmentPyrolysis());
+        return FurnaceManager.getRecipe(input.getFirstNonEmpty(IngredientComponent.ITEMSTACK), tile.augmentPyrolysis());
     }
 
     @Override

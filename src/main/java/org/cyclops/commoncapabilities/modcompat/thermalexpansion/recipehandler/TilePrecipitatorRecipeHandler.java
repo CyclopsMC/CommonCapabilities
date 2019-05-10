@@ -55,7 +55,7 @@ public class TilePrecipitatorRecipeHandler extends TransformedRecipeHandlerAdapt
 
     @Override
     protected PrecipitatorManager.PrecipitatorRecipe findRecipe(IMixedIngredients input) {
-        FluidStack fluidStack = Iterables.getFirst(input.getInstances(IngredientComponent.FLUIDSTACK), null);
+        FluidStack fluidStack = input.getFirstNonEmpty(IngredientComponent.FLUIDSTACK);
 
         for (PrecipitatorManager.PrecipitatorRecipe recipe : PrecipitatorManager.getRecipeList()) {
             if (recipe.getInput().equals(fluidStack)) {

@@ -54,7 +54,7 @@ public class TileSawmillRecipeHandler extends TransformedRecipeHandlerAdapter<Sa
 
     @Override
     protected SawmillManager.SawmillRecipe findRecipe(IMixedIngredients input) {
-        return SawmillManager.getRecipe(Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY));
+        return SawmillManager.getRecipe(input.getFirstNonEmpty(IngredientComponent.ITEMSTACK));
     }
 
     @Override

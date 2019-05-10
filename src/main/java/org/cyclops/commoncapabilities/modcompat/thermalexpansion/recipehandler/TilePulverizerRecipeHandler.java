@@ -54,7 +54,7 @@ public class TilePulverizerRecipeHandler extends TransformedRecipeHandlerAdapter
 
     @Override
     protected PulverizerManager.PulverizerRecipe findRecipe(IMixedIngredients input) {
-        return PulverizerManager.getRecipe(Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY));
+        return PulverizerManager.getRecipe(input.getFirstNonEmpty(IngredientComponent.ITEMSTACK));
     }
 
     @Override

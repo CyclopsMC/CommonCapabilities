@@ -1,14 +1,10 @@
 package org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import forestry.api.recipes.IFermenterRecipe;
-import forestry.api.recipes.IStillRecipe;
 import forestry.factory.recipes.FermenterRecipeManager;
-import forestry.factory.recipes.StillRecipeManager;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
@@ -65,8 +61,8 @@ public class TileFermenterRecipeHandler extends CraftingProviderRecipeHandlerAda
     @Override
     protected IFermenterRecipe findRecipe(IMixedIngredients input) {
         return FermenterRecipeManager.findMatchingRecipe(
-                Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY),
-                Iterables.getFirst(input.getInstances(IngredientComponent.FLUIDSTACK), null)
+                input.getFirstNonEmpty(IngredientComponent.ITEMSTACK),
+                input.getFirstNonEmpty(IngredientComponent.FLUIDSTACK)
         );
     }
 

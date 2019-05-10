@@ -1,6 +1,5 @@
 package org.cyclops.commoncapabilities.modcompat.tconstruct.capability.recipehandler;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -96,8 +95,8 @@ public abstract class TileCastingRecipeHandler implements IRecipeHandler {
     @Nullable
     @Override
     public IMixedIngredients simulate(IMixedIngredients input) {
-        ItemStack itemStack = Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY);
-        FluidStack fluidStack = Iterables.getFirst(input.getInstances(IngredientComponent.FLUIDSTACK), null);
+        ItemStack itemStack = input.getFirstNonEmpty(IngredientComponent.ITEMSTACK);
+        FluidStack fluidStack = input.getFirstNonEmpty(IngredientComponent.FLUIDSTACK);
         Fluid fluid = fluidStack != null ? fluidStack.getFluid() : null;
 
         ICastingRecipe recipe = getCastingRecipe(itemStack, fluid);

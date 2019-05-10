@@ -59,8 +59,8 @@ public class TileBrewerRecipeHandler extends TransformedRecipeHandlerAdapter<Bre
     @Override
     protected BrewerManager.BrewerRecipe findRecipe(IMixedIngredients input) {
         return BrewerManager.getRecipe(
-                Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY),
-                Iterables.getFirst(input.getInstances(IngredientComponent.FLUIDSTACK), null)
+                input.getFirstNonEmpty(IngredientComponent.ITEMSTACK),
+                input.getFirstNonEmpty(IngredientComponent.FLUIDSTACK)
         );
     }
 

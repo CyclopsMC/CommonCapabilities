@@ -1,12 +1,10 @@
 package org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import forestry.api.recipes.ICentrifugeRecipe;
 import forestry.factory.recipes.CentrifugeRecipeManager;
-import net.minecraft.item.ItemStack;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IPrototypedIngredientAlternatives;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
@@ -46,7 +44,7 @@ public class TileCentrifugeRecipeHandler extends CraftingProviderRecipeHandlerAd
 
     @Override
     protected ICentrifugeRecipe findRecipe(IMixedIngredients input) {
-        return CentrifugeRecipeManager.findMatchingRecipe(Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY));
+        return CentrifugeRecipeManager.findMatchingRecipe(input.getFirstNonEmpty(IngredientComponent.ITEMSTACK));
     }
 
     @Override

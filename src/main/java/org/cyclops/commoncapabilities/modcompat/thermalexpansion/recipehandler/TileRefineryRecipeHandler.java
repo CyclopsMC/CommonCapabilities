@@ -72,9 +72,9 @@ public class TileRefineryRecipeHandler extends TransformedRecipeHandlerAdapter<R
     @Override
     protected RefineryManager.RefineryRecipe findRecipe(IMixedIngredients input) {
         if (isAugmentPotion()) {
-            return RefineryManager.getRecipePotion(Iterables.getFirst(input.getInstances(IngredientComponent.FLUIDSTACK), null));
+            return RefineryManager.getRecipePotion(input.getFirstNonEmpty(IngredientComponent.FLUIDSTACK));
         } else {
-            return RefineryManager.getRecipe(Iterables.getFirst(input.getInstances(IngredientComponent.FLUIDSTACK), null));
+            return RefineryManager.getRecipe(input.getFirstNonEmpty(IngredientComponent.FLUIDSTACK));
         }
     }
 

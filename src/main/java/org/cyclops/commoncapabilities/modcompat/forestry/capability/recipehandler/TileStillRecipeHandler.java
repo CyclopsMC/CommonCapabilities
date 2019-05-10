@@ -1,6 +1,5 @@
 package org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -47,7 +46,7 @@ public class TileStillRecipeHandler extends CraftingProviderRecipeHandlerAdapter
 
     @Override
     protected IStillRecipe findRecipe(IMixedIngredients input) {
-        return StillRecipeManager.findMatchingRecipe(Iterables.getFirst(input.getInstances(IngredientComponent.FLUIDSTACK), null));
+        return StillRecipeManager.findMatchingRecipe(input.getFirstNonEmpty(IngredientComponent.FLUIDSTACK));
     }
 
     @Override

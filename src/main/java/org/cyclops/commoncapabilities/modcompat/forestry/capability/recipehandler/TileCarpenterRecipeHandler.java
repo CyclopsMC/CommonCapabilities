@@ -82,7 +82,7 @@ public class TileCarpenterRecipeHandler extends CraftingProviderRecipeHandlerAda
             }
         }
 
-        FluidStack fluidStack = Iterables.getFirst(input.getInstances(IngredientComponent.FLUIDSTACK), null);
+        FluidStack fluidStack = input.getFirstNonEmpty(IngredientComponent.FLUIDSTACK);
 
         RecipePair<ICarpenterRecipe> recipePair = CarpenterRecipeManager.findMatchingRecipe(fluidStack, box, grid);
         return recipePair == null ? null : recipePair.getRecipe();

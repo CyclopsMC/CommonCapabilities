@@ -17,6 +17,7 @@ import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
+import scala.xml.dtd.EMPTY;
 import slimeknights.tconstruct.library.TinkerRegistry;
 import slimeknights.tconstruct.library.smeltery.AlloyRecipe;
 import slimeknights.tconstruct.library.smeltery.MeltingRecipe;
@@ -118,7 +119,7 @@ public class TileSmelteryRecipeHandler implements IRecipeHandler {
     @Override
     public IMixedIngredients simulate(IMixedIngredients input) {
         if (input.getComponents().contains(IngredientComponent.ITEMSTACK)) {
-            ItemStack itemStack = Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY);
+            ItemStack itemStack = input.getFirstNonEmpty(IngredientComponent.ITEMSTACK);
 
             MeltingRecipe recipe = TinkerRegistry.getMelting(itemStack);
             if (recipe == null) {

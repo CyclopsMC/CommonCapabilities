@@ -67,7 +67,7 @@ public class TileCompactorRecipeHandler extends TransformedRecipeHandlerAdapter<
 
     @Override
     protected CompactorManager.CompactorRecipe findRecipe(IMixedIngredients input) {
-        return CompactorManager.getRecipe(Iterables.getFirst(input.getInstances(IngredientComponent.ITEMSTACK), ItemStack.EMPTY), getMode());
+        return CompactorManager.getRecipe(input.getFirstNonEmpty(IngredientComponent.ITEMSTACK), getMode());
     }
 
     @Override
