@@ -1,0 +1,17 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.2.0 or higher.
+
+Changes:
+* Add containsAll and isEmpty methods to IMixedIngredients
+  Needed for CyclopsMC/IntegratedCrafting#30
+* Make single recipe inputs more loose
+  For recipes that only require a single input,
+  they can now appear anywhere within the recipe,
+  even if there are empty slots before them.
+  Needed for CyclopsMC/IntegratedCrafting#30
+* Remove CyclopsCore dependency in prototyped alternatives
+* Make ItemMatch in API independent from main mod
+
+Fixes:
+* Fix ingredients being equal even if their ingred length is non-equal
+* Fix edge-case when comparing null ItemStack tags, Closes #6
