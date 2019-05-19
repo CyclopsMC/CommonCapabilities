@@ -41,10 +41,10 @@ public class TestSlotlessItemHandlerWrapper {
                 new ItemStack(Items.APPLE, 60)
         ));
 
-        itEmpty = IntStream.of()::iterator;
-        it0 = IntStream.of(0)::iterator;
-        it9 = IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9)::iterator;
-        itAll = IntStream.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)::iterator;
+        itEmpty = () -> IntStream.of().iterator();
+        it0 = () -> IntStream.of(0).iterator();
+        it9 = () -> IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9).iterator();
+        itAll = () -> IntStream.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9).iterator();
     }
 
     @Test
