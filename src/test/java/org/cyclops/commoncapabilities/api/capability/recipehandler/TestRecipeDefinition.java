@@ -133,9 +133,6 @@ public class TestRecipeDefinition {
     public void testHashCode() {
         assertThat(D_1.hashCode(), equalTo(D_1_bis.hashCode()));
         assertThat(D_1_bis.hashCode(), equalTo(D_1.hashCode()));
-
-        assertThat(D_1.hashCode(), not(equalTo(D_3.hashCode())));
-        assertThat(D_3.hashCode(), not(equalTo(D_1.hashCode())));
     }
 
     @Test
