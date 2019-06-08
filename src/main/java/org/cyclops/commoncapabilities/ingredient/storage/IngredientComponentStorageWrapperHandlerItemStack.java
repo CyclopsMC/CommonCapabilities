@@ -331,7 +331,12 @@ public class IngredientComponentStorageWrapperHandlerItemStack
         @Nonnull
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            return storage.extract(amount, simulate);
+            ItemStack slotItem = Iterators.get(storage.iterator(), slot, ItemStack.EMPTY);
+            if (slotItem.isEmpty()) {
+                return slotItem;
+            }
+            return storage.extract(ingredientComponent.getMatcher().withQuantity(slotItem, amount),
+                    ingredientComponent.getMatcher().getExactMatchNoQuantityCondition(), simulate);
         }
 
         @Override

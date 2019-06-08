@@ -95,15 +95,18 @@ public class TestItemStackItemStorageWrapper {
 
     @Test
     public void testExtractItem() {
-        assertThat(eq(wrapper.extractItem(0, 10, true), APPLE_1_0), is(true));
-        assertThat(eq(wrapper.extractItem(0, 10, true), APPLE_1_0), is(true));
-        assertThat(eq(wrapper.extractItem(0, 10, true), APPLE_1_0), is(true));
+        assertThat(eq(wrapper.extractItem(0, 1, true), ItemStack.EMPTY), is(true));
+        assertThat(eq(wrapper.extractItem(1, 1, true), ItemStack.EMPTY), is(true));
+        assertThat(eq(wrapper.extractItem(2, 1, true), APPLE_1_0), is(true));
 
-        assertThat(eq(wrapper.extractItem(0, 10, false), APPLE_1_0), is(true));
-        assertThat(eq(wrapper.extractItem(0, 10, false), APPLE_1_10), is(true));
-        assertThat(eq(wrapper.extractItem(0, 10, false), APPLE_10_10), is(true));
-        assertThat(eq(wrapper.extractItem(0, 10, false), APPLE_10_0), is(true));
-        assertThat(eq(wrapper.extractItem(0, 10, false), ItemStack.EMPTY), is(true));
+        assertThat(eq(wrapper.extractItem(2, 1, false), APPLE_1_0), is(true));
+        assertThat(eq(wrapper.extractItem(4, 1, false), APPLE_1_10), is(true));
+        assertThat(eq(wrapper.extractItem(6, 10, false), APPLE_10_10), is(true));
+        assertThat(eq(wrapper.extractItem(8, 10, false), APPLE_10_0), is(true));
+        assertThat(eq(wrapper.extractItem(2, 1, false), ItemStack.EMPTY), is(true));
+        assertThat(eq(wrapper.extractItem(4, 1, false), ItemStack.EMPTY), is(true));
+        assertThat(eq(wrapper.extractItem(6, 10, false), ItemStack.EMPTY), is(true));
+        assertThat(eq(wrapper.extractItem(8, 10, false), ItemStack.EMPTY), is(true));
     }
 
     @Test
