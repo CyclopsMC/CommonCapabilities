@@ -4,6 +4,7 @@ import cofh.thermalexpansion.block.device.*;
 import cofh.thermalexpansion.block.machine.*;
 import cofh.thermalexpansion.block.storage.ItemBlockCache;
 import cofh.thermalexpansion.block.storage.ItemBlockStrongbox;
+import cofh.thermalexpansion.block.storage.TileCache;
 import cofh.thermalexpansion.item.ItemSatchel;
 import cofh.thermalfoundation.item.ItemWrench;
 import net.minecraft.item.ItemStack;
@@ -14,10 +15,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.cyclops.commoncapabilities.CommonCapabilities;
 import org.cyclops.commoncapabilities.Reference;
+import org.cyclops.commoncapabilities.api.capability.itemhandler.ISlotlessItemHandler;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.api.capability.wrench.DefaultWrench;
 import org.cyclops.commoncapabilities.api.capability.wrench.IWrench;
+import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
 import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 import org.cyclops.commoncapabilities.capability.wrench.WrenchConfig;
@@ -25,6 +28,7 @@ import org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler.Ite
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler.ItemBlockCacheItemHandler;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler.ItemBlockStrongboxItemHandler;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.recipehandler.*;
+import org.cyclops.commoncapabilities.modcompat.thermalexpansion.slotlessitemhandler.TileCacheSlotlessItemHandler;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.work.TileDeviceBaseWorker;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.work.TileMachineBaseWorker;
 import org.cyclops.cyclopscore.modcompat.IModCompat;
@@ -113,6 +117,21 @@ public class ThermalExpansionModCompat implements IModCompat {
                         @Override
                         public ICapabilityProvider createProvider(ItemBlockStrongbox hostType, ItemStack host) {
                             return new DefaultCapabilityProvider<>(this, new ItemBlockStrongboxItemHandler(host));
+                        }
+                    });
+
+            // SlotlessItemHandler
+            registry.registerTile(TileCache.class,
+                    new ICapabilityConstructor<ISlotlessItemHandler, TileCache, TileCache>() {
+                        @Override
+                        public Capability<ISlotlessItemHandler> getCapability() {
+                            return SlotlessItemHandlerConfig.CAPABILITY;
+                        }
+
+                        @Nullable
+                        @Override
+                        public ICapabilityProvider createProvider(TileCache hostType, TileCache host) {
+                            return new DefaultCapabilityProvider<>(this, new TileCacheSlotlessItemHandler(host));
                         }
                     });
 
