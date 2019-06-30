@@ -1,0 +1,5 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.3.0 or higher.
+
+Changes:
+* Improve performance of storage wrapping by avoiding hasCapability calls
