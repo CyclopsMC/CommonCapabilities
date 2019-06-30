@@ -67,21 +67,17 @@ public class IngredientComponentStorageWrapperHandlerItemStack
     @Nullable
     @Override
     public IItemHandler getStorage(ICapabilityProvider capabilityProvider, @Nullable EnumFacing facing) {
-        if (capabilityProvider.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
-            return capabilityProvider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
-        }
-        return null;
+        return capabilityProvider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
     }
 
     @Override
     public IIngredientComponentStorage<ItemStack, Integer> getComponentStorage(ICapabilityProvider capabilityProvider,
                                                                                @Nullable EnumFacing facing) {
-        if (capabilityProvider.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)) {
-            if (capabilityProvider.hasCapability(SlotlessItemHandlerConfig.CAPABILITY, facing)) {
-                return wrapComponentStorage(
-                        capabilityProvider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing),
-                        capabilityProvider.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing)
-                );
+        IItemHandler storageSlotted = getStorage(capabilityProvider, facing);
+        ISlotlessItemHandler storageSlotless = capabilityProvider.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
+        if (storageSlotted != null) {
+            if (storageSlotless != null) {
+                return wrapComponentStorage(storageSlotted, storageSlotless);
             } else {
                 return wrapComponentStorage(getStorage(capabilityProvider, facing));
             }

@@ -41,10 +41,7 @@ public class IngredientComponentStorageWrapperHandlerItemStackSlotless
     @Nullable
     @Override
     public ISlotlessItemHandler getStorage(ICapabilityProvider capabilityProvider, @Nullable EnumFacing facing) {
-        if (capabilityProvider.hasCapability(SlotlessItemHandlerConfig.CAPABILITY, facing)) {
-            return capabilityProvider.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
-        }
-        return null;
+        return capabilityProvider.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
     }
 
     @Override

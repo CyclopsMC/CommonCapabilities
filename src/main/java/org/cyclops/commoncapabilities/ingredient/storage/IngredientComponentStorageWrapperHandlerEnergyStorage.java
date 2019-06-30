@@ -42,10 +42,7 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage implements
     @Nullable
     @Override
     public IEnergyStorage getStorage(ICapabilityProvider capabilityProvider, @Nullable EnumFacing facing) {
-        if (capabilityProvider.hasCapability(CapabilityEnergy.ENERGY, facing)) {
-            return capabilityProvider.getCapability(CapabilityEnergy.ENERGY, facing);
-        }
-        return null;
+        return capabilityProvider.getCapability(CapabilityEnergy.ENERGY, facing);
     }
 
     @Override

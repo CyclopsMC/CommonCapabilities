@@ -47,10 +47,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
     @Nullable
     @Override
     public IFluidHandler getStorage(ICapabilityProvider capabilityProvider, @Nullable EnumFacing facing) {
-        if (capabilityProvider.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing)) {
-            return capabilityProvider.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
-        }
-        return null;
+        return capabilityProvider.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
     }
 
     @Override
