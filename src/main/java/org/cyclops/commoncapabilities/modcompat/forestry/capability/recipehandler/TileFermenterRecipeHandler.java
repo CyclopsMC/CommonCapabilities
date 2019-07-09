@@ -44,7 +44,7 @@ public class TileFermenterRecipeHandler extends CraftingProviderRecipeHandlerAda
             ))));
         } else {
             inputs.put(IngredientComponent.ITEMSTACK, Lists.newArrayList(new PrototypedIngredientAlternativesItemStackOredictionary(
-                    Lists.newArrayList(recipe.getResourceOreName()), ItemMatch.EXACT
+                    Lists.newArrayList(recipe.getResourceOreName()), ItemMatch.EXACT, 1
             )));
         }
         inputs.put(IngredientComponent.FLUIDSTACK, Lists.newArrayList(new PrototypedIngredientAlternativesList<>(Lists.newArrayList(

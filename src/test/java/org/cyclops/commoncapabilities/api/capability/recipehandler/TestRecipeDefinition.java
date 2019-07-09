@@ -72,7 +72,7 @@ public class TestRecipeDefinition {
 
         Map<IngredientComponent<?, ?>, List<IPrototypedIngredientAlternatives<?, ?>>> dInputMap3 = Maps.newIdentityHashMap();
         dInputMap3.put(IngredientComponents.ITEMSTACK, Lists.newArrayList(
-                new PrototypedIngredientAlternativesItemStackOredictionary(Lists.newArrayList("logWood"), ItemMatch.EXACT)
+                new PrototypedIngredientAlternativesItemStackOredictionary(Lists.newArrayList("logWood"), ItemMatch.EXACT, 1)
         ));
         Map<IngredientComponent<?, ?>, List<?>> dOutputMap3 = Maps.newIdentityHashMap();
         dOutputMap3.put(IngredientComponents.ITEMSTACK, Lists.newArrayList(
