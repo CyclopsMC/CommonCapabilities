@@ -1,11 +1,11 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.init.Bootstrap;
-import net.minecraft.init.Items;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.nbt.IntNBT;
+import net.minecraft.nbt.StringNBT;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,12 +15,12 @@ import static org.junit.Assert.assertThat;
 public class TestIngredientSerializerItemStack {
 
     private static IngredientSerializerItemStack S;
-    private static NBTTagCompound TAG;
-    private static NBTTagCompound I_TAG1;
-    private static NBTTagCompound I_TAG2;
-    private static NBTTagCompound I_TAG1L;
-    private static NBTTagCompound I_TAG2L;
-    private static NBTTagCompound I_TAG_EMPTY;
+    private static CompoundNBT TAG;
+    private static CompoundNBT I_TAG1;
+    private static CompoundNBT I_TAG2;
+    private static CompoundNBT I_TAG1L;
+    private static CompoundNBT I_TAG2L;
+    private static CompoundNBT I_TAG_EMPTY;
     private static ItemStack I1;
     private static ItemStack I2;
     private static ItemStack I1L;
@@ -33,44 +33,39 @@ public class TestIngredientSerializerItemStack {
 
         S = new IngredientSerializerItemStack();
 
-        TAG = new NBTTagCompound();
-        TAG.setBoolean("flag", true);
+        TAG = new CompoundNBT();
+        TAG.putBoolean("flag", true);
 
-        I_TAG1 = new NBTTagCompound();
-        I_TAG1.setString("id", "minecraft:apple");
-        I_TAG1.setByte("Count", (byte) 1);
-        I_TAG1.setShort("Damage", (short) 0);
+        I_TAG1 = new CompoundNBT();
+        I_TAG1.putString("id", "minecraft:apple");
+        I_TAG1.putByte("Count", (byte) 1);
 
-        I_TAG2 = new NBTTagCompound();
-        I_TAG2.setString("id", "minecraft:lead");
-        I_TAG2.setByte("Count", (byte) 2);
-        I_TAG2.setShort("Damage", (short) 3);
-        I_TAG2.setTag("tag", TAG);
+        I_TAG2 = new CompoundNBT();
+        I_TAG2.putString("id", "minecraft:lead");
+        I_TAG2.putByte("Count", (byte) 2);
+        I_TAG2.put("tag", TAG);
 
-        I_TAG1L = new NBTTagCompound();
-        I_TAG1L.setString("id", "minecraft:apple");
-        I_TAG1L.setByte("Count", (byte) 1);
-        I_TAG1L.setShort("Damage", (short) 0);
-        I_TAG1L.setInteger("ExtendedCount", 128);
+        I_TAG1L = new CompoundNBT();
+        I_TAG1L.putString("id", "minecraft:apple");
+        I_TAG1L.putByte("Count", (byte) 1);
+        I_TAG1L.putInt("ExtendedCount", 128);
 
-        I_TAG2L = new NBTTagCompound();
-        I_TAG2L.setString("id", "minecraft:lead");
-        I_TAG2L.setByte("Count", (byte) 1);
-        I_TAG2L.setShort("Damage", (short) 3);
-        I_TAG2L.setTag("tag", TAG);
-        I_TAG2L.setInteger("ExtendedCount", 2000);
+        I_TAG2L = new CompoundNBT();
+        I_TAG2L.putString("id", "minecraft:lead");
+        I_TAG2L.putByte("Count", (byte) 1);
+        I_TAG2L.put("tag", TAG);
+        I_TAG2L.putInt("ExtendedCount", 2000);
 
-        I_TAG_EMPTY = new NBTTagCompound();
-        I_TAG_EMPTY.setString("id", "minecraft:air");
-        I_TAG_EMPTY.setByte("Count", (byte) 1);
-        I_TAG_EMPTY.setShort("Damage", (short) 0);
+        I_TAG_EMPTY = new CompoundNBT();
+        I_TAG_EMPTY.putString("id", "minecraft:air");
+        I_TAG_EMPTY.putByte("Count", (byte) 1);
 
         I1 = new ItemStack(Items.APPLE);
-        I2 = new ItemStack(Items.LEAD, 2, 3);
-        I2.setTagCompound(TAG);
+        I2 = new ItemStack(Items.LEAD, 2);
+        I2.setTag(TAG);
         I1L = new ItemStack(Items.APPLE, 128);
-        I2L = new ItemStack(Items.LEAD, 2000, 3);
-        I2L.setTagCompound(TAG);
+        I2L = new ItemStack(Items.LEAD, 2000);
+        I2L.setTag(TAG);
     }
 
     @Test
@@ -100,22 +95,22 @@ public class TestIngredientSerializerItemStack {
 
     @Test(expected = IllegalArgumentException.class)
     public void deserializeInstanceInvalid() {
-        S.deserializeInstance(new NBTTagString("0"));
+        S.deserializeInstance(new StringNBT("0"));
     }
 
     @Test
     public void serializeCondition() {
-        assertThat(S.serializeCondition(1), is(new NBTTagInt(1)));
+        assertThat(S.serializeCondition(1), is(new IntNBT(1)));
     }
 
     @Test
     public void deserializeCondition() {
-        assertThat(S.deserializeCondition(new NBTTagInt(1)), is(1));
+        assertThat(S.deserializeCondition(new IntNBT(1)), is(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void deserializeConditionInvalid() {
-        S.deserializeCondition(new NBTTagString("0"));
+        S.deserializeCondition(new StringNBT("0"));
     }
 
 }

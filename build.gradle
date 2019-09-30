@@ -9,19 +9,22 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
 plugins {
     // For people who want stable
     //id "net.minecraftforge.gradle.forge" version "2.0.2"
-    id 'com.matthewprenger.cursegradle' version '1.1.0'
-    id 'com.github.kt3k.coveralls' version '2.8.2'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'idea'
+apply plugin: 'maven'
 apply plugin: 'jacoco'
+
+import net.minecraftforge.gradle.common.task.SignJar
 
 loadProperties()
 
@@ -46,23 +49,321 @@ def loadProperties() {
         project.buildnumber = System.getenv().BUILD_NUMBER
     if (System.getenv().TRAVIS_BUILD_NUMBER)
         project.buildnumber = System.getenv().TRAVIS_BUILD_NUMBER
-    if (System.getenv().CI) {
-        //project.buildnumber += "-DEV"
-    }
 
     if (System.getenv().RELEASE || System.getenv().TRAVIS_TAG)
         project.buildnumber = "RELEASE"
     logger.lifecycle "BUILDING VERSION: " + project.buildnumber
 }
 
-apply from: 'gradle/forge.gradle'
-apply from: 'gradle/dev.gradle'
-apply from: 'gradle/deploy.gradle'
+sourceSets {
+    main
+    test
+    test_vanilla_capability_entityitem {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    test_vanilla_capability_inventorystate {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    test_vanilla_capability_itemitemhandler {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    test_vanilla_capability_recipehandler {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    test_vanilla_capability_temperature {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    test_vanilla_capability_worker {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+    test_vanilla_capability_wrench {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
 
-// Mark API directory as source directory in IDEA.
+configurations {
+    test_vanilla_capability_entityitemCompile.extendsFrom(compile)
+    test_vanilla_capability_inventorystateCompile.extendsFrom(compile)
+    test_vanilla_capability_itemitemhandlerCompile.extendsFrom(compile)
+    test_vanilla_capability_recipehandlerCompile.extendsFrom(compile)
+    test_vanilla_capability_temperatureCompile.extendsFrom(compile)
+    test_vanilla_capability_workerCompile.extendsFrom(compile)
+    test_vanilla_capability_wrenchCompile.extendsFrom(compile)
+    javadoc.classpath += sourceSets.test_vanilla_capability_entityitem.output
+    javadoc.classpath += sourceSets.test_vanilla_capability_inventorystate.output
+    javadoc.classpath += sourceSets.test_vanilla_capability_itemitemhandler.output
+    javadoc.classpath += sourceSets.test_vanilla_capability_recipehandler.output
+    javadoc.classpath += sourceSets.test_vanilla_capability_temperature.output
+    javadoc.classpath += sourceSets.test_vanilla_capability_worker.output
+    javadoc.classpath += sourceSets.test_vanilla_capability_wrench.output
+}
+
+repositories {
+    mavenCentral()
+	mavenLocal()
+    maven {
+        name "Cyclops Repo"
+        url "https://oss.jfrog.org/artifactory/simple/libs-release/"
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${config.minecraft_version}-${config.forge_version}"
+
+    // Add something like 'cyclopscore_version_local=0.1.0-DEV' to your gradle.properties if you want to use a custom local CyclopsCore version.
+    if(project.hasProperty("cyclopscore_version_local")) {
+        compile "org.cyclops.cyclopscore:CyclopsCore:${config.minecraft_version}-${project.cyclopscore_version_local}:deobf"
+    } else {
+        compile "org.cyclops.cyclopscore:CyclopsCore:${config.minecraft_version}-${config.cyclopscore_version}:deobf"
+    }
+	
+	// TODO: port mod dependencies once they update
+
+    // Project lombok
+    compileOnly "org.projectlombok:lombok:1.16.4"
+    testCompile "junit:junit:4.12"
+    testCompile "org.mockito:mockito-core:1.+"
+}
+
+minecraft {
+    mappings channel: "${config.mcp_mappings_channel}", version: "${config.mcp_mappings_version}"
+
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            //property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                commoncapabilities {
+                    source sourceSets.main
+                }
+                test_commoncapabilities_vanilla_capability_entityitem {
+                    source sourceSets.test_vanilla_capability_entityitem
+                }
+                test_commoncapabilities_vanilla_capability_inventorystate {
+                    source sourceSets.test_vanilla_capability_inventorystate
+                }
+                test_commoncapabilities_vanilla_capability_itemitemhandler {
+                    source sourceSets.test_vanilla_capability_itemitemhandler
+                }
+                test_commoncapabilities_vanilla_capability_recipehandler {
+                    source sourceSets.test_vanilla_capability_recipehandler
+                }
+                test_commoncapabilities_vanilla_capability_temperature {
+                    source sourceSets.test_vanilla_capability_temperature
+                }
+                test_commoncapabilities_vanilla_capability_worker {
+                    source sourceSets.test_vanilla_capability_worker
+                }
+                test_commoncapabilities_vanilla_capability_wrench {
+                    source sourceSets.test_vanilla_capability_wrench
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                commoncapabilities {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'commoncapabilities', '--all', '--output', file('src/generated/resources/')
+            mods {
+                commoncapabilities {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+if (project.buildnumber.equals("RELEASE"))
+    version = "${config.minecraft_version}-${config.mod_version}"
+else
+    version = "${config.minecraft_version}-${config.mod_version}-${buildnumber}"
+
+jar {
+    manifest {
+        attributes([
+                "FMLAT": "accesstransformer.cfg",
+                "Specification-Title": "${project.name}",
+                "Specification-Vendor": "rubensworks",
+                "Specification-Version": "${config.mod_version}",
+                "Implementation-Title": "${project.name}",
+                "Implementation-Version": "${config.mod_version}",
+                "Implementation-Vendor" :"rubensworks",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+task signJar(type: SignJar, dependsOn: jar) {
+    onlyIf {
+        System.getenv().SIGN_KEYSTORE
+    }
+
+    keyStore = System.getenv().SIGN_KEYSTORE
+    alias = System.getenv().SIGN_ALIAS
+    storePass = System.getenv().SIGN_STOREPASS
+    keyPass = System.getenv().SIGN_KEYPASS
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+build.dependsOn signJar
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
+    manifest {
+        attributes([
+                "FMLAT": "accesstransformer.cfg",
+                "Specification-Title": "${project.name}",
+                "Specification-Vendor": "rubensworks",
+                "Specification-Version": "${config.mod_version}",
+                "Implementation-Title": "${project.name}",
+                "Implementation-Version": "${config.mod_version}",
+                "Implementation-Vendor" :"rubensworks",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+task apiJar(type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.main.java
+    classifier = 'api'
+    include 'commoncapabilities/api/**'
+}
+
+task sourceJar(type: Jar) {
+    classifier = "sources"
+    from sourceSets.main.allJava
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    classifier 'javadoc'
+}
+
+artifacts {
+    archives deobfJar
+	archives apiJar
+    archives sourceJar
+    archives javadocJar
+}
+
+curseforge {
+    if(project.hasProperty("curseforge_key")) {
+        apiKey = project.curseforge_key
+    } else if(System.getenv().TRAVIS && System.getenv().CURSEFORGE_KEY_SECRET) {
+        apiKey = System.getenv().CURSEFORGE_KEY_SECRET
+    }
+
+    project {
+        id = "247007" // my project url is http://minecraft.curseforge.com/mc-mods/247007/
+        releaseType = project.config.release_type
+        mainArtifact(jar) {
+            relations {
+                requiredDependency 'cyclops-core'
+            }
+        }
+
+        changelog = ""
+        if (new File("resources/changelog/${project.version}.txt").exists()) {
+            changelog = new File("resources/changelog/${project.version}.txt").text
+        }
+
+        addArtifact deobfJar
+        addArtifact sourceJar
+        addArtifact javadocJar
+    }
+}
+
+configurations {
+    deployerJars
+}
+
+dependencies {
+    deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
+}
+
+uploadArchives {
+    repositories {
+        add getProject().repositories.mavenLocal()
+    }
+    repositories.mavenDeployer {
+        configuration = configurations.deployerJars
+
+        if (project.hasProperty("filesmaven_url")) {
+            logger.info('Publishing to files server')
+            repository(url: project.filesmaven_url) {
+                authentication(userName: project.filesmaven_username, password: project.filesmaven_key)
+            }
+        } else if (System.getenv().MAVEN_URL) {
+            logger.info('Publishing to files server')
+            repository(url: System.getenv().MAVEN_URL) {
+                authentication(userName: System.getenv().MAVEN_USERNAME, password: System.getenv().MAVEN_KEY)
+            }
+        } else {
+            logger.info('Publishing to repo folder')
+            repository(url: 'file://localhost/' + project.file('~/.m2/repository').getAbsolutePath())
+        }
+
+        pom {
+            groupId = project.group
+            version = project.version
+            artifactId = project.archivesBaseName
+        }
+        pom.project {
+            name project.archivesBaseName
+            packaging 'jar'
+            description 'todo'
+            url 'https://github.com/CyclopsMC/CommonCapabilities'
+
+            scm {
+                url 'https://github.com/CyclopsMC/CommonCapabilities'
+                connection 'scm:git:git://github.com/CyclopsMC/CommonCapabilities.git'
+                developerConnection 'scm:git:git@github.com:CyclopsMC/CommonCapabilities.git'
+            }
+
+            issueManagement {
+                system 'github'
+                url 'https://github.com/CyclopsMC/CommonCapabilities/issues'
+            }
+
+            developers {
+                developer {
+                    id 'rubensworks'
+                    name 'rubensworks'
+                    roles { role 'developer' }
+                }
+            }
+        }
+    }
+}
+
 idea {
     module {
-        sourceDirs += file('src/api/java')
+        for (String excludeDirName in ["run", "out", "logs", "gradle"]) {
+            File excludeDir = new File(projectDir, excludeDirName)
+            excludeDirs.add(excludeDir)
+        }
     }
 }
 
@@ -71,7 +372,10 @@ sourceSets {
     main {
         java {
             exclude '**/modcompat/enderio/**'
+			exclude '**/modcompat/forestry/**'
             exclude '**/modcompat/ic2/**'
+			exclude '**/modcompat/tconstruct/**'
+			exclude '**/modcompat/thermalexpansion/**'
         }
     }
 }

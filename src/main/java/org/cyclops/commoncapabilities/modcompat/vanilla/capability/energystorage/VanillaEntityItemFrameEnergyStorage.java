@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage;
 
-import net.minecraft.entity.item.EntityItemFrame;
+import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -14,7 +14,7 @@ import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntity
  */
 public class VanillaEntityItemFrameEnergyStorage extends VanillaEntityItemFrameCapabilityDelegator<IEnergyStorage> implements IEnergyStorage {
 
-    public VanillaEntityItemFrameEnergyStorage(EntityItemFrame entity, EnumFacing side) {
+    public VanillaEntityItemFrameEnergyStorage(ItemFrameEntity entity, Direction side) {
         super(entity, side);
     }
 
@@ -26,58 +26,55 @@ public class VanillaEntityItemFrameEnergyStorage extends VanillaEntityItemFrameC
     @Override
     public int receiveEnergy(int maxReceive, boolean simulate) {
         ItemStack itemStack = getItemStack();
-        IEnergyStorage energyStorage = getCapability(itemStack);
-        if (energyStorage != null) {
-            int ret = energyStorage.receiveEnergy(maxReceive, simulate);
-            if (!simulate && ret > 0) {
-                updateItemStack(itemStack);
-            }
-            return ret;
-        }
-        return 0;
+        return getCapability(itemStack)
+                .map(energyStorage -> {
+                    int ret = energyStorage.receiveEnergy(maxReceive, simulate);
+                    if (!simulate && ret > 0) {
+                        updateItemStack(itemStack);
+                    }
+                    return ret;
+                })
+                .orElse(0);
     }
 
     @Override
     public int extractEnergy(int maxExtract, boolean simulate) {
         ItemStack itemStack = getItemStack();
-        IEnergyStorage energyStorage = getCapability(itemStack);
-        if (energyStorage != null) {
-            int ret = energyStorage.extractEnergy(maxExtract, simulate);
-            if (!simulate && ret > 0) {
-                updateItemStack(itemStack);
-            }
-            return ret;
-        }
-        return 0;
+        return getCapability(itemStack)
+                .map(energyStorage -> {
+                    int ret = energyStorage.extractEnergy(maxExtract, simulate);
+                    if (!simulate && ret > 0) {
+                        updateItemStack(itemStack);
+                    }
+                    return ret;
+                }).orElse(0);
     }
 
     @Override
     public int getEnergyStored() {
-        IEnergyStorage energyStorage = getCapability();
-        if (energyStorage != null) {
-            return energyStorage.getEnergyStored();
-        }
-        return 0;
+        return getCapability()
+                .map(IEnergyStorage::getEnergyStored)
+                .orElse(0);
     }
 
     @Override
     public int getMaxEnergyStored() {
-        IEnergyStorage energyStorage = getCapability();
-        if (energyStorage != null) {
-            return energyStorage.getMaxEnergyStored();
-        }
-        return 0;
+        return getCapability()
+                .map(IEnergyStorage::getMaxEnergyStored)
+                .orElse(0);
     }
 
     @Override
     public boolean canExtract() {
-        IEnergyStorage energyStorage = getCapability();
-        return energyStorage != null && energyStorage.canExtract();
+        return getCapability()
+                .map(IEnergyStorage::canExtract)
+                .orElse(false);
     }
 
     @Override
     public boolean canReceive() {
-        IEnergyStorage energyStorage = getCapability();
-        return energyStorage != null && energyStorage.canReceive();
+        return getCapability()
+                .map(IEnergyStorage::canReceive)
+                .orElse(false);
     }
 }

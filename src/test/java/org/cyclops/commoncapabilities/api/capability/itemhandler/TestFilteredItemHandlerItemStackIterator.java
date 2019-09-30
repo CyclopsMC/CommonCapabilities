@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities.api.capability.itemhandler;
 
-import net.minecraft.init.Bootstrap;
-import net.minecraft.init.Items;
+import net.minecraft.item.Items;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;
@@ -28,7 +28,7 @@ public class TestFilteredItemHandlerItemStackIterator {
         HANDLER = new ImmutableListItemHandler(NonNullList.from(ItemStack.EMPTY,
                 new ItemStack(Items.APPLE),
                 new ItemStack(Items.LEAD),
-                new ItemStack(Items.LEAD, 10, 10),
+                new ItemStack(Items.LEAD, 10),
                 new ItemStack(Items.BOWL)
         ));
     }
@@ -87,7 +87,7 @@ public class TestFilteredItemHandlerItemStackIterator {
 
     @Test
     public void testNonEmptyLeadExact() {
-        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.LEAD, 10, 10), ItemMatch.EXACT);
+        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.LEAD, 10), ItemMatch.EXACT);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.LEAD));
         assertThat(it.hasNext(), is(false));
@@ -95,7 +95,7 @@ public class TestFilteredItemHandlerItemStackIterator {
 
     @Test(expected = NoSuchElementException.class)
     public void testNonEmptyLeadExactOutOfRange() {
-        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.LEAD, 10, 10), ItemMatch.EXACT);
+        Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.LEAD, 10), ItemMatch.EXACT);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.LEAD));
         assertThat(it.hasNext(), is(false));

@@ -1,14 +1,10 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import com.google.common.collect.Maps;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.fluid.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.cyclopscore.helper.Helpers;
-
-import java.util.Map;
 
 /**
  * Matcher for FluidStacks.
@@ -16,11 +12,9 @@ import java.util.Map;
  */
 public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStack, Integer> {
 
-    private static final Map<Fluid, Integer> FLUID_ID_CACHE = Maps.newIdentityHashMap();
-
     @Override
     public boolean isInstance(Object object) {
-        return object == null || object instanceof FluidStack;
+        return object instanceof FluidStack;
     }
 
     @Override
@@ -60,52 +54,49 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
 
     @Override
     public FluidStack getEmptyInstance() {
-        return null;
+        return FluidStack.EMPTY;
     }
 
     @Override
     public int hash(FluidStack instance) {
-        if (instance == null) {
+        if (instance.isEmpty()) {
             return 0;
         }
 
         int code = 1;
         code = 31 * code + instance.getFluid().hashCode();
-        code = 31 * code + instance.amount;
-        if (instance.tag != null)
-            code = 31 * code + instance.tag.hashCode();
+        code = 31 * code + instance.getAmount();
+        if (instance.getTag() != null)
+            code = 31 * code + instance.getTag().hashCode();
         return code;
     }
 
     @Override
     public FluidStack copy(FluidStack instance) {
-        if (instance == null) {
-            return null;
+        if (instance.isEmpty()) {
+            return getEmptyInstance();
         }
         return instance.copy();
     }
 
     @Override
     public long getQuantity(FluidStack instance) {
-        if (instance == null) {
-            return 0;
-        }
-        return instance.amount;
+        return instance.getAmount();
     }
 
     @Override
     public FluidStack withQuantity(FluidStack instance, long quantity) {
         if (quantity == 0) {
-            return null;
+            return getEmptyInstance();
         }
-        if (instance == null) {
-            return new FluidStack(FluidRegistry.WATER, Helpers.castSafe(quantity));
+        if (instance.isEmpty()) {
+            return new FluidStack(Fluids.WATER, Helpers.castSafe(quantity));
         }
-        if (instance.amount == quantity) {
+        if (instance.getAmount() == quantity) {
             return instance;
         }
         FluidStack copy = instance.copy();
-        copy.amount = Helpers.castSafe(quantity);
+        copy.setAmount(Helpers.castSafe(quantity));
         return copy;
     }
 
@@ -121,35 +112,26 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
 
     @Override
     public String localize(FluidStack instance) {
-        return instance.getLocalizedName();
+        return instance.getDisplayName().getString();
     }
 
     @Override
     public int compare(FluidStack o1, FluidStack o2) {
-        if (o1 == null) {
-            if (o2 == null) {
+        if (o1.isEmpty()) {
+            if (o2.isEmpty()) {
                 return 0;
             } else {
                 return -1;
             }
-        } else if (o2 == null) {
+        } else if (o2.isEmpty()) {
             return 1;
         } else if (o1.getFluid() == o2.getFluid()) {
-            if (o1.amount == o2.amount) {
-                return IngredientHelpers.compareTags(o1.tag, o2.tag);
+            if (o1.getAmount() == o2.getAmount()) {
+                return IngredientHelpers.compareTags(o1.getTag(), o2.getTag());
             }
-            return o1.amount - o2.amount;
+            return o1.getAmount() - o2.getAmount();
         }
-        return getFluidId(o1.getFluid()) - getFluidId(o2.getFluid());
+        return o1.getFluid().getRegistryName().compareTo(o2.getFluid().getRegistryName());
     }
 
-    @SuppressWarnings("deprecation")
-    public static int getFluidId(Fluid fluid) {
-        // Lazy map initialization
-        if (FLUID_ID_CACHE.isEmpty()) {
-            FLUID_ID_CACHE.putAll(FluidRegistry.getRegisteredFluidIDs());
-        }
-
-        return FLUID_ID_CACHE.getOrDefault(fluid, -1);
-    }
 }

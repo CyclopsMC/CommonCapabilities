@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.IntNBT;
 import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 
@@ -12,28 +12,28 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
  */
 public class IngredientSerializerFluidStack implements IIngredientSerializer<FluidStack, Integer> {
     @Override
-    public NBTBase serializeInstance(FluidStack instance) {
-        return instance == null ? new NBTTagCompound() : instance.writeToNBT(new NBTTagCompound());
+    public INBT serializeInstance(FluidStack instance) {
+        return instance.isEmpty() ? new CompoundNBT() : instance.writeToNBT(new CompoundNBT());
     }
 
     @Override
-    public FluidStack deserializeInstance(NBTBase tag) throws IllegalArgumentException {
-        if (!(tag instanceof NBTTagCompound)) {
+    public FluidStack deserializeInstance(INBT tag) throws IllegalArgumentException {
+        if (!(tag instanceof CompoundNBT)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagCompound");
         }
-        return FluidStack.loadFluidStackFromNBT((NBTTagCompound) tag);
+        return FluidStack.loadFluidStackFromNBT((CompoundNBT) tag);
     }
 
     @Override
-    public NBTBase serializeCondition(Integer matchCondition) {
-        return new NBTTagInt(matchCondition);
+    public INBT serializeCondition(Integer matchCondition) {
+        return new IntNBT(matchCondition);
     }
 
     @Override
-    public Integer deserializeCondition(NBTBase tag) throws IllegalArgumentException {
-        if (!(tag instanceof NBTTagInt)) {
+    public Integer deserializeCondition(INBT tag) throws IllegalArgumentException {
+        if (!(tag instanceof IntNBT)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagInt");
         }
-        return ((NBTTagInt) tag).getInt();
+        return ((IntNBT) tag).getInt();
     }
 }

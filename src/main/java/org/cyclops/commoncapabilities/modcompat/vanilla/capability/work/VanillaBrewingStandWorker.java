@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.work;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityBrewingStand;
+import net.minecraft.tileentity.BrewingStandTileEntity;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
@@ -13,9 +13,9 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 public class VanillaBrewingStandWorker implements IWorker {
     private static final int[] outputSlots = new int[] {0, 1, 2};
     
-    private final TileEntityBrewingStand brewingStand;
+    private final BrewingStandTileEntity brewingStand;
 
-    public VanillaBrewingStandWorker(TileEntityBrewingStand brewingStand) {
+    public VanillaBrewingStandWorker(BrewingStandTileEntity brewingStand) {
         this.brewingStand = brewingStand;
     }
 
@@ -30,6 +30,6 @@ public class VanillaBrewingStandWorker implements IWorker {
 
     @Override
     public boolean canWork() {
-        return brewingStand.getField(1) > 0;
+        return brewingStand.fuel > 0;
     }
 }

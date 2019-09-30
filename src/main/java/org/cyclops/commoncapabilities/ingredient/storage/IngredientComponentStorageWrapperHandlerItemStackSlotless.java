@@ -1,8 +1,9 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ISlotlessItemHandler;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
@@ -38,9 +39,8 @@ public class IngredientComponentStorageWrapperHandlerItemStackSlotless
         return new ItemStorageWrapper(getComponent(), componentStorage);
     }
 
-    @Nullable
     @Override
-    public ISlotlessItemHandler getStorage(ICapabilityProvider capabilityProvider, @Nullable EnumFacing facing) {
+    public LazyOptional<ISlotlessItemHandler> getStorage(ICapabilityProvider capabilityProvider, @Nullable Direction facing) {
         return capabilityProvider.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
     }
 

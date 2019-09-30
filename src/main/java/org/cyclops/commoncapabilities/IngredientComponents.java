@@ -1,12 +1,12 @@
 package org.cyclops.commoncapabilities;
 
 import com.google.common.collect.Lists;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -40,12 +40,10 @@ public class IngredientComponents {
                     new IngredientSerializerItemStack(), Lists.newArrayList(
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/item"),
                             Item.class, true,ItemStack::getItem, ItemMatch.ITEM, false),
-                    new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/metadata"),
-                            Integer.class, false, ItemStack::getMetadata, ItemMatch.DAMAGE, false),
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/count"),
                             Integer.class, false, ItemStack::getCount, ItemMatch.STACKSIZE, true),
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/tag"),
-                            NBTTagCompound.class, false, ItemStack::getTagCompound, ItemMatch.NBT, false)
+                            CompoundNBT.class, false, ItemStack::getTag, ItemMatch.NBT, false)
             )).setTranslationKey("recipecomponent.minecraft.itemstack");
 
     public static final IngredientComponent<FluidStack, Integer> FLUIDSTACK =
@@ -54,9 +52,9 @@ public class IngredientComponents {
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/fluid"),
                             Fluid.class, true, FluidStack::getFluid, FluidMatch.FLUID, false),
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/amount"),
-                            Integer.class, false, fluidStack -> fluidStack.amount, FluidMatch.AMOUNT, true),
+                            Integer.class, false, FluidStack::getAmount, FluidMatch.AMOUNT, true),
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/tag"),
-                            NBTTagCompound.class, false, fluidStack -> fluidStack.tag, FluidMatch.NBT, false)
+                            CompoundNBT.class, false, FluidStack::getTag, FluidMatch.NBT, false)
             )).setTranslationKey("recipecomponent.minecraft.fluidstack");
 
     public static final IngredientComponent<Integer, Boolean> ENERGY =

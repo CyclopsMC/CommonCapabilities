@@ -15,26 +15,18 @@ import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityStorage;
  */
 public class TemperatureConfig extends CapabilityConfig<ITemperature> {
 
-    /**
-     * The unique instance.
-     */
     public static TemperatureConfig _instance;
 
     @CapabilityInject(ITemperature.class)
     public static Capability<ITemperature> CAPABILITY = null;
 
-    /**
-     * Make a new instance.
-     */
     public TemperatureConfig() {
         super(
                 CommonCapabilities._instance,
-                true,
                 "temperature",
-                "Indicates if something has a temperature",
                 ITemperature.class,
                 new DefaultCapabilityStorage<ITemperature>(),
-                DefaultTemperature.class
+                DefaultTemperature::new
         );
     }
 }

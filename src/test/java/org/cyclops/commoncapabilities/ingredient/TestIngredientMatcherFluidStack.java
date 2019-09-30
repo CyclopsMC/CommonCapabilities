@@ -1,15 +1,14 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.init.Bootstrap;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientMatcherFluidStack {
@@ -35,30 +34,30 @@ public class TestIngredientMatcherFluidStack {
 
         M = new IngredientMatcherFluidStack();
 
-        NBTTagCompound tag1 = new NBTTagCompound();
-        tag1.setInteger("key", 1);
+        CompoundNBT tag1 = new CompoundNBT();
+        tag1.putInt("key", 1);
 
-        NBTTagCompound tag2 = new NBTTagCompound();
-        tag2.setInteger("key", 2);
+        CompoundNBT tag2 = new CompoundNBT();
+        tag2.putInt("key", 2);
 
-        W_1 = new FluidStack(FluidRegistry.WATER, 1);
-        W_100 = new FluidStack(FluidRegistry.WATER, 100);
-        W_123 = new FluidStack(FluidRegistry.WATER, 123);
-        W_2 = new FluidStack(FluidRegistry.WATER, 2);
-        W_1_T1 = new FluidStack(FluidRegistry.WATER, 1, tag1);
-        W_2_T1 = new FluidStack(FluidRegistry.WATER, 2, tag1);
-        W_1_T2 = new FluidStack(FluidRegistry.WATER, 1, tag2);
-        W_2_T2 = new FluidStack(FluidRegistry.WATER, 2, tag2);
+        W_1 = new FluidStack(Fluids.WATER, 1);
+        W_100 = new FluidStack(Fluids.WATER, 100);
+        W_123 = new FluidStack(Fluids.WATER, 123);
+        W_2 = new FluidStack(Fluids.WATER, 2);
+        W_1_T1 = new FluidStack(Fluids.WATER, 1, tag1);
+        W_2_T1 = new FluidStack(Fluids.WATER, 2, tag1);
+        W_1_T2 = new FluidStack(Fluids.WATER, 1, tag2);
+        W_2_T2 = new FluidStack(Fluids.WATER, 2, tag2);
 
-        L_1 = new FluidStack(FluidRegistry.LAVA, 1);
-        L_1_T1 = new FluidStack(FluidRegistry.LAVA, 1, tag1);
+        L_1 = new FluidStack(Fluids.LAVA, 1);
+        L_1_T1 = new FluidStack(Fluids.LAVA, 1, tag1);
     }
 
     @Test
     public void testInstance() {
         assertThat(M.isInstance("a"), is(false));
         assertThat(M.isInstance(W_1), is(true));
-        assertThat(M.isInstance(null), is(true));
+        assertThat(M.isInstance(FluidStack.EMPTY), is(true));
     }
 
     @Test
@@ -117,13 +116,13 @@ public class TestIngredientMatcherFluidStack {
 
     @Test
     public void testMatches() {
-        assertThat(M.matches(null, null, FluidMatch.EXACT), is(true));
-        assertThat(M.matches(W_1, null, FluidMatch.EXACT), is(false));
-        assertThat(M.matches(null, W_1, FluidMatch.EXACT), is(false));
+        assertThat(M.matches(FluidStack.EMPTY, FluidStack.EMPTY, FluidMatch.EXACT), is(true));
+        assertThat(M.matches(W_1, FluidStack.EMPTY, FluidMatch.EXACT), is(false));
+        assertThat(M.matches(FluidStack.EMPTY, W_1, FluidMatch.EXACT), is(false));
 
-        assertThat(M.matches(null, null, FluidMatch.ANY), is(true));
-        assertThat(M.matches(W_1, null, FluidMatch.ANY), is(true));
-        assertThat(M.matches(null, W_1, FluidMatch.ANY), is(true));
+        assertThat(M.matches(FluidStack.EMPTY, FluidStack.EMPTY, FluidMatch.ANY), is(true));
+        assertThat(M.matches(W_1, FluidStack.EMPTY, FluidMatch.ANY), is(true));
+        assertThat(M.matches(FluidStack.EMPTY, W_1, FluidMatch.ANY), is(true));
 
         assertThat(M.matches(W_1, W_1, FluidMatch.EXACT), is(true));
         assertThat(M.matches(W_1, W_2, FluidMatch.EXACT), is(false));
@@ -200,9 +199,9 @@ public class TestIngredientMatcherFluidStack {
 
     @Test
     public void testMatchesExactly() {
-        assertThat(M.matchesExactly(null, null), is(true));
-        assertThat(M.matchesExactly(W_1, null), is(false));
-        assertThat(M.matchesExactly(null, W_1), is(false));
+        assertThat(M.matchesExactly(FluidStack.EMPTY, FluidStack.EMPTY), is(true));
+        assertThat(M.matchesExactly(W_1, FluidStack.EMPTY), is(false));
+        assertThat(M.matchesExactly(FluidStack.EMPTY, W_1), is(false));
 
         assertThat(M.matchesExactly(W_1, W_1), is(true));
         assertThat(M.matchesExactly(W_1, W_2), is(false));
@@ -216,32 +215,32 @@ public class TestIngredientMatcherFluidStack {
 
     @Test
     public void testEmpty() {
-        assertThat(M.getEmptyInstance(), nullValue());
+        assertThat(M.getEmptyInstance(), is(FluidStack.EMPTY));
     }
 
     @Test
     public void testIsEmpty() {
         assertThat(M.isEmpty(W_1), is(false));
-        assertThat(M.isEmpty(null), is(true));
+        assertThat(M.isEmpty(FluidStack.EMPTY), is(true));
     }
 
     @Test
     public void testHash() {
         assertThat(M.hash(W_1), is(M.hash(W_1.copy())));
-        assertThat(M.hash(null), is(0));
+        assertThat(M.hash(FluidStack.EMPTY), is(0));
     }
 
     @Test
     public void testCopy() {
         assertThat(M.matchesExactly(M.copy(W_1), W_1), is(true));
-        assertThat(M.matchesExactly(M.copy(null), null), is(true));
+        assertThat(M.matchesExactly(M.copy(FluidStack.EMPTY), FluidStack.EMPTY), is(true));
     }
 
     @Test
     public void testCompare() {
-        assertThat(M.compare(W_1, null), is(1));
-        assertThat(M.compare(null, null), is(0));
-        assertThat(M.compare(null, W_1), is(-1));
+        assertThat(M.compare(W_1, FluidStack.EMPTY), is(1));
+        assertThat(M.compare(FluidStack.EMPTY, FluidStack.EMPTY), is(0));
+        assertThat(M.compare(FluidStack.EMPTY, W_1), is(-1));
 
         assertThat(M.compare(W_1, W_1), is(0));
         assertThat(M.compare(W_1, W_1_T1), is(-1));
@@ -249,8 +248,8 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.compare(W_1, W_2), is(-1));
         assertThat(M.compare(W_1, W_2_T1), is(-1));
         assertThat(M.compare(W_1, W_2_T2), is(-1));
-        assertThat(M.compare(W_1, L_1), is(-1));
-        assertThat(M.compare(W_1, L_1_T1), is(-1));
+        assertThat(M.compare(W_1, L_1), is(11));
+        assertThat(M.compare(W_1, L_1_T1), is(11));
 
         assertThat(M.compare(W_1_T1, W_1), is(1));
         assertThat(M.compare(W_1_T1, W_1_T1), is(0));
@@ -258,8 +257,8 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.compare(W_1_T1, W_2), is(-1));
         assertThat(M.compare(W_1_T1, W_2_T1), is(-1));
         assertThat(M.compare(W_1_T1, W_2_T2), is(-1));
-        assertThat(M.compare(W_1_T1, L_1), is(-1));
-        assertThat(M.compare(W_1_T1, L_1_T1), is(-1));
+        assertThat(M.compare(W_1_T1, L_1), is(11));
+        assertThat(M.compare(W_1_T1, L_1_T1), is(11));
 
         assertThat(M.compare(W_1_T2, W_1), is(1));
         assertThat(M.compare(W_1_T2, W_1_T1), is(1));
@@ -267,8 +266,8 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.compare(W_1_T2, W_2), is(-1));
         assertThat(M.compare(W_1_T2, W_2_T1), is(-1));
         assertThat(M.compare(W_1_T2, W_2_T2), is(-1));
-        assertThat(M.compare(W_1_T2, L_1), is(-1));
-        assertThat(M.compare(W_1_T2, L_1_T1), is(-1));
+        assertThat(M.compare(W_1_T2, L_1), is(11));
+        assertThat(M.compare(W_1_T2, L_1_T1), is(11));
 
         assertThat(M.compare(W_2, W_1), is(1));
         assertThat(M.compare(W_2, W_1_T1), is(1));
@@ -276,8 +275,8 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.compare(W_2, W_2), is(0));
         assertThat(M.compare(W_2, W_2_T1), is(-1));
         assertThat(M.compare(W_2, W_2_T2), is(-1));
-        assertThat(M.compare(W_2, L_1), is(-1));
-        assertThat(M.compare(W_2, L_1_T1), is(-1));
+        assertThat(M.compare(W_2, L_1), is(11));
+        assertThat(M.compare(W_2, L_1_T1), is(11));
 
         assertThat(M.compare(W_2_T1, W_1), is(1));
         assertThat(M.compare(W_2_T1, W_1_T1), is(1));
@@ -285,8 +284,8 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.compare(W_2_T1, W_2), is(1));
         assertThat(M.compare(W_2_T1, W_2_T1), is(0));
         assertThat(M.compare(W_2_T1, W_2_T2), is(-1));
-        assertThat(M.compare(W_2_T1, L_1), is(-1));
-        assertThat(M.compare(W_2_T1, L_1_T1), is(-1));
+        assertThat(M.compare(W_2_T1, L_1), is(11));
+        assertThat(M.compare(W_2_T1, L_1_T1), is(11));
 
         assertThat(M.compare(W_2_T2, W_1), is(1));
         assertThat(M.compare(W_2_T2, W_1_T1), is(1));
@@ -294,24 +293,24 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.compare(W_2_T2, W_2), is(1));
         assertThat(M.compare(W_2_T2, W_2_T1), is(1));
         assertThat(M.compare(W_2_T2, W_2_T2), is(0));
-        assertThat(M.compare(W_2_T2, L_1), is(-1));
-        assertThat(M.compare(W_2_T2, L_1_T1), is(-1));
+        assertThat(M.compare(W_2_T2, L_1), is(11));
+        assertThat(M.compare(W_2_T2, L_1_T1), is(11));
 
-        assertThat(M.compare(L_1, W_1), is(1));
-        assertThat(M.compare(L_1, W_1_T1), is(1));
-        assertThat(M.compare(L_1, W_1_T2), is(1));
-        assertThat(M.compare(L_1, W_2), is(1));
-        assertThat(M.compare(L_1, W_2_T1), is(1));
-        assertThat(M.compare(L_1, W_2_T2), is(1));
+        assertThat(M.compare(L_1, W_1), is(-11));
+        assertThat(M.compare(L_1, W_1_T1), is(-11));
+        assertThat(M.compare(L_1, W_1_T2), is(-11));
+        assertThat(M.compare(L_1, W_2), is(-11));
+        assertThat(M.compare(L_1, W_2_T1), is(-11));
+        assertThat(M.compare(L_1, W_2_T2), is(-11));
         assertThat(M.compare(L_1, L_1), is(0));
         assertThat(M.compare(L_1, L_1_T1), is(-1));
 
-        assertThat(M.compare(L_1_T1, W_1), is(1));
-        assertThat(M.compare(L_1_T1, W_1_T1), is(1));
-        assertThat(M.compare(L_1_T1, W_1_T2), is(1));
-        assertThat(M.compare(L_1_T1, W_2), is(1));
-        assertThat(M.compare(L_1_T1, W_2_T1), is(1));
-        assertThat(M.compare(L_1_T1, W_2_T2), is(1));
+        assertThat(M.compare(L_1_T1, W_1), is(-11));
+        assertThat(M.compare(L_1_T1, W_1_T1), is(-11));
+        assertThat(M.compare(L_1_T1, W_1_T2), is(-11));
+        assertThat(M.compare(L_1_T1, W_2), is(-11));
+        assertThat(M.compare(L_1_T1, W_2_T1), is(-11));
+        assertThat(M.compare(L_1_T1, W_2_T2), is(-11));
         assertThat(M.compare(L_1_T1, L_1), is(1));
         assertThat(M.compare(L_1_T1, L_1_T1), is(0));
     }
@@ -320,16 +319,16 @@ public class TestIngredientMatcherFluidStack {
     public void testGetQuantity() {
         assertThat(M.getQuantity(W_1), is(1L));
         assertThat(M.getQuantity(W_2), is(2L));
-        assertThat(M.getQuantity(null), is(0L));
+        assertThat(M.getQuantity(FluidStack.EMPTY), is(0L));
     }
 
     @Test
     public void testSetQuantity() {
         assertThat(M.matchesExactly(M.withQuantity(W_1, 100L), W_100), is(true));
         assertThat(M.matchesExactly(M.withQuantity(W_1, 123L), W_123), is(true));
-        assertThat(M.matchesExactly(M.withQuantity(null, 123L), W_123), is(true));
-        assertThat(M.matchesExactly(M.withQuantity(null, 0L), null), is(true));
-        assertThat(M.matchesExactly(M.withQuantity(W_1, 0L), null), is(true));
+        assertThat(M.matchesExactly(M.withQuantity(FluidStack.EMPTY, 123L), W_123), is(true));
+        assertThat(M.matchesExactly(M.withQuantity(FluidStack.EMPTY, 0L), FluidStack.EMPTY), is(true));
+        assertThat(M.matchesExactly(M.withQuantity(W_1, 0L), FluidStack.EMPTY), is(true));
     }
 
     @Test

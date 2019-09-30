@@ -1,11 +1,10 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability;
 
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-
-import javax.annotation.Nullable;
+import net.minecraftforge.common.util.LazyOptional;
 
 /**
  * An abstract capability capability delegator from entity item to inner itemstack.
@@ -14,19 +13,19 @@ import javax.annotation.Nullable;
  */
 public abstract class VanillaEntityItemCapabilityDelegator<C> {
 
-    private final EntityItem entity;
-    private final EnumFacing side;
+    private final ItemEntity entity;
+    private final Direction side;
 
-    public VanillaEntityItemCapabilityDelegator(EntityItem entity, EnumFacing side) {
+    public VanillaEntityItemCapabilityDelegator(ItemEntity entity, Direction side) {
         this.entity = entity;
         this.side = side;
     }
 
-    public EntityItem getEntity() {
+    public ItemEntity getEntity() {
         return entity;
     }
 
-    public EnumFacing getSide() {
+    public Direction getSide() {
         return side;
     }
 
@@ -40,16 +39,11 @@ public abstract class VanillaEntityItemCapabilityDelegator<C> {
 
     protected abstract Capability<C> getCapabilityType();
 
-    @Nullable
-    protected C getCapability(ItemStack itemStack) {
-        if (itemStack.hasCapability(getCapabilityType(), getSide())) {
-            return itemStack.getCapability(getCapabilityType(), getSide());
-        }
-        return null;
+    protected LazyOptional<C> getCapability(ItemStack itemStack) {
+        return itemStack.getCapability(getCapabilityType(), getSide());
     }
 
-    @Nullable
-    protected C getCapability() {
+    protected LazyOptional<C> getCapability() {
         return getCapability(getItemStack());
     }
 }

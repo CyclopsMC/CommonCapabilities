@@ -2,7 +2,7 @@ package org.cyclops.commoncapabilities.ingredient;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.IntNBT;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -18,9 +18,9 @@ public class TestIngredientHelpers {
     @Test
     public void testCompareTags() {
         assertThat(compareTags(null, null), is(0));
-        assertThat(compareTags(null, new NBTTagInt(0)), is(-1));
-        assertThat(compareTags(new NBTTagInt(0), null), is(1));
-        assertThat(compareTags(new NBTTagInt(0), new NBTTagInt(0)), is(0));
+        assertThat(compareTags(null, new IntNBT(0)), is(-1));
+        assertThat(compareTags(new IntNBT(0), null), is(1));
+        assertThat(compareTags(new IntNBT(0), new IntNBT(0)), is(0));
     }
 
     @Test

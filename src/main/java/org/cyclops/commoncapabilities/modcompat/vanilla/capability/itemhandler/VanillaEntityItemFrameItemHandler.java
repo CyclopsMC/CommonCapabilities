@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler;
 
-import net.minecraft.entity.item.EntityItemFrame;
+import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -16,7 +16,7 @@ import javax.annotation.Nonnull;
  */
 public class VanillaEntityItemFrameItemHandler extends VanillaEntityItemFrameCapabilityDelegator<IItemHandler> implements IItemHandler {
 
-    public VanillaEntityItemFrameItemHandler(EntityItemFrame entity, EnumFacing side) {
+    public VanillaEntityItemFrameItemHandler(ItemFrameEntity entity, Direction side) {
         super(entity, side);
     }
 
@@ -27,59 +27,60 @@ public class VanillaEntityItemFrameItemHandler extends VanillaEntityItemFrameCap
 
     @Override
     public int getSlots() {
-        IItemHandler itemHandler = getCapability();
-        if (itemHandler != null) {
-            return itemHandler.getSlots();
-        }
-        return 0;
+        return getCapability()
+                .map(IItemHandler::getSlots)
+                .orElse(0);
     }
 
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int slot) {
-        IItemHandler itemHandler = getCapability();
-        if (itemHandler != null) {
-            return itemHandler.getStackInSlot(slot);
-        }
-        return ItemStack.EMPTY;
+        return getCapability()
+                .map(itemHandler -> itemHandler.getStackInSlot(slot))
+                .orElse(ItemStack.EMPTY);
     }
 
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        ItemStack innerStack = getItemStack();
-        IItemHandler itemHandler = getCapability(innerStack);
-        if (itemHandler != null) {
-            ItemStack ret = itemHandler.insertItem(slot, stack, simulate);
-            if (stack.getCount() != ret.getCount() && !simulate) {
-                updateItemStack(innerStack);
-            }
-            return ret;
-        }
-        return stack;
+        return getCapability()
+                .map(itemHandler -> {
+                    ItemStack innerStack = getItemStack();
+                    ItemStack ret = itemHandler.insertItem(slot, stack, simulate);
+                    if (stack.getCount() != ret.getCount() && !simulate) {
+                        updateItemStack(innerStack);
+                    }
+                    return ret;
+                })
+                .orElse(ItemStack.EMPTY);
     }
 
     @Nonnull
     @Override
     public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        ItemStack innerStack = getItemStack();
-        IItemHandler itemHandler = getCapability(innerStack);
-        if (itemHandler != null) {
-            ItemStack ret = itemHandler.extractItem(slot, amount, simulate);
-            if (!ret.isEmpty() && !simulate) {
-                updateItemStack(innerStack);
-            }
-            return ret;
-        }
-        return ItemStack.EMPTY;
+        return getCapability()
+                .map(itemHandler -> {
+                    ItemStack innerStack = getItemStack();
+                    ItemStack ret = itemHandler.extractItem(slot, amount, simulate);
+                    if (!ret.isEmpty() && !simulate) {
+                        updateItemStack(innerStack);
+                    }
+                    return ret;
+                })
+                .orElse(ItemStack.EMPTY);
     }
 
     @Override
     public int getSlotLimit(int slot) {
-        IItemHandler itemHandler = getCapability();
-        if (itemHandler != null) {
-            return itemHandler.getSlotLimit(slot);
-        }
-        return 0;
+        return getCapability()
+                .map(itemHandler -> itemHandler.getSlotLimit(slot))
+                .orElse(0);
+    }
+
+    @Override
+    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+        return getCapability()
+                .map(itemHandler -> itemHandler.isItemValid(slot, stack))
+                .orElse(false);
     }
 }

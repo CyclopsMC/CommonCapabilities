@@ -1,8 +1,9 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
 import com.google.common.collect.Iterators;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
@@ -41,7 +42,7 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage implements
 
     @Nullable
     @Override
-    public IEnergyStorage getStorage(ICapabilityProvider capabilityProvider, @Nullable EnumFacing facing) {
+    public LazyOptional<IEnergyStorage> getStorage(ICapabilityProvider capabilityProvider, @Nullable Direction facing) {
         return capabilityProvider.getCapability(CapabilityEnergy.ENERGY, facing);
     }
 

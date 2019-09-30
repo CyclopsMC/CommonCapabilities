@@ -15,26 +15,16 @@ import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityStorage;
  */
 public class WorkerConfig extends CapabilityConfig<IWorker> {
 
-    /**
-     * The unique instance.
-     */
-    public static WorkerConfig _instance;
-
     @CapabilityInject(IWorker.class)
     public static Capability<IWorker> CAPABILITY = null;
 
-    /**
-     * Make a new instance.
-     */
     public WorkerConfig() {
         super(
                 CommonCapabilities._instance,
-                true,
                 "worker",
-                "Indication if a machine is working",
                 IWorker.class,
                 new DefaultCapabilityStorage<IWorker>(),
-                DefaultWorker.class
+                DefaultWorker::new
         );
     }
 }

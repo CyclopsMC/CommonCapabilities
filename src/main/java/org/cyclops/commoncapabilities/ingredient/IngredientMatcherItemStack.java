@@ -29,7 +29,7 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
 
     @Override
     public Integer getExactMatchNoQuantityCondition() {
-        return ItemMatch.ITEM | ItemMatch.DAMAGE | ItemMatch.NBT;
+        return ItemMatch.ITEM | ItemMatch.NBT;
     }
 
     @Override
@@ -99,7 +99,7 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
 
     @Override
     public String localize(ItemStack instance) {
-        return instance.getDisplayName();
+        return instance.getDisplayName().getString();
     }
 
     @Override
@@ -113,17 +113,12 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
         } else if (o2.isEmpty()) {
             return 1;
         } else if (o1.getItem() == o2.getItem()) {
-            int m1 = o1.getMetadata();
-            int m2 = o2.getMetadata();
-            if (m1 == m2) {
-                int c1 = o1.getCount();
-                int c2 = o2.getCount();
-                if (c1 == c2) {
-                    return IngredientHelpers.compareTags(o1.getTagCompound(), o2.getTagCompound());
-                }
-                return c1 - c2;
+            int c1 = o1.getCount();
+            int c2 = o2.getCount();
+            if (c1 == c2) {
+                return IngredientHelpers.compareTags(o1.getTag(), o2.getTag());
             }
-            return m1 - m2;
+            return c1 - c2;
         }
         return Item.getIdFromItem(o1.getItem()) - Item.getIdFromItem(o2.getItem());
     }

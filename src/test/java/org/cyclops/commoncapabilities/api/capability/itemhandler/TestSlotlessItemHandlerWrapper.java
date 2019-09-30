@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities.api.capability.itemhandler;
 
-import net.minecraft.init.Bootstrap;
-import net.minecraft.init.Items;
+import net.minecraft.item.Items;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.items.IItemHandler;

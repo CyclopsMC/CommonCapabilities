@@ -1,6 +1,6 @@
 package org.cyclops.commoncapabilities.core;
 
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
@@ -37,17 +37,17 @@ public class Helpers {
 
     public static <E> Method getMethod(Class<? super E> clazz, String method, Class<?>... methodTypes) {
         try {
-            return ReflectionHelper.findMethod(clazz, method, null, methodTypes);
-        } catch (ReflectionHelper.UnableToFindMethodException e) {
+            return ObfuscationReflectionHelper.findMethod(clazz, method, methodTypes);
+        } catch (ObfuscationReflectionHelper.UnableToFindMethodException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public static Field getField(Class<?> clazz, String field) {
+    public static <T> Field getField(Class<? super T> clazz, String field) {
         try {
-            return ReflectionHelper.findField(clazz, field);
-        } catch (ReflectionHelper.UnableToFindFieldException e) {
+            return ObfuscationReflectionHelper.findField(clazz, field);
+        } catch (ObfuscationReflectionHelper.UnableToFindFieldException e) {
             e.printStackTrace();
             return null;
         }

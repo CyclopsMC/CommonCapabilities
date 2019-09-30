@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.api.capability.fluidhandler;
 
 import com.google.common.collect.Lists;
-import net.minecraft.init.Bootstrap;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.junit.BeforeClass;
@@ -26,9 +26,9 @@ public class TestFluidHandlerFluidStackIterator {
 
         HANDLER_EMPTY = new ImmutableListFluidHandler(Lists.newArrayList());
         HANDLER = new ImmutableListFluidHandler(Lists.newArrayList(
-                new FluidStack(FluidRegistry.WATER, 1000),
-                new FluidStack(FluidRegistry.WATER, 123),
-                new FluidStack(FluidRegistry.LAVA, 1000)
+                new FluidStack(Fluids.WATER, 1000),
+                new FluidStack(Fluids.WATER, 123),
+                new FluidStack(Fluids.LAVA, 1000)
         ));
     }
 
@@ -48,11 +48,11 @@ public class TestFluidHandlerFluidStackIterator {
     public void testNonEmpty() {
         Iterator<FluidStack> it = new FluidHandlerFluidStackIterator(HANDLER);
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(FluidRegistry.WATER, 1000)));
+        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 1000)));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(FluidRegistry.WATER, 123)));
+        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 123)));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(FluidRegistry.LAVA, 1000)));
+        assertThat(it.next(), is(new FluidStack(Fluids.LAVA, 1000)));
         assertThat(it.hasNext(), is(false));
     }
 
@@ -60,14 +60,14 @@ public class TestFluidHandlerFluidStackIterator {
     public void testNonEmptyOffset() {
         Iterator<FluidStack> it1 = new FluidHandlerFluidStackIterator(HANDLER, 1);
         assertThat(it1.hasNext(), is(true));
-        assertThat(it1.next(), is(new FluidStack(FluidRegistry.WATER, 123)));
+        assertThat(it1.next(), is(new FluidStack(Fluids.WATER, 123)));
         assertThat(it1.hasNext(), is(true));
-        assertThat(it1.next(), is(new FluidStack(FluidRegistry.LAVA, 1000)));
+        assertThat(it1.next(), is(new FluidStack(Fluids.LAVA, 1000)));
         assertThat(it1.hasNext(), is(false));
 
         Iterator<FluidStack> it2 = new FluidHandlerFluidStackIterator(HANDLER, 2);
         assertThat(it2.hasNext(), is(true));
-        assertThat(it2.next(), is(new FluidStack(FluidRegistry.LAVA, 1000)));
+        assertThat(it2.next(), is(new FluidStack(Fluids.LAVA, 1000)));
         assertThat(it2.hasNext(), is(false));
 
         Iterator<FluidStack> it3 = new FluidHandlerFluidStackIterator(HANDLER, 3);
@@ -78,11 +78,11 @@ public class TestFluidHandlerFluidStackIterator {
     public void testNonEmptyOutOfRange() {
         Iterator<FluidStack> it = new FluidHandlerFluidStackIterator(HANDLER);
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(FluidRegistry.WATER, 1000)));
+        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 1000)));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(FluidRegistry.WATER, 123)));
+        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 123)));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(FluidRegistry.LAVA, 1000)));
+        assertThat(it.next(), is(new FluidStack(Fluids.LAVA, 1000)));
         assertThat(it.hasNext(), is(false));
 
         it.next();

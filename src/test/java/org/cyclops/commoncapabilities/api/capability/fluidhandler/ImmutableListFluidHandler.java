@@ -1,10 +1,10 @@
 package org.cyclops.commoncapabilities.api.capability.fluidhandler;
 
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.FluidTankProperties;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import org.cyclops.cyclopscore.helper.FluidHelpers;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -14,34 +14,47 @@ import java.util.List;
  */
 public class ImmutableListFluidHandler implements IFluidHandler {
 
-    private final IFluidTankProperties[] properties;
+    private final List<FluidStack> fluidStacks;
 
     public ImmutableListFluidHandler(List<FluidStack> fluidStacks) {
-        this.properties = new IFluidTankProperties[fluidStacks.size()];
-        for (int i = 0; i < fluidStacks.size(); i++) {
-            this.properties[i] = new FluidTankProperties(fluidStacks.get(i), 1000);
-        }
+        this.fluidStacks = fluidStacks;
     }
 
     @Override
-    public IFluidTankProperties[] getTankProperties() {
-        return this.properties;
+    public int getTanks() {
+        return this.fluidStacks.size();
+    }
+
+    @Nonnull
+    @Override
+    public FluidStack getFluidInTank(int tank) {
+        return this.fluidStacks.get(tank);
     }
 
     @Override
-    public int fill(FluidStack resource, boolean doFill) {
+    public int getTankCapacity(int tank) {
+        return FluidHelpers.BUCKET_VOLUME;
+    }
+
+    @Override
+    public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
+        return false;
+    }
+
+    @Override
+    public int fill(FluidStack resource, FluidAction action) {
         return 0;
     }
 
     @Nullable
     @Override
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
+    public FluidStack drain(FluidStack resource, FluidAction action) {
         return null;
     }
 
     @Nullable
     @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
+    public FluidStack drain(int maxDrain, FluidAction action) {
         return null;
     }
 }

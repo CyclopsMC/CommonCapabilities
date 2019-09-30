@@ -3,8 +3,9 @@ package org.cyclops.commoncapabilities.ingredient.storage;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -12,7 +13,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ISlotlessItemHandler;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemHandlerItemStackIterator;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
-import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageSlotted;
@@ -64,22 +64,21 @@ public class IngredientComponentStorageWrapperHandlerItemStack
         return new ItemStorageWrapper(getComponent(), componentStorage);
     }
 
-    @Nullable
     @Override
-    public IItemHandler getStorage(ICapabilityProvider capabilityProvider, @Nullable EnumFacing facing) {
+    public LazyOptional<IItemHandler> getStorage(ICapabilityProvider capabilityProvider, @Nullable Direction facing) {
         return capabilityProvider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
     }
 
     @Override
     public IIngredientComponentStorage<ItemStack, Integer> getComponentStorage(ICapabilityProvider capabilityProvider,
-                                                                               @Nullable EnumFacing facing) {
-        IItemHandler storageSlotted = getStorage(capabilityProvider, facing);
-        ISlotlessItemHandler storageSlotless = capabilityProvider.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
-        if (storageSlotted != null) {
-            if (storageSlotless != null) {
-                return wrapComponentStorage(storageSlotted, storageSlotless);
+                                                                               @Nullable Direction facing) {
+        LazyOptional<IItemHandler> storageSlotted = getStorage(capabilityProvider, facing);
+        LazyOptional<ISlotlessItemHandler> storageSlotless = capabilityProvider.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
+        if (storageSlotted.isPresent()) {
+            if (storageSlotless.isPresent()) {
+                return wrapComponentStorage(storageSlotted.orElse(null), storageSlotless.orElse(null));
             } else {
-                return wrapComponentStorage(getStorage(capabilityProvider, facing));
+                return wrapComponentStorage(storageSlotted.orElse(null));
             }
         }
         return new IngredientComponentStorageEmpty<>(getComponent());
@@ -339,6 +338,11 @@ public class IngredientComponentStorageWrapperHandlerItemStack
         public int getSlotLimit(int slot) {
             return Helpers.castSafe(ingredientComponent.getMatcher().getMaximumQuantity());
         }
+
+        @Override
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            return true;
+        }
     }
 
     public static class ItemStorageWrapperSlotted implements IItemHandler {
@@ -389,6 +393,11 @@ public class IngredientComponentStorageWrapperHandlerItemStack
         public int getSlotLimit(int slot) {
             validateSlotIndex(slot);
             return Helpers.castSafe(storage.getMaxQuantity(slot));
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+            return true;
         }
     }
 }

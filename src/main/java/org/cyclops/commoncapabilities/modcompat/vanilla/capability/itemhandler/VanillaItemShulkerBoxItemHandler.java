@@ -2,11 +2,12 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler;
 
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.util.Constants;
 import org.cyclops.commoncapabilities.capability.itemhandler.ItemItemHandler;
-import org.cyclops.cyclopscore.helper.ItemStackHelpers;
-import org.cyclops.cyclopscore.helper.MinecraftHelpers;
+
+import javax.annotation.Nonnull;
 
 /**
  * An item handler wrapper for the shulker box in item form.
@@ -21,10 +22,10 @@ public class VanillaItemShulkerBoxItemHandler extends ItemItemHandler {
     @Override
     protected NonNullList<ItemStack> getItemList() {
         NonNullList<ItemStack> itemStacks = NonNullList.withSize(getSlots(), ItemStack.EMPTY);
-        NBTTagCompound rootTag = getItemStack().getTagCompound();
-        if (rootTag != null && rootTag.hasKey("BlockEntityTag", MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal())) {
-            NBTTagCompound entityTag = rootTag.getCompoundTag("BlockEntityTag");
-            if (entityTag.hasKey("Items", MinecraftHelpers.NBTTag_Types.NBTTagList.ordinal())) {
+        CompoundNBT rootTag = getItemStack().getTag();
+        if (rootTag != null && rootTag.contains("BlockEntityTag", Constants.NBT.TAG_COMPOUND)) {
+            CompoundNBT entityTag = rootTag.getCompound("BlockEntityTag");
+            if (entityTag.contains("Items", Constants.NBT.TAG_LIST)) {
                 ItemStackHelper.loadAllItems(entityTag, itemStacks);
             }
         }
@@ -33,11 +34,11 @@ public class VanillaItemShulkerBoxItemHandler extends ItemItemHandler {
 
     @Override
     protected void setItemList(NonNullList<ItemStack> itemStacks) {
-        NBTTagCompound rootTag = ItemStackHelpers.getSafeTagCompound(getItemStack());
-        if (!rootTag.hasKey("BlockEntityTag", MinecraftHelpers.NBTTag_Types.NBTTagCompound.ordinal())) {
-            rootTag.setTag("BlockEntityTag", new NBTTagCompound());
+        CompoundNBT rootTag = getItemStack().getOrCreateTag();
+        if (!rootTag.contains("BlockEntityTag", Constants.NBT.TAG_COMPOUND)) {
+            rootTag.put("BlockEntityTag", new CompoundNBT());
         }
-        ItemStackHelper.saveAllItems(rootTag.getCompoundTag("BlockEntityTag"), itemStacks);
+        ItemStackHelper.saveAllItems(rootTag.getCompound("BlockEntityTag"), itemStacks);
     }
 
     @Override
@@ -49,5 +50,10 @@ public class VanillaItemShulkerBoxItemHandler extends ItemItemHandler {
     @Override
     public int getSlotLimit(int slot) {
         return 64;
+    }
+
+    @Override
+    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+        return true;
     }
 }

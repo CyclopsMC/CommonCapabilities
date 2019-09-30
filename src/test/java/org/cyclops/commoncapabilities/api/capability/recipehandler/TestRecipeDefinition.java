@@ -3,9 +3,9 @@ package org.cyclops.commoncapabilities.api.capability.recipehandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.minecraft.init.Bootstrap;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.registry.Bootstrap;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
@@ -19,9 +19,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class TestRecipeDefinition {
@@ -72,7 +70,7 @@ public class TestRecipeDefinition {
 
         Map<IngredientComponent<?, ?>, List<IPrototypedIngredientAlternatives<?, ?>>> dInputMap3 = Maps.newIdentityHashMap();
         dInputMap3.put(IngredientComponents.ITEMSTACK, Lists.newArrayList(
-                new PrototypedIngredientAlternativesItemStackOredictionary(Lists.newArrayList("logWood"), ItemMatch.EXACT, 1)
+                new PrototypedIngredientAlternativesItemStackTag(Lists.newArrayList("logs"), ItemMatch.EXACT, 1)
         ));
         Map<IngredientComponent<?, ?>, List<?>> dOutputMap3 = Maps.newIdentityHashMap();
         dOutputMap3.put(IngredientComponents.ITEMSTACK, Lists.newArrayList(
@@ -140,11 +138,11 @@ public class TestRecipeDefinition {
         assertThat(D_1.compareTo(D_1_bis), is(0));
         assertThat(D_1_bis.compareTo(D_1), is(0));
 
-        assertThat(D_1.compareTo(D_2), is(-4));
-        assertThat(D_2.compareTo(D_1), is(4));
+        assertThat(D_1.compareTo(D_2), is(-5));
+        assertThat(D_2.compareTo(D_1), is(5));
 
-        assertThat(D_1.compareTo(D_3), is(-5));
-        assertThat(D_3.compareTo(D_1), is(5));
+        assertThat(D_1.compareTo(D_3), is(1));
+        assertThat(D_3.compareTo(D_1), is(-1));
     }
 
 }

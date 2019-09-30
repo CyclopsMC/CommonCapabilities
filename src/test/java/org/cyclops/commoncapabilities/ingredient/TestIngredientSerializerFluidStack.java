@@ -1,25 +1,23 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.init.Bootstrap;
-import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagString;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.IntNBT;
+import net.minecraft.nbt.StringNBT;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraftforge.fluids.FluidStack;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientSerializerFluidStack {
 
     private static IngredientSerializerFluidStack S;
-    private static NBTTagCompound TAG;
-    private static NBTTagCompound F_TAG1;
-    private static NBTTagCompound F_TAG2;
+    private static CompoundNBT TAG;
+    private static CompoundNBT F_TAG1;
+    private static CompoundNBT F_TAG2;
     private static FluidStack F1;
     private static FluidStack F2;
 
@@ -30,54 +28,54 @@ public class TestIngredientSerializerFluidStack {
 
         S = new IngredientSerializerFluidStack();
 
-        TAG = new NBTTagCompound();
-        TAG.setBoolean("flag", true);
+        TAG = new CompoundNBT();
+        TAG.putBoolean("flag", true);
 
-        F_TAG1 = new NBTTagCompound();
-        F_TAG1.setString("FluidName", "water");
-        F_TAG1.setInteger("Amount", 1000);
+        F_TAG1 = new CompoundNBT();
+        F_TAG1.putString("FluidName", "minecraft:water");
+        F_TAG1.putInt("Amount", 1000);
 
-        F_TAG2 = new NBTTagCompound();
-        F_TAG2.setString("FluidName", "lava");
-        F_TAG2.setInteger("Amount", 123);
-        F_TAG2.setTag("Tag", TAG);
+        F_TAG2 = new CompoundNBT();
+        F_TAG2.putString("FluidName", "minecraft:lava");
+        F_TAG2.putInt("Amount", 123);
+        F_TAG2.put("Tag", TAG);
 
-        F1 = new FluidStack(FluidRegistry.WATER, 1000);
-        F2 = new FluidStack(FluidRegistry.LAVA, 123, TAG);
+        F1 = new FluidStack(Fluids.WATER, 1000);
+        F2 = new FluidStack(Fluids.LAVA, 123, TAG);
     }
 
     @Test
     public void serializeInstance() {
         assertThat(S.serializeInstance(F1), is(F_TAG1));
         assertThat(S.serializeInstance(F2), is(F_TAG2));
-        assertThat(S.serializeInstance(null), is(new NBTTagCompound()));
+        assertThat(S.serializeInstance(FluidStack.EMPTY), is(new CompoundNBT()));
     }
 
     @Test
     public void deserializeInstance() {
         assertThat(S.deserializeInstance(F_TAG1), is(F1));
         assertThat(S.deserializeInstance(F_TAG2), is(F2));
-        assertThat(S.deserializeInstance(new NBTTagCompound()), nullValue());
+        assertThat(S.deserializeInstance(new CompoundNBT()), is(FluidStack.EMPTY));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void deserializeInstanceInvalid() {
-        S.deserializeInstance(new NBTTagString("0"));
+        S.deserializeInstance(new StringNBT("0"));
     }
 
     @Test
     public void serializeCondition() {
-        assertThat(S.serializeCondition(1), is(new NBTTagInt(1)));
+        assertThat(S.serializeCondition(1), is(new IntNBT(1)));
     }
 
     @Test
     public void deserializeCondition() {
-        assertThat(S.deserializeCondition(new NBTTagInt(1)), is(1));
+        assertThat(S.deserializeCondition(new IntNBT(1)), is(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void deserializeConditionInvalid() {
-        S.deserializeCondition(new NBTTagString("0"));
+        S.deserializeCondition(new StringNBT("0"));
     }
 
 }

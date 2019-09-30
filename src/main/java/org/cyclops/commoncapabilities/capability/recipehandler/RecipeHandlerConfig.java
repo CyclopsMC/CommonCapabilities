@@ -14,26 +14,16 @@ import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityStorage;
  */
 public class RecipeHandlerConfig extends CapabilityConfig<IRecipeHandler> {
 
-    /**
-     * The unique instance.
-     */
-    public static RecipeHandlerConfig _instance;
-
     @CapabilityInject(IRecipeHandler.class)
     public static Capability<IRecipeHandler> CAPABILITY = null;
 
-    /**
-     * Make a new instance.
-     */
     public RecipeHandlerConfig() {
         super(
                 CommonCapabilities._instance,
-                true,
                 "recipeHandler",
-                "Something that is able to process recipes",
                 IRecipeHandler.class,
                 new DefaultCapabilityStorage<IRecipeHandler>(),
-                DefaultRecipeHandler.class
+                DefaultRecipeHandler::new
         );
     }
 }

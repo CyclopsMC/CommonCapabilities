@@ -11,202 +11,202 @@ import static org.junit.Assert.assertThat;
 
 public class TestNBTBaseComparator {
 
-    private static NBTBaseComparator COMP;
+    private static NBTComparator COMP;
 
-    private static NBTTagEnd E;
+    private static EndNBT E;
 
-    private static NBTTagByte B_0;
-    private static NBTTagByte B_1;
-    private static NBTTagByte B_2;
+    private static ByteNBT B_0;
+    private static ByteNBT B_1;
+    private static ByteNBT B_2;
 
-    private static NBTTagShort S_0;
-    private static NBTTagShort S_1;
-    private static NBTTagShort S_2;
+    private static ShortNBT S_0;
+    private static ShortNBT S_1;
+    private static ShortNBT S_2;
 
-    private static NBTTagInt I_0;
-    private static NBTTagInt I_1;
-    private static NBTTagInt I_2;
+    private static IntNBT I_0;
+    private static IntNBT I_1;
+    private static IntNBT I_2;
 
-    private static NBTTagLong L_0;
-    private static NBTTagLong L_1;
-    private static NBTTagLong L_2;
+    private static LongNBT L_0;
+    private static LongNBT L_1;
+    private static LongNBT L_2;
 
-    private static NBTTagFloat F_0;
-    private static NBTTagFloat F_1;
-    private static NBTTagFloat F_2;
+    private static FloatNBT F_0;
+    private static FloatNBT F_1;
+    private static FloatNBT F_2;
 
-    private static NBTTagDouble D_0;
-    private static NBTTagDouble D_1;
-    private static NBTTagDouble D_2;
+    private static DoubleNBT D_0;
+    private static DoubleNBT D_1;
+    private static DoubleNBT D_2;
 
-    private static NBTTagByteArray BA_0;
-    private static NBTTagByteArray BA_1;
-    private static NBTTagByteArray BA_2;
+    private static ByteArrayNBT BA_0;
+    private static ByteArrayNBT BA_1;
+    private static ByteArrayNBT BA_2;
 
-    private static NBTTagString STR_0;
-    private static NBTTagString STR_1;
-    private static NBTTagString STR_2;
-    private static NBTTagString STR_X;
+    private static StringNBT STR_0;
+    private static StringNBT STR_1;
+    private static StringNBT STR_2;
+    private static StringNBT STR_X;
 
-    private static NBTTagList LST_B_012;
-    private static NBTTagList LST_I_;
-    private static NBTTagList LST_I_0;
-    private static NBTTagList LST_I_1;
-    private static NBTTagList LST_I_01;
-    private static NBTTagList LST_I_012;
-    private static NBTTagList LST_STR_012;
+    private static ListNBT LST_B_012;
+    private static ListNBT LST_I_;
+    private static ListNBT LST_I_0;
+    private static ListNBT LST_I_1;
+    private static ListNBT LST_I_01;
+    private static ListNBT LST_I_012;
+    private static ListNBT LST_STR_012;
 
-    private static NBTTagCompound CMP_;
-    private static NBTTagCompound CMP_AB;
-    private static NBTTagCompound CMP_AI;
-    private static NBTTagCompound CMP_AI_BI;
-    private static NBTTagCompound CMP_AB_BB;
-    private static NBTTagCompound CMP_AI_BB;
-    private static NBTTagCompound CMP_AB_BI;
-    private static NBTTagCompound CMP_AB_CI;
+    private static CompoundNBT CMP_;
+    private static CompoundNBT CMP_AB;
+    private static CompoundNBT CMP_AI;
+    private static CompoundNBT CMP_AI_BI;
+    private static CompoundNBT CMP_AB_BB;
+    private static CompoundNBT CMP_AI_BB;
+    private static CompoundNBT CMP_AB_BI;
+    private static CompoundNBT CMP_AB_CI;
 
-    private static NBTTagIntArray IA_0;
-    private static NBTTagIntArray IA_1;
-    private static NBTTagIntArray IA_2;
+    private static IntArrayNBT IA_0;
+    private static IntArrayNBT IA_1;
+    private static IntArrayNBT IA_2;
 
-    private static NBTTagLongArray LA_0;
-    private static NBTTagLongArray LA_1;
-    private static NBTTagLongArray LA_2;
+    private static LongArrayNBT LA_0;
+    private static LongArrayNBT LA_1;
+    private static LongArrayNBT LA_2;
 
     private static NBTUnknown UNKNOWN0;
     private static NBTUnknown UNKNOWN1;
 
-    private static NBTTagCompound CMP_NESTED0;
-    private static NBTTagCompound CMP_NESTED1;
-    private static NBTTagCompound CMP_NESTED2;
+    private static CompoundNBT CMP_NESTED0;
+    private static CompoundNBT CMP_NESTED1;
+    private static CompoundNBT CMP_NESTED2;
 
     @BeforeClass
     public static void init() {
-        COMP = new NBTBaseComparator(null);
+        COMP = new NBTComparator(null);
 
-        E = (NBTTagEnd) new NBTTagList().get(-1);
+        E = new EndNBT();
 
-        B_0 = new NBTTagByte((byte) 0);
-        B_1 = new NBTTagByte((byte) 1);
-        B_2 = new NBTTagByte((byte) 2);
+        B_0 = new ByteNBT((byte) 0);
+        B_1 = new ByteNBT((byte) 1);
+        B_2 = new ByteNBT((byte) 2);
 
-        S_0 = new NBTTagShort((short) 0);
-        S_1 = new NBTTagShort((short) 1);
-        S_2 = new NBTTagShort((short) 2);
+        S_0 = new ShortNBT((short) 0);
+        S_1 = new ShortNBT((short) 1);
+        S_2 = new ShortNBT((short) 2);
 
-        I_0 = new NBTTagInt(0);
-        I_1 = new NBTTagInt(1);
-        I_2 = new NBTTagInt(2);
+        I_0 = new IntNBT(0);
+        I_1 = new IntNBT(1);
+        I_2 = new IntNBT(2);
 
-        L_0 = new NBTTagLong(0);
-        L_1 = new NBTTagLong(1);
-        L_2 = new NBTTagLong(2);
+        L_0 = new LongNBT(0);
+        L_1 = new LongNBT(1);
+        L_2 = new LongNBT(2);
 
-        F_0 = new NBTTagFloat(0);
-        F_1 = new NBTTagFloat(1);
-        F_2 = new NBTTagFloat(2);
+        F_0 = new FloatNBT(0);
+        F_1 = new FloatNBT(1);
+        F_2 = new FloatNBT(2);
 
-        D_0 = new NBTTagDouble(0);
-        D_1 = new NBTTagDouble(1);
-        D_2 = new NBTTagDouble(2);
+        D_0 = new DoubleNBT(0);
+        D_1 = new DoubleNBT(1);
+        D_2 = new DoubleNBT(2);
 
-        BA_0 = new NBTTagByteArray(new byte[]{0});
-        BA_1 = new NBTTagByteArray(new byte[]{1});
-        BA_2 = new NBTTagByteArray(new byte[]{2});
+        BA_0 = new ByteArrayNBT(new byte[]{0});
+        BA_1 = new ByteArrayNBT(new byte[]{1});
+        BA_2 = new ByteArrayNBT(new byte[]{2});
 
-        STR_0 = new NBTTagString("0");
-        STR_1 = new NBTTagString("1");
-        STR_2 = new NBTTagString("2");
-        STR_X = new NBTTagString("X");
+        STR_0 = new StringNBT("0");
+        STR_1 = new StringNBT("1");
+        STR_2 = new StringNBT("2");
+        STR_X = new StringNBT("X");
 
-        LST_B_012 = new NBTTagList();
-        LST_B_012.appendTag(B_0);
-        LST_B_012.appendTag(B_1);
-        LST_B_012.appendTag(B_2);
-        LST_I_ = new NBTTagList();
-        LST_I_0 = new NBTTagList();
-        LST_I_0.appendTag(I_0);
-        LST_I_1 = new NBTTagList();
-        LST_I_1.appendTag(I_1);
-        LST_I_01 = new NBTTagList();
-        LST_I_01.appendTag(I_0);
-        LST_I_01.appendTag(I_1);
-        LST_I_012 = new NBTTagList();
-        LST_I_012.appendTag(I_0);
-        LST_I_012.appendTag(I_1);
-        LST_I_012.appendTag(I_2);
-        LST_STR_012 = new NBTTagList();
-        LST_STR_012.appendTag(STR_0);
-        LST_STR_012.appendTag(STR_1);
-        LST_STR_012.appendTag(STR_2);
+        LST_B_012 = new ListNBT();
+        LST_B_012.add(B_0);
+        LST_B_012.add(B_1);
+        LST_B_012.add(B_2);
+        LST_I_ = new ListNBT();
+        LST_I_0 = new ListNBT();
+        LST_I_0.add(I_0);
+        LST_I_1 = new ListNBT();
+        LST_I_1.add(I_1);
+        LST_I_01 = new ListNBT();
+        LST_I_01.add(I_0);
+        LST_I_01.add(I_1);
+        LST_I_012 = new ListNBT();
+        LST_I_012.add(I_0);
+        LST_I_012.add(I_1);
+        LST_I_012.add(I_2);
+        LST_STR_012 = new ListNBT();
+        LST_STR_012.add(STR_0);
+        LST_STR_012.add(STR_1);
+        LST_STR_012.add(STR_2);
 
-        CMP_ = new NBTTagCompound();
-        CMP_AB = new NBTTagCompound();
-        CMP_AB.setTag("A", B_0);
-        CMP_AI = new NBTTagCompound();
-        CMP_AI.setTag("A", I_0);
-        CMP_AI_BI = new NBTTagCompound();
-        CMP_AI_BI.setTag("A", I_0);
-        CMP_AI_BI.setTag("B", I_0);
-        CMP_AB_BB = new NBTTagCompound();
-        CMP_AB_BB.setTag("A", B_0);
-        CMP_AB_BB.setTag("B", B_0);
-        CMP_AI_BB = new NBTTagCompound();
-        CMP_AI_BB.setTag("A", I_0);
-        CMP_AI_BB.setTag("B", B_0);
-        CMP_AB_BI = new NBTTagCompound();
-        CMP_AB_BI.setTag("A", B_0);
-        CMP_AB_BI.setTag("B", I_0);
-        CMP_AB_CI = new NBTTagCompound();
-        CMP_AB_CI.setTag("A", B_0);
-        CMP_AB_CI.setTag("C", I_0);
+        CMP_ = new CompoundNBT();
+        CMP_AB = new CompoundNBT();
+        CMP_AB.put("A", B_0);
+        CMP_AI = new CompoundNBT();
+        CMP_AI.put("A", I_0);
+        CMP_AI_BI = new CompoundNBT();
+        CMP_AI_BI.put("A", I_0);
+        CMP_AI_BI.put("B", I_0);
+        CMP_AB_BB = new CompoundNBT();
+        CMP_AB_BB.put("A", B_0);
+        CMP_AB_BB.put("B", B_0);
+        CMP_AI_BB = new CompoundNBT();
+        CMP_AI_BB.put("A", I_0);
+        CMP_AI_BB.put("B", B_0);
+        CMP_AB_BI = new CompoundNBT();
+        CMP_AB_BI.put("A", B_0);
+        CMP_AB_BI.put("B", I_0);
+        CMP_AB_CI = new CompoundNBT();
+        CMP_AB_CI.put("A", B_0);
+        CMP_AB_CI.put("C", I_0);
 
-        IA_0 = new NBTTagIntArray(new int[]{0});
-        IA_1 = new NBTTagIntArray(new int[]{1});
-        IA_2 = new NBTTagIntArray(new int[]{2});
+        IA_0 = new IntArrayNBT(new int[]{0});
+        IA_1 = new IntArrayNBT(new int[]{1});
+        IA_2 = new IntArrayNBT(new int[]{2});
 
-        LA_0 = new NBTTagLongArray(new long[]{0});
-        LA_1 = new NBTTagLongArray(new long[]{1});
-        LA_2 = new NBTTagLongArray(new long[]{2});
+        LA_0 = new LongArrayNBT(new long[]{0});
+        LA_1 = new LongArrayNBT(new long[]{1});
+        LA_2 = new LongArrayNBT(new long[]{2});
 
         UNKNOWN0 = new NBTUnknown();
         UNKNOWN1 = new NBTUnknown();
 
-        CMP_NESTED0 = new NBTTagCompound();
-        CMP_NESTED0.setString("a", "b");
-        CMP_NESTED0.setBoolean("some boolean", true);
-        NBTTagCompound subTag = new NBTTagCompound();
-        subTag.setDouble("double", 4);
-        subTag.setInteger("int", 268940);
-        NBTTagCompound subSubTag = new NBTTagCompound();
-        subSubTag.setInteger("value", 100);
-        subSubTag.setBoolean("flag", true);
-        subTag.setTag("and another thing", subSubTag);
-        CMP_NESTED0.setTag("another thing", subTag);
+        CMP_NESTED0 = new CompoundNBT();
+        CMP_NESTED0.putString("a", "b");
+        CMP_NESTED0.putBoolean("some boolean", true);
+        CompoundNBT subTag = new CompoundNBT();
+        subTag.putDouble("double", 4);
+        subTag.putInt("int", 268940);
+        CompoundNBT subSubTag = new CompoundNBT();
+        subSubTag.putInt("value", 100);
+        subSubTag.putBoolean("flag", true);
+        subTag.put("and another thing", subSubTag);
+        CMP_NESTED0.put("another thing", subTag);
 
-        CMP_NESTED1 = new NBTTagCompound();
-        CMP_NESTED1.setString("a", "b");
-        CMP_NESTED1.setBoolean("some boolean", true);
-        NBTTagCompound subTag1 = new NBTTagCompound();
-        subTag1.setDouble("double", 4);
-        subTag1.setInteger("int", 268940);
-        NBTTagCompound subSubTag1 = new NBTTagCompound();
-        subSubTag1.setInteger("value", 101);
-        subSubTag1.setBoolean("flag", true);
-        subTag1.setTag("and another thing", subSubTag1);
-        CMP_NESTED1.setTag("another thing", subTag1);
+        CMP_NESTED1 = new CompoundNBT();
+        CMP_NESTED1.putString("a", "b");
+        CMP_NESTED1.putBoolean("some boolean", true);
+        CompoundNBT subTag1 = new CompoundNBT();
+        subTag1.putDouble("double", 4);
+        subTag1.putInt("int", 268940);
+        CompoundNBT subSubTag1 = new CompoundNBT();
+        subSubTag1.putInt("value", 101);
+        subSubTag1.putBoolean("flag", true);
+        subTag1.put("and another thing", subSubTag1);
+        CMP_NESTED1.put("another thing", subTag1);
 
-        CMP_NESTED2 = new NBTTagCompound();
-        CMP_NESTED2.setString("a", "b");
-        CMP_NESTED2.setBoolean("some boolean", true);
-        NBTTagCompound subTag2 = new NBTTagCompound();
-        subTag2.setDouble("double", 4);
-        subTag2.setInteger("int", 268940);
-        NBTTagCompound subSubTag2 = new NBTTagCompound();
-        subSubTag2.setInteger("value", 102);
-        subSubTag2.setBoolean("flag", true);
-        subTag2.setTag("and another thing", subSubTag2);
-        CMP_NESTED2.setTag("another thing", subTag2);
+        CMP_NESTED2 = new CompoundNBT();
+        CMP_NESTED2.putString("a", "b");
+        CMP_NESTED2.putBoolean("some boolean", true);
+        CompoundNBT subTag2 = new CompoundNBT();
+        subTag2.putDouble("double", 4);
+        subTag2.putInt("int", 268940);
+        CompoundNBT subSubTag2 = new CompoundNBT();
+        subSubTag2.putInt("value", 102);
+        subSubTag2.putBoolean("flag", true);
+        subTag2.put("and another thing", subSubTag2);
+        CMP_NESTED2.put("another thing", subTag2);
     }
 
     @Test
@@ -530,7 +530,7 @@ public class TestNBTBaseComparator {
 
     @Test
     public void testCompoundNestedFilteredMatchExact() throws NbtParseException {
-        NBTBaseComparator comp = new NBTBaseComparator(NbtPath
+        NBTComparator comp = new NBTComparator(NbtPath
                 .parse("[\"another thing\"][\"and another thing\"].value").asNavigation());
 
         assertThat(comp.compare(CMP_NESTED0, CMP_NESTED0), is(0));
@@ -552,7 +552,7 @@ public class TestNBTBaseComparator {
 
     @Test
     public void testCompoundNestedFilteredMatchWildcard() throws NbtParseException {
-        NBTBaseComparator comp = new NBTBaseComparator(NbtPath
+        NBTComparator comp = new NBTComparator(NbtPath
                 .parse("[\"another thing\"][\"and another thing\"]*").asNavigation());
 
         assertThat(comp.compare(CMP_NESTED0, CMP_NESTED0), is(0));
@@ -574,7 +574,7 @@ public class TestNBTBaseComparator {
 
     @Test
     public void testCompoundNestedFilteredNoMatch() throws NbtParseException {
-        NBTBaseComparator comp = new NBTBaseComparator(NbtPath
+        NBTComparator comp = new NBTComparator(NbtPath
                 .parse("[\"another thing\"][\"and another thing\"].noMatch").asNavigation());
 
         assertThat(comp.compare(CMP_NESTED0, CMP_NESTED0), is(0));
@@ -852,7 +852,7 @@ public class TestNBTBaseComparator {
         assertThat(COMP.compare(LA_0, UNKNOWN0), is(-8));
     }
 
-    public static class NBTUnknown extends NBTTagInt {
+    public static class NBTUnknown extends IntNBT {
         public NBTUnknown() {
             super(0);
         }

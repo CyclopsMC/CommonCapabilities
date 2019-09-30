@@ -1,14 +1,13 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
-import net.minecraft.init.Bootstrap;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.registry.Bootstrap;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
-import net.minecraftforge.fluids.capability.templates.FluidHandlerConcatenate;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.cyclops.commoncapabilities.IngredientComponents;
+import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidHandlerConcatenate;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -51,16 +50,16 @@ public class TestFluidStackFluidStorageWrapper {
 
     @Before
     public void beforeEach() {
-        WATER_1 = new FluidStack(FluidRegistry.WATER, 1);
-        LAVA_1_NB = new FluidStack(FluidRegistry.LAVA, 1, new NBTTagCompound());
-        LAVA_10 = new FluidStack(FluidRegistry.LAVA, 10);
-        WATER_10 = new FluidStack(FluidRegistry.WATER, 10);
+        WATER_1 = new FluidStack(Fluids.WATER, 1);
+        LAVA_1_NB = new FluidStack(Fluids.LAVA, 1, new CompoundNBT());
+        LAVA_10 = new FluidStack(Fluids.LAVA, 10);
+        WATER_10 = new FluidStack(Fluids.WATER, 10);
 
-        WATER_64 = new FluidStack(FluidRegistry.WATER, 64);
-        LAVA_64 = new FluidStack(FluidRegistry.LAVA, 64);
-        LAVA_64_NB = new FluidStack(FluidRegistry.LAVA, 64, new NBTTagCompound());
-        WATER_11 = new FluidStack(FluidRegistry.WATER, 11);
-        LAVA_11_NB = new FluidStack(FluidRegistry.LAVA, 11, new NBTTagCompound());
+        WATER_64 = new FluidStack(Fluids.WATER, 64);
+        LAVA_64 = new FluidStack(Fluids.LAVA, 64);
+        LAVA_64_NB = new FluidStack(Fluids.LAVA, 64, new CompoundNBT());
+        WATER_11 = new FluidStack(Fluids.WATER, 11);
+        LAVA_11_NB = new FluidStack(Fluids.LAVA, 11, new CompoundNBT());
 
         t1 = new FluidTank(64);
         t2 = new FluidTank(64);
@@ -78,100 +77,89 @@ public class TestFluidStackFluidStorageWrapper {
                 t4,
                 new FluidTank(64)
         );
-        t1.fill(WATER_1.copy(), true);
-        t2.fill(LAVA_1_NB.copy(), true);
-        t3.fill(LAVA_10.copy(), true);
-        t4.fill(WATER_10.copy(), true);
+        t1.fill(WATER_1.copy(), IFluidHandler.FluidAction.EXECUTE);
+        t2.fill(LAVA_1_NB.copy(), IFluidHandler.FluidAction.EXECUTE);
+        t3.fill(LAVA_10.copy(), IFluidHandler.FluidAction.EXECUTE);
+        t4.fill(WATER_10.copy(), IFluidHandler.FluidAction.EXECUTE);
         storage = new IngredientComponentStorageWrapperHandlerFluidStack.ComponentStorageWrapper(IngredientComponents.FLUIDSTACK, innerStorage);
         wrapper = new IngredientComponentStorageWrapperHandlerFluidStack.FluidStorageWrapper(storage);
     }
 
     @Test
     public void testGetTankProperties() {
-        IFluidTankProperties[] props = wrapper.getTankProperties();
-        assertThat(props.length, is(10));
+        assertThat(wrapper.getTanks(), is(10));
 
-        for (IFluidTankProperties prop : props) {
-            assertThat(prop.getCapacity(), is(Integer.MAX_VALUE));
-            assertThat(prop.canDrain(), is(true));
-            assertThat(prop.canDrainFluidType(null), is(true));
-            assertThat(prop.canFill(), is(true));
-            assertThat(prop.canFillFluidType(null), is(true));
+        for (int i = 0; i < wrapper.getTanks(); i++) {
+            assertThat(wrapper.getTankCapacity(i), is(Integer.MAX_VALUE));
         }
 
-        assertThat(eq(props[0].getContents(), null), is(true));
-        assertThat(eq(props[1].getContents(), null), is(true));
-        assertThat(eq(props[2].getContents(), WATER_1), is(true));
-        assertThat(eq(props[3].getContents(), null), is(true));
-        assertThat(eq(props[4].getContents(), LAVA_1_NB), is(true));
-        assertThat(eq(props[5].getContents(), null), is(true));
-        assertThat(eq(props[6].getContents(), LAVA_10), is(true));
-        assertThat(eq(props[7].getContents(), null), is(true));
-        assertThat(eq(props[8].getContents(), WATER_10), is(true));
-        assertThat(eq(props[9].getContents(), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), LAVA_1_NB), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), LAVA_10), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
     }
 
     @Test
     public void testFill() {
-        assertThat(wrapper.fill(WATER_64, false), is(64));
-        assertThat(wrapper.fill(WATER_64, false), is(64));
-        assertThat(wrapper.fill(WATER_64, false), is(64));
-        IFluidTankProperties[] props1 = wrapper.getTankProperties();
-        assertThat(eq(props1[0].getContents(), null), is(true));
-        assertThat(eq(props1[1].getContents(), null), is(true));
-        assertThat(eq(props1[2].getContents(), WATER_1), is(true));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.SIMULATE), is(64));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.SIMULATE), is(64));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.SIMULATE), is(64));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_1), is(true));
 
-        assertThat(wrapper.fill(WATER_64, true), is(64));
-        assertThat(wrapper.fill(WATER_64, true), is(64));
-        assertThat(wrapper.fill(WATER_64, true), is(64));
-        IFluidTankProperties[] props2 = wrapper.getTankProperties();
-        assertThat(eq(props2[0].getContents(), WATER_64), is(true));
-        assertThat(eq(props2[1].getContents(), WATER_64), is(true));
-        assertThat(eq(props2[2].getContents(), WATER_64), is(true));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_64), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_64), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_64), is(true));
 
-        assertThat(wrapper.fill(WATER_64, true), is(64));
-        assertThat(wrapper.fill(WATER_64, true), is(64));
-        assertThat(wrapper.fill(WATER_64, true), is(64));
-        assertThat(wrapper.fill(WATER_64, true), is(64));
-        assertThat(wrapper.fill(WATER_64, true), is(53));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
+        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(53));
     }
 
     @Test
     public void testDrain() {
-        assertThat(eq(wrapper.drain(WATER_10, false), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(WATER_10, false), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(WATER_10, false), WATER_10), is(true));
-        IFluidTankProperties[] props1 = wrapper.getTankProperties();
-        assertThat(eq(props1[2].getContents(), WATER_1), is(true));
-        assertThat(eq(props1[8].getContents(), WATER_10), is(true));
+        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
+        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
+        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_10), is(true));
 
-        assertThat(eq(wrapper.drain(WATER_10, true), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(WATER_10, true), WATER_1), is(true));
-        assertThat(eq(wrapper.drain(WATER_10, true), null), is(true));
-        IFluidTankProperties[] props2 = wrapper.getTankProperties();
-        assertThat(eq(props2[2].getContents(), null), is(true));
-        assertThat(eq(props2[8].getContents(), null), is(true));
+        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.EXECUTE), WATER_10), is(true));
+        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.EXECUTE), WATER_1), is(true));
+        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.EXECUTE), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
     }
 
     @Test
     public void testDrainMax() {
-        assertThat(eq(wrapper.drain(10, false), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(10, false), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(10, false), WATER_10), is(true));
-        IFluidTankProperties[] props1 = wrapper.getTankProperties();
-        assertThat(eq(props1[2].getContents(), WATER_1), is(true));
-        assertThat(eq(props1[4].getContents(), LAVA_1_NB), is(true));
-        assertThat(eq(props1[6].getContents(), LAVA_10), is(true));
-        assertThat(eq(props1[8].getContents(), WATER_10), is(true));
+        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
+        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
+        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), LAVA_1_NB), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), LAVA_10), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_10), is(true));
 
-        assertThat(eq(wrapper.drain(10, true), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(10, true), LAVA_1_NB), is(true));
-        assertThat(eq(wrapper.drain(10, true), LAVA_10), is(true));
-        IFluidTankProperties[] props2 = wrapper.getTankProperties();
-        assertThat(eq(props2[2].getContents(), null), is(true));
-        assertThat(eq(props2[4].getContents(), null), is(true));
-        assertThat(eq(props2[6].getContents(), null), is(true));
-        assertThat(eq(props2[8].getContents(), WATER_1), is(true));
+        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.EXECUTE), WATER_10), is(true));
+        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.EXECUTE), LAVA_1_NB), is(true));
+        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.EXECUTE), LAVA_10), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), null), is(true));
+        assertThat(eq(wrapper.getFluidInTank(1), WATER_1), is(true));
     }
 
 }

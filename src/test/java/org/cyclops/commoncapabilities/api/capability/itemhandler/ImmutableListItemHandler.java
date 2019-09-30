@@ -45,4 +45,9 @@ public class ImmutableListItemHandler implements IItemHandler {
     public int getSlotLimit(int slot) {
         return 64;
     }
+
+    @Override
+    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+        return true;
+    }
 }

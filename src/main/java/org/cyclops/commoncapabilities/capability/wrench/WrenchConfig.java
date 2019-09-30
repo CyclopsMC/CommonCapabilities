@@ -15,26 +15,16 @@ import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityStorage;
  */
 public class WrenchConfig extends CapabilityConfig<IWrench> {
 
-    /**
-     * The unique instance.
-     */
-    public static WrenchConfig _instance;
-
     @CapabilityInject(IWrench.class)
     public static Capability<IWrench> CAPABILITY = null;
 
-    /**
-     * Make a new instance.
-     */
     public WrenchConfig() {
         super(
                 CommonCapabilities._instance,
-                true,
                 "wrench",
-                "Indicates if something is a wrench",
                 IWrench.class,
                 new DefaultCapabilityStorage<IWrench>(),
-                DefaultWrench.class
+                DefaultWrench::new
         );
     }
 }

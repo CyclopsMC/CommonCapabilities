@@ -17,7 +17,7 @@ public class VanillaUniversalBucketTemperature implements ITemperature {
     }
 
     protected FluidStack getFluidStack() {
-        return FluidUtil.getFluidContained(itemStack);
+        return FluidUtil.getFluidContained(itemStack).orElse(FluidStack.EMPTY);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class VanillaUniversalBucketTemperature implements ITemperature {
         if (fluidStack == null) {
             return ITemperature.ZERO_CELCIUS;
         }
-        return fluidStack.getFluid().getTemperature(fluidStack);
+        return fluidStack.getFluid().getAttributes().getTemperature(fluidStack);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class VanillaUniversalBucketTemperature implements ITemperature {
         if (fluidStack == null) {
             return ITemperature.ZERO_CELCIUS;
         }
-        return fluidStack.getFluid().getTemperature();
+        return fluidStack.getFluid().getAttributes().getTemperature();
     }
 }

@@ -1,16 +1,18 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
-import com.google.common.collect.Lists;
-import net.minecraft.util.EnumFacing;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidHandlerFluidStackIterator;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
+import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageSlotted;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
 import org.cyclops.cyclopscore.helper.FluidHelpers;
 import org.cyclops.cyclopscore.helper.Helpers;
@@ -34,6 +36,14 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
         this.ingredientComponent = Objects.requireNonNull(ingredientComponent);
     }
 
+    public static IFluidHandler.FluidAction simulateToFluidAction(boolean simulate) {
+        return simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE;
+    }
+
+    public static boolean fluidActionToSimulate(IFluidHandler.FluidAction fluidAction) {
+        return fluidAction.simulate();
+    }
+
     @Override
     public IIngredientComponentStorage<FluidStack, Integer> wrapComponentStorage(IFluidHandler storage) {
         return new ComponentStorageWrapper(getComponent(), storage);
@@ -41,12 +51,14 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
 
     @Override
     public IFluidHandler wrapStorage(IIngredientComponentStorage<FluidStack, Integer> componentStorage) {
+        if (componentStorage instanceof IIngredientComponentStorageSlotted) {
+            return new FluidStorageWrapperSlotted((IIngredientComponentStorageSlotted<FluidStack, Integer>) componentStorage);
+        }
         return new FluidStorageWrapper(componentStorage);
     }
 
-    @Nullable
     @Override
-    public IFluidHandler getStorage(ICapabilityProvider capabilityProvider, @Nullable EnumFacing facing) {
+    public LazyOptional<IFluidHandler> getStorage(ICapabilityProvider capabilityProvider, @Nullable Direction facing) {
         return capabilityProvider.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
     }
 
@@ -86,23 +98,23 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
         @Override
         public long getMaxQuantity() {
             long sum = 0;
-            for (IFluidTankProperties properties : storage.getTankProperties()) {
-                sum = Math.addExact(sum, properties.getCapacity());
+            for (int i = 0; i < storage.getTanks(); i++) {
+                sum = Math.addExact(sum, storage.getTankCapacity(i));
             }
             return sum;
         }
 
         @Override
         public FluidStack insert(@Nonnull FluidStack ingredient, boolean simulate) {
-            // Null-check, because the empty fluidstack is null
-            if (ingredient == null) {
-                return null;
+            // Don't continue if stack is empty
+            if (ingredient.isEmpty()) {
+                return FluidStack.EMPTY;
             }
 
-            int totalAmount = ingredient.amount;
-            int filledAmount = storage.fill(ingredient, !simulate);
+            int totalAmount = ingredient.getAmount();
+            int filledAmount = storage.fill(ingredient, simulateToFluidAction(simulate));
             if (filledAmount >= totalAmount) {
-                return null;
+                return FluidStack.EMPTY;
             } else {
                 int remaining = totalAmount - filledAmount;
                 return new FluidStack(ingredient, remaining);
@@ -111,48 +123,48 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
 
         @Override
         public FluidStack extract(@Nonnull FluidStack prototype, Integer matchFlags, boolean simulate) {
-            // Null-check, because the empty fluidstack is null
-            if (prototype == null) {
-                return null;
+            // Don't continue if stack is empty
+            if (prototype.isEmpty()) {
+                return FluidStack.EMPTY;
             }
 
             // Optimize if ANY condition
             if (matchFlags == FluidMatch.ANY) {
                 // Drain as much as possible
-                return storage.drain(FluidHelpers.getAmount(prototype), !simulate);
+                return storage.drain(FluidHelpers.getAmount(prototype), simulateToFluidAction(simulate));
             }
 
             // Optimize if AMOUNT condition
             if (matchFlags == FluidMatch.AMOUNT) {
                 // Drain the exact given amount
-                FluidStack drainedSimulated = storage.drain(prototype.amount, false);
-                if (drainedSimulated == null || drainedSimulated.amount != prototype.amount) {
-                    return null;
+                FluidStack drainedSimulated = storage.drain(prototype.getAmount(), IFluidHandler.FluidAction.SIMULATE);
+                if (drainedSimulated.isEmpty() || drainedSimulated.getAmount() != prototype.getAmount()) {
+                    return FluidStack.EMPTY;
                 }
-                return simulate ? drainedSimulated : storage.drain(prototype.amount, true);
+                return simulate ? drainedSimulated : storage.drain(prototype.getAmount(), IFluidHandler.FluidAction.EXECUTE);
             }
 
             // In all other cases, we have to iterate over the tank contents,
             // and drain based on their contents.
-            for (IFluidTankProperties properties : storage.getTankProperties()) {
-                if (properties.getContents() != null
-                        && FluidMatch.areFluidStacksEqual(properties.getContents(), prototype, matchFlags & ~FluidMatch.AMOUNT)) {
-                    FluidStack toDrain = properties.getContents();
-                    toDrain = toDrain.copy();
-                    toDrain.amount = prototype.amount;
-                    FluidStack drained = storage.drain(toDrain, !simulate);
+            for (int i = 0; i < storage.getTanks(); i++) {
+                FluidStack contents = storage.getFluidInTank(i);
+                if (!contents.isEmpty()
+                        && FluidMatch.areFluidStacksEqual(contents, prototype, matchFlags & ~FluidMatch.AMOUNT)) {
+                    FluidStack toDrain = contents.copy();
+                    toDrain.setAmount(prototype.getAmount());
+                    FluidStack drained = storage.drain(toDrain, simulateToFluidAction(simulate));
                     if (FluidMatch.areFluidStacksEqual(drained, prototype, matchFlags)) {
                         return drained;
                     }
                 }
             }
 
-            return null;
+            return FluidStack.EMPTY;
         }
 
         @Override
         public FluidStack extract(long maxQuantity, boolean simulate) {
-            return storage.drain(Helpers.castSafe(maxQuantity), !simulate);
+            return storage.drain(Helpers.castSafe(maxQuantity), simulateToFluidAction(simulate));
         }
     }
 
@@ -164,88 +176,86 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
             this.storage = storage;
         }
 
-
         @Override
-        public IFluidTankProperties[] getTankProperties() {
-            return Lists.newArrayList(storage).stream().map(DummyFluidTankProperties::new)
-                    .toArray(IFluidTankProperties[]::new);
+        public int getTanks() {
+            // +1 so that at least one slot appears empty, for when others want to insert
+            return Iterators.size(storage.iterator()) + 1;
+        }
+
+        @Nonnull
+        @Override
+        public FluidStack getFluidInTank(int tank) {
+            return Iterables.get(this.storage, tank, FluidStack.EMPTY);
         }
 
         @Override
-        public int fill(FluidStack resource, boolean doFill) {
-            // Null-check, because the empty fluidstack is null
-            if (resource == null) {
+        public int getTankCapacity(int tank) {
+            return Integer.MAX_VALUE;
+        }
+
+        @Override
+        public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
+            return true;
+        }
+
+        @Override
+        public int fill(FluidStack resource, FluidAction action) {
+            if (resource.isEmpty()) {
                 return 0;
             }
 
-            FluidStack inserted = storage.insert(resource, !doFill);
-            return inserted == null ? resource.amount : resource.amount - inserted.amount;
+            FluidStack inserted = storage.insert(resource, fluidActionToSimulate(action));
+            return inserted.isEmpty() ? resource.getAmount() : resource.getAmount() - inserted.getAmount();
         }
 
-        @Nullable
         @Override
-        public FluidStack drain(FluidStack resource, boolean doDrain) {
-            // Null-check, because the empty fluidstack is null
-            if (resource == null) {
-                return null;
+        public FluidStack drain(FluidStack resource, FluidAction action) {
+            // Don't continue if stack is empty
+            if (resource.isEmpty()) {
+                return FluidStack.EMPTY;
             }
 
             FluidStack extractSimulated = storage.extract(resource, FluidMatch.FLUID | FluidMatch.NBT, true);
             if (extractSimulated != null) {
                 FluidStack prototype = resource;
-                if (prototype.amount > extractSimulated.amount) {
+                if (prototype.getAmount() > extractSimulated.getAmount()) {
                     prototype = prototype.copy();
-                    prototype.amount = extractSimulated.amount;
+                    prototype.setAmount(extractSimulated.getAmount());
                 }
-                return storage.extract(prototype, FluidMatch.EXACT, !doDrain);
+                return storage.extract(prototype, FluidMatch.EXACT, fluidActionToSimulate(action));
             }
-            return null;
+            return FluidStack.EMPTY;
         }
 
-        @Nullable
         @Override
-        public FluidStack drain(int maxDrain, boolean doDrain) {
-            return storage.extract(maxDrain, !doDrain);
+        public FluidStack drain(int maxDrain, FluidAction action) {
+            return storage.extract(maxDrain, fluidActionToSimulate(action));
         }
     }
 
-    public static class DummyFluidTankProperties implements IFluidTankProperties {
+    public static class FluidStorageWrapperSlotted extends FluidStorageWrapper {
 
-        private final FluidStack fluidStack;
+        private final IIngredientComponentStorageSlotted<FluidStack, Integer> storage;
 
-        public DummyFluidTankProperties(FluidStack fluidStack) {
-            this.fluidStack = fluidStack;
-        }
-
-        @Nullable
-        @Override
-        public FluidStack getContents() {
-            return this.fluidStack;
+        public FluidStorageWrapperSlotted(IIngredientComponentStorageSlotted<FluidStack, Integer> storage) {
+            super(storage);
+            this.storage = storage;
         }
 
         @Override
-        public int getCapacity() {
-            return Integer.MAX_VALUE;
+        public int getTanks() {
+            return this.storage.getSlots();
         }
 
+        @Nonnull
         @Override
-        public boolean canFill() {
-            return true;
-        }
-
-        @Override
-        public boolean canDrain() {
-            return true;
-        }
-
-        @Override
-        public boolean canFillFluidType(FluidStack fluidStack) {
-            return true;
-        }
-
-        @Override
-        public boolean canDrainFluidType(FluidStack fluidStack) {
-            return true;
+        public FluidStack getFluidInTank(int tank) {
+            int tanks = getTanks();
+            if (tank < 0 || tank >= tanks) {
+                throw new IndexOutOfBoundsException("Tank " + tank + " not in valid range - [0," + tanks + ")");
+            }
+            return this.storage.getSlotContents(tank);
         }
     }
+
 }

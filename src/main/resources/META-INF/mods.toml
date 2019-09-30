@@ -1,0 +1,31 @@
+modLoader="javafml"
+loaderVersion="[28.1,)"
+issueTrackerURL="https://github.com/CyclopsMC/CommonCapabilities/issues"
+[[mods]]
+modId="commoncapabilities"
+version="${file.jarVersion}"
+displayName="CommonCapabilities"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/commoncapabilities"
+logoFile="logo.png"
+authors="rubensworks (aka kroeser)"
+description='''
+Forge Capabilities that can be shared by multiple mods.
+'''
+[[dependencies.commoncapabilities]]
+    modId="cyclopscore"
+    mandatory=true
+    versionRange="[1.5.3,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.commoncapabilities]]
+    modId="forge"
+    mandatory=true
+    versionRange="[28.1,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.commoncapabilities]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.14.4]"
+    ordering="NONE"
+    side="BOTH"

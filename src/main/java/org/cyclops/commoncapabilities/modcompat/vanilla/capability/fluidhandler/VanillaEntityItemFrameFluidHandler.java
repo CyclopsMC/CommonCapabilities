@@ -1,16 +1,15 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler;
 
-import net.minecraft.entity.item.EntityItemFrame;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.entity.item.ItemFrameEntity;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntityItemFrameCapabilityDelegator;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * A fluid handler for entity item frames that have a fluid handler.
@@ -18,7 +17,7 @@ import javax.annotation.Nullable;
  */
 public class VanillaEntityItemFrameFluidHandler extends VanillaEntityItemFrameCapabilityDelegator<IFluidHandlerItem> implements IFluidHandler {
 
-    public VanillaEntityItemFrameFluidHandler(EntityItemFrame entity, EnumFacing side) {
+    public VanillaEntityItemFrameFluidHandler(ItemFrameEntity entity, Direction side) {
         super(entity, side);
     }
 
@@ -28,52 +27,70 @@ public class VanillaEntityItemFrameFluidHandler extends VanillaEntityItemFrameCa
     }
 
     @Override
-    public IFluidTankProperties[] getTankProperties() {
-        IFluidHandlerItem fluidHandler = getCapability();
-        if (fluidHandler != null) {
-            return fluidHandler.getTankProperties();
-        }
-        return new IFluidTankProperties[0];
+    public int getTanks() {
+        return getCapability()
+                .map(IFluidHandlerItem::getTanks)
+                .orElse(0);
+    }
+
+    @Nonnull
+    @Override
+    public FluidStack getFluidInTank(int tank) {
+        return getCapability()
+                .map(fluidHandler -> fluidHandler.getFluidInTank(tank))
+                .orElse(FluidStack.EMPTY);
     }
 
     @Override
-    public int fill(FluidStack resource, boolean doFill) {
-        IFluidHandlerItem fluidHandler = getCapability();
-        if (fluidHandler != null) {
-            int ret = fluidHandler.fill(resource, doFill);
-            if (ret > 0 && doFill) {
-                updateItemStack(fluidHandler.getContainer());
-            }
-            return ret;
-        }
-        return 0;
+    public int getTankCapacity(int tank) {
+        return getCapability()
+                .map(fluidHandler -> fluidHandler.getTankCapacity(tank))
+                .orElse(0);
     }
 
-    @Nullable
     @Override
-    public FluidStack drain(FluidStack resource, boolean doDrain) {
-        IFluidHandlerItem fluidHandler = getCapability();
-        if (fluidHandler != null) {
-            FluidStack ret = fluidHandler.drain(resource, doDrain);
-            if (ret != null && doDrain) {
-                updateItemStack(fluidHandler.getContainer());
-            }
-            return ret;
-        }
-        return null;
+    public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
+        return getCapability()
+                .map(fluidHandler -> fluidHandler.isFluidValid(tank, stack))
+                .orElse(false);
     }
 
-    @Nullable
     @Override
-    public FluidStack drain(int maxDrain, boolean doDrain) {
-        IFluidHandlerItem fluidHandler = getCapability();
-        if (fluidHandler != null) {
-            FluidStack ret = fluidHandler.drain(maxDrain, doDrain);
-            if (ret != null && doDrain) {
-                updateItemStack(fluidHandler.getContainer());
-            }
-            return ret;
-        }
-        return null;
+    public int fill(FluidStack resource, FluidAction action) {
+        return getCapability()
+                .map(fluidHandler -> {
+                    int ret = fluidHandler.fill(resource, action);
+                    if (ret > 0 && action.execute()) {
+                        updateItemStack(fluidHandler.getContainer());
+                    }
+                    return ret;
+                })
+                .orElse(0);
+    }
+
+    @Override
+    public FluidStack drain(FluidStack resource, FluidAction action) {
+        return getCapability()
+                .map(fluidHandler -> {
+                    FluidStack ret = fluidHandler.drain(resource, action);
+                    if (!ret.isEmpty() && action.execute()) {
+                        updateItemStack(fluidHandler.getContainer());
+                    }
+                    return ret;
+                })
+                .orElse(FluidStack.EMPTY);
+    }
+
+    @Override
+    public FluidStack drain(int maxDrain, FluidAction action) {
+        return getCapability()
+                .map(fluidHandler -> {
+                    FluidStack ret = fluidHandler.drain(maxDrain, action);
+                    if (!ret.isEmpty() && action.execute()) {
+                        updateItemStack(fluidHandler.getContainer());
+                    }
+                    return ret;
+                })
+                .orElse(FluidStack.EMPTY);
     }
 }

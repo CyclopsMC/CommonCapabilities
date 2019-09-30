@@ -69,7 +69,7 @@ public abstract class ItemItemHandler implements IItemHandlerModifiable {
                 // copy the stack to not modify the original one
                 stack = stack.copy();
                 if (!simulate) {
-                    ItemStack copy = stack.splitStack(maxStackSize);
+                    ItemStack copy = stack.split(maxStackSize);
                     copy.grow(existingStack.getCount());
                     setStackInSlot(slot, copy);
                     return stack;
@@ -84,7 +84,7 @@ public abstract class ItemItemHandler implements IItemHandlerModifiable {
                 // copy the stack to not modify the original one
                 stack = stack.copy();
                 if (!simulate) {
-                    setStackInSlot(slot, stack.splitStack(maxStackSize));
+                    setStackInSlot(slot, stack.split(maxStackSize));
                     return stack;
                 } else {
                     stack.shrink(maxStackSize);
@@ -111,7 +111,7 @@ public abstract class ItemItemHandler implements IItemHandlerModifiable {
             return ItemStack.EMPTY;
         }
 
-        ItemStack extracted = existingStack.splitStack(amount);
+        ItemStack extracted = existingStack.split(amount);
         if (!simulate) {
             setStackInSlot(slot, existingStack);
         }
