@@ -52,9 +52,7 @@ public class TestItemStackSlotlessItemStorageWrapper {
 
         innerStorage = new ItemStackHandler(10);
         ((ItemStackHandler) innerStorage).setStackInSlot(2, APPLE_1.copy());
-        ((ItemStackHandler) innerStorage).setStackInSlot(4, APPLE_1.copy());
         ((ItemStackHandler) innerStorage).setStackInSlot(6, APPLE_10.copy());
-        ((ItemStackHandler) innerStorage).setStackInSlot(8, APPLE_10.copy());
         storage = new IngredientComponentStorageWrapperHandlerItemStackSlotless.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, new DefaultSlotlessItemHandlerWrapper(innerStorage));
         wrapper = new IngredientComponentStorageWrapperHandlerItemStackSlotless.ItemStorageWrapper(IngredientComponents.ITEMSTACK, storage);
     }
@@ -62,15 +60,15 @@ public class TestItemStackSlotlessItemStorageWrapper {
     @Test
     public void testGetItems() {
         assertThat(new IngredientArrayList<>(IngredientComponents.ITEMSTACK, wrapper.getItems()),
-                is(new IngredientArrayList<>(IngredientComponents.ITEMSTACK, ItemStack.EMPTY, ItemStack.EMPTY, APPLE_1, ItemStack.EMPTY, APPLE_1,
-                        ItemStack.EMPTY, APPLE_10, ItemStack.EMPTY, APPLE_10, ItemStack.EMPTY)));
+                is(new IngredientArrayList<>(IngredientComponents.ITEMSTACK, ItemStack.EMPTY, ItemStack.EMPTY, APPLE_1, ItemStack.EMPTY, ItemStack.EMPTY,
+                        ItemStack.EMPTY, APPLE_10, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY)));
     }
 
     @Test
     public void testFindItems() {
         assertThat(new IngredientArrayList<>(IngredientComponents.ITEMSTACK, wrapper.findItems(ItemStack.EMPTY, ItemMatch.ANY)),
-                is(new IngredientArrayList<>(IngredientComponents.ITEMSTACK, ItemStack.EMPTY, ItemStack.EMPTY, APPLE_1, ItemStack.EMPTY, APPLE_1,
-                        ItemStack.EMPTY, APPLE_10, ItemStack.EMPTY, APPLE_10, ItemStack.EMPTY)));
+                is(new IngredientArrayList<>(IngredientComponents.ITEMSTACK, ItemStack.EMPTY, ItemStack.EMPTY, APPLE_1, ItemStack.EMPTY, ItemStack.EMPTY,
+                        ItemStack.EMPTY, APPLE_10, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY)));
     }
 
     @Test
@@ -86,9 +84,7 @@ public class TestItemStackSlotlessItemStorageWrapper {
         assertThat(eq(wrapper.extractItem(0, true), ItemStack.EMPTY), is(true));
 
         assertThat(eq(wrapper.extractItem(10, false), APPLE_1), is(true));
-        assertThat(eq(wrapper.extractItem(10, false), APPLE_1), is(true));
         assertThat(eq(wrapper.extractItem(0, false), ItemStack.EMPTY), is(true));
-        assertThat(eq(wrapper.extractItem(10, false), APPLE_10), is(true));
         assertThat(eq(wrapper.extractItem(10, false), APPLE_10), is(true));
         assertThat(eq(wrapper.extractItem(10, false), ItemStack.EMPTY), is(true));
     }

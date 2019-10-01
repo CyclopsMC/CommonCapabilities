@@ -9,6 +9,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidHandlerConcatenate;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
+import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidTankFixed;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientArrayList;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientLinkedList;
 import org.junit.Before;
@@ -69,21 +70,21 @@ public class TestFluidStackComponentStorageWrapper {
         WATER_2 = new FluidStack(Fluids.WATER, 2);
         WATER_9 = new FluidStack(Fluids.WATER, 9);
 
-        t1 = new FluidTank(64);
-        t2 = new FluidTank(64);
-        t3 = new FluidTank(64);
-        t4 = new FluidTank(64);
+        t1 = new FluidTankFixed(64);
+        t2 = new FluidTankFixed(64);
+        t3 = new FluidTankFixed(64);
+        t4 = new FluidTankFixed(64);
         storage = new FluidHandlerConcatenate(
-                new FluidTank(64),
-                new FluidTank(64),
+                new FluidTankFixed(64),
+                new FluidTankFixed(64),
                 t1,
-                new FluidTank(64),
+                new FluidTankFixed(64),
                 t2,
-                new FluidTank(64),
+                new FluidTankFixed(64),
                 t3,
-                new FluidTank(64),
+                new FluidTankFixed(64),
                 t4,
-                new FluidTank(64)
+                new FluidTankFixed(64)
         );
         t1.fill(WATER_1.copy(), IFluidHandler.FluidAction.EXECUTE);
         t2.fill(LAVA_1_NB.copy(), IFluidHandler.FluidAction.EXECUTE);
@@ -130,50 +131,50 @@ public class TestFluidStackComponentStorageWrapper {
     @Test
     public void testInsert() {
         assertThat(wrapper.insert(WATER_64, true), is(FluidStack.EMPTY));
-        assertThat(storage.getFluidInTank(1), is(FluidStack.EMPTY));
+        assertThat(storage.getFluidInTank(0), is(FluidStack.EMPTY));
         assertThat(wrapper.insert(WATER_64, true), is(FluidStack.EMPTY));
-        assertThat(storage.getFluidInTank(1), is(FluidStack.EMPTY));
+        assertThat(storage.getFluidInTank(0), is(FluidStack.EMPTY));
         assertThat(wrapper.insert(WATER_64, true), is(FluidStack.EMPTY));
-        assertThat(storage.getFluidInTank(1), is(FluidStack.EMPTY));
+        assertThat(storage.getFluidInTank(0), is(FluidStack.EMPTY));
         assertThat(wrapper.insert(LAVA_64, true), is(FluidStack.EMPTY));
-        assertThat(storage.getFluidInTank(1), is(FluidStack.EMPTY));
+        assertThat(storage.getFluidInTank(0), is(FluidStack.EMPTY));
         assertThat(wrapper.insert(LAVA_64, true), is(FluidStack.EMPTY));
+        assertThat(storage.getFluidInTank(0), is(FluidStack.EMPTY));
+        assertThat(wrapper.insert(WATER_64, false), is(FluidStack.EMPTY));
+        assertThat(eq(storage.getFluidInTank(0), WATER_64), is(true));
         assertThat(storage.getFluidInTank(1), is(FluidStack.EMPTY));
         assertThat(wrapper.insert(WATER_64, false), is(FluidStack.EMPTY));
+        assertThat(eq(storage.getFluidInTank(0), WATER_64), is(true));
         assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(storage.getFluidInTank(1), is(FluidStack.EMPTY));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
+        assertThat(storage.getFluidInTank(3), is(FluidStack.EMPTY));
         assertThat(wrapper.insert(WATER_64, false), is(FluidStack.EMPTY));
+        assertThat(eq(storage.getFluidInTank(0), WATER_64), is(true));
         assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
-        assertThat(storage.getFluidInTank(1), is(FluidStack.EMPTY));
-        assertThat(wrapper.insert(WATER_64, false), is(FluidStack.EMPTY));
-        assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(storage.getFluidInTank(1), is(FluidStack.EMPTY));
+        assertThat(eq(storage.getFluidInTank(2), WATER_64), is(true));
+        assertThat(eq(storage.getFluidInTank(3), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(storage.getFluidInTank(5), is(FluidStack.EMPTY));
         assertThat(wrapper.insert(LAVA_64_NB, false), is(FluidStack.EMPTY));
+        assertThat(eq(storage.getFluidInTank(0), WATER_64), is(true));
         assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_64_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(storage.getFluidInTank(1), is(FluidStack.EMPTY));
+        assertThat(eq(storage.getFluidInTank(2), WATER_64), is(true));
+        assertThat(eq(storage.getFluidInTank(3), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_64_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(5), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(storage.getFluidInTank(7), is(FluidStack.EMPTY));
         assertThat(wrapper.insert(LAVA_64_NB, false), is(FluidStack.EMPTY));
+        assertThat(eq(storage.getFluidInTank(0), WATER_64), is(true));
         assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_64_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_64_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
-        assertThat(storage.getFluidInTank(1), is(FluidStack.EMPTY));
+        assertThat(eq(storage.getFluidInTank(2), WATER_64), is(true));
+        assertThat(eq(storage.getFluidInTank(3), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_64_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(5), LAVA_64_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(7), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
+        assertThat(storage.getFluidInTank(9), is(FluidStack.EMPTY));
     }
 
     @Test
@@ -186,247 +187,247 @@ public class TestFluidStackComponentStorageWrapper {
     @Test
     public void testExtractAny() {
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.ANY, true), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.ANY, true), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(WATER_10, FluidMatch.ANY, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.ANY, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.ANY, false), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.ANY, false), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.ANY, false), LAVA_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_9), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_9), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
     }
 
     @Test
     public void testExtractAmount() {
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.AMOUNT, true), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.AMOUNT, true), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(WATER_10, FluidMatch.AMOUNT, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.AMOUNT, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.AMOUNT, false), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.AMOUNT, false), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.AMOUNT, false), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(WATER_11, FluidMatch.AMOUNT, false), FluidStack.EMPTY), is(true));
         assertThat(eq(wrapper.extract(WATER_10, FluidMatch.AMOUNT, false), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), FluidStack.EMPTY), is(true));
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.AMOUNT, false), FluidStack.EMPTY), is(true));
     }
 
     @Test
     public void testExtractFluid() {
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.FLUID, true), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.FLUID, true), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(WATER_10, FluidMatch.FLUID, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.FLUID, true), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.FLUID, false), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.FLUID, false), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.FLUID, false), LAVA_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_9), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_9), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
     }
 
     @Test
     public void testExtractNbt() {
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.NBT, true), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.NBT, true), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(WATER_10, FluidMatch.NBT, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.NBT, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.NBT, false), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.NBT, false), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.NBT, false), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
     }
 
     @Test
     public void testExtractFluidAmount() {
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.FLUID | FluidMatch.AMOUNT, true), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.FLUID | FluidMatch.AMOUNT, true), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(WATER_10, FluidMatch.FLUID | FluidMatch.AMOUNT, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.FLUID | FluidMatch.AMOUNT, true), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.FLUID | FluidMatch.AMOUNT, false), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.FLUID | FluidMatch.AMOUNT, false), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.FLUID | FluidMatch.AMOUNT, false), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(WATER_10, FluidMatch.FLUID | FluidMatch.AMOUNT, false), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), FluidStack.EMPTY), is(true));
     }
 
     @Test
     public void testExtractFluidNbt() {
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.FLUID | FluidMatch.NBT, true), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.FLUID | FluidMatch.NBT, true), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(WATER_10, FluidMatch.FLUID | FluidMatch.NBT, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.FLUID | FluidMatch.NBT, true), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.FLUID | FluidMatch.NBT, false), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.FLUID | FluidMatch.NBT, false), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.FLUID | FluidMatch.NBT, false), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
     }
 
     @Test
     public void testExtractAmountNbt() {
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.AMOUNT | FluidMatch.NBT, true), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.AMOUNT | FluidMatch.NBT, true), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(WATER_10, FluidMatch.AMOUNT | FluidMatch.NBT, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.AMOUNT | FluidMatch.NBT, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.AMOUNT | FluidMatch.NBT, false), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.AMOUNT | FluidMatch.NBT, false), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(WATER_10, FluidMatch.AMOUNT | FluidMatch.NBT, false), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.AMOUNT | FluidMatch.NBT, false), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), FluidStack.EMPTY), is(true));
     }
 
     @Test
     public void testExtractExact() {
         assertThat(eq(wrapper.extract(WATER_9, FluidMatch.EXACT, true), WATER_9), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(WATER_2, FluidMatch.EXACT, true), WATER_2), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.EXACT, true), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.EXACT, true), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(WATER_9, FluidMatch.EXACT, false), WATER_9), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_2), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_2), is(true));
         assertThat(eq(wrapper.extract(WATER_2, FluidMatch.EXACT, false), WATER_2), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), FluidStack.EMPTY), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.EXACT, false), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), FluidStack.EMPTY), is(true));
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.EXACT, false), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), FluidStack.EMPTY), is(true));
     }
 
     @Test
@@ -445,39 +446,39 @@ public class TestFluidStackComponentStorageWrapper {
     @Test
     public void testExtractMax() {
         assertThat(eq(wrapper.extract(10, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(1, true), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(10, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(10, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(10, false), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), LAVA_1_NB), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_1), is(true));
         assertThat(eq(wrapper.extract(1, false), LAVA_1_NB), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), LAVA_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_1), is(true));
         assertThat(eq(wrapper.extract(10, false), LAVA_10), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), WATER_1), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_1), is(true));
         assertThat(eq(wrapper.extract(10, false), WATER_1), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), FluidStack.EMPTY), is(true));
         assertThat(eq(wrapper.extract(10, false), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(storage.getFluidInTank(1), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(4), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(6), FluidStack.EMPTY), is(true));
+        assertThat(eq(storage.getFluidInTank(8), FluidStack.EMPTY), is(true));
     }
 
 }

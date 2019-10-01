@@ -1,0 +1,37 @@
+package org.cyclops.commoncapabilities.api.capability.fluidhandler;
+
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
+
+import javax.annotation.Nonnull;
+import java.util.function.Predicate;
+
+/**
+ * A temporary override of FluidTank with a fix for Forge PR 6196.
+ * @author rubensworks
+ */
+public class FluidTankFixed extends FluidTank { // TODO: rm when Forge fixes the bug
+    public FluidTankFixed(int capacity) {
+        super(capacity);
+    }
+
+    public FluidTankFixed(int capacity, Predicate<FluidStack> validator) {
+        super(capacity, validator);
+    }
+
+    @Nonnull
+    @Override
+    public FluidStack drain(int maxDrain, FluidAction action) {
+        int drained = maxDrain;
+        if (fluid.getAmount() < drained)
+        {
+            drained = fluid.getAmount();
+        }
+        FluidStack stack = new FluidStack(fluid, drained);
+        if (action.execute() && drained > 0)
+        {
+            fluid.shrink(drained);
+        }
+        return stack;
+    }
+}
