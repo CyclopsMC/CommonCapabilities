@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.6.0 or higher.
+
+Changes:
+* Cache crafting table recipe simulation
+  This used to cause performance issues in Integrated Crafting.
+  Closes CyclopsMC/IntegratedDynamics#775
