@@ -24,6 +24,7 @@ import org.cyclops.commoncapabilities.api.ingredient.IPrototypedIngredient;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
+import org.cyclops.cyclopscore.helper.CraftingHelpers;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -133,7 +134,7 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
             inventoryCrafting.setInventorySlotContents(i, recipeIngredients.get(i));
         }
 
-        IRecipe recipe = CraftingManager.findMatchingRecipe(inventoryCrafting, world);
+        IRecipe recipe = CraftingHelpers.findMatchingRecipeCached(inventoryCrafting, world, true);
         if (recipe == null) {
             return null;
         }
