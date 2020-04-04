@@ -1,0 +1,5 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.6.0 or higher.
+
+Fixes:
+* Fix invalid MixedIngredients sometimes being made on empty recipe inputs, Closes CyclopsMC/IntegratedDynamics#825
