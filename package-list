@@ -1,6 +1,5 @@
 net.minecraft.potion
 org.cyclops.commoncapabilities
-org.cyclops.commoncapabilities.api.capability
 org.cyclops.commoncapabilities.api.capability.block
 org.cyclops.commoncapabilities.api.capability.fluidhandler
 org.cyclops.commoncapabilities.api.capability.inventorystate
@@ -22,18 +21,6 @@ org.cyclops.commoncapabilities.capability.wrench
 org.cyclops.commoncapabilities.core
 org.cyclops.commoncapabilities.ingredient
 org.cyclops.commoncapabilities.ingredient.storage
-org.cyclops.commoncapabilities.modcompat.forestry
-org.cyclops.commoncapabilities.modcompat.forestry.capability.recipehandler
-org.cyclops.commoncapabilities.modcompat.forestry.capability.temperature
-org.cyclops.commoncapabilities.modcompat.forestry.capability.work
-org.cyclops.commoncapabilities.modcompat.tconstruct
-org.cyclops.commoncapabilities.modcompat.tconstruct.capability.recipehandler
-org.cyclops.commoncapabilities.modcompat.tconstruct.capability.work
-org.cyclops.commoncapabilities.modcompat.thermalexpansion
-org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler
-org.cyclops.commoncapabilities.modcompat.thermalexpansion.recipehandler
-org.cyclops.commoncapabilities.modcompat.thermalexpansion.slotlessitemhandler
-org.cyclops.commoncapabilities.modcompat.thermalexpansion.work
 org.cyclops.commoncapabilities.modcompat.vanilla
 org.cyclops.commoncapabilities.modcompat.vanilla.capability
 org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage
