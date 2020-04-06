@@ -37,7 +37,7 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
 
     @Override
     public INBT serializeCondition(Integer matchCondition) {
-        return new IntNBT(matchCondition);
+        return IntNBT.valueOf(matchCondition);
     }
 
     @Override

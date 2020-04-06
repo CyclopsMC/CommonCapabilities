@@ -63,12 +63,12 @@ public class GeneralConfig extends DummyConfig {
     }
 
     @SubscribeEvent
-    public void onConfigLoad(ModConfig.ConfigReloading event) {
+    public void onConfigLoad(ModConfig.Loading event) {
         updateNbtComparator();
     }
 
     @SubscribeEvent
-    public void onConfigReload(ModConfig.ConfigReloading event) {
+    public void onConfigReload(ModConfig.Reloading event) {
         updateNbtComparator();
     }
 

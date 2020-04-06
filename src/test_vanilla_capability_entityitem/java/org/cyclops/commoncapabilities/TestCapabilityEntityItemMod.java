@@ -42,13 +42,13 @@ public class TestCapabilityEntityItemMod {
 
     @SubscribeEvent
     public void onEntityInteract(PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getEntityPlayer() == null) return;
-        if (event.getEntityPlayer().getHeldItemMainhand().isEmpty()) return;
+        if (event.getPlayer() == null) return;
+        if (event.getPlayer().getHeldItemMainhand().isEmpty()) return;
 
-        Entity target = Iterables.get(event.getEntityPlayer().getEntityWorld().getEntitiesWithinAABB(Entity.class,
+        Entity target = Iterables.get(event.getPlayer().getEntityWorld().getEntitiesWithinAABB(Entity.class,
                 new AxisAlignedBB(event.getPos().offset(event.getFace()))), 0, null);
         if (target != null) {
-            Item heldItem = event.getEntityPlayer().getHeldItemMainhand().getItem();
+            Item heldItem = event.getPlayer().getHeldItemMainhand().getItem();
             if (!(target instanceof ItemEntity) && !(target instanceof ItemFrameEntity)) return;
             if (target.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, event.getFace()).isPresent()) {
                 event.setCanceled(true);

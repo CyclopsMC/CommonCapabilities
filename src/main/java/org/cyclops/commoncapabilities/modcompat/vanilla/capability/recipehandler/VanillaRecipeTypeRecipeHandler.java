@@ -12,7 +12,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.world.World;
-import net.minecraftforge.common.crafting.IngredientNBT;
+import net.minecraftforge.common.crafting.NBTIngredient;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
@@ -81,7 +81,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
      * @return A list of prototyped ingredients.
      */
     public static List<IPrototypedIngredient<ItemStack, Integer>> getPrototypesFromIngredient(Ingredient ingredient) {
-        if (ingredient instanceof IngredientNBT) {
+        if (ingredient instanceof NBTIngredient) {
             return Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
                     ingredient.getMatchingStacks()[0], ItemMatch.ITEM | ItemMatch.NBT));
 //        } else if (ingredient instanceof OreIngredient) { // TODO: somehow detect tags in the future, see ShapelessRecipeBuilder

@@ -18,9 +18,9 @@ public class TestIngredientHelpers {
     @Test
     public void testCompareTags() {
         assertThat(compareTags(null, null), is(0));
-        assertThat(compareTags(null, new IntNBT(0)), is(-1));
-        assertThat(compareTags(new IntNBT(0), null), is(1));
-        assertThat(compareTags(new IntNBT(0), new IntNBT(0)), is(0));
+        assertThat(compareTags(null, IntNBT.valueOf(0)), is(-1));
+        assertThat(compareTags(IntNBT.valueOf(0), null), is(1));
+        assertThat(compareTags(IntNBT.valueOf(0), IntNBT.valueOf(0)), is(0));
     }
 
     @Test

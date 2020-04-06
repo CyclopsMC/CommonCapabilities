@@ -45,9 +45,9 @@ public class TestCapabilityWorldTemperatureMod {
 
     @SubscribeEvent
     public void onEntityInteract(AttackEntityEvent event) {
-        if (event.getEntityPlayer() == null) return;
-        if (event.getEntityPlayer().getHeldItemMainhand().isEmpty()) return;
-        if (event.getEntityPlayer().getHeldItemMainhand().getItem() != Items.BEETROOT) return;
+        if (event.getPlayer() == null) return;
+        if (event.getPlayer().getHeldItemMainhand().isEmpty()) return;
+        if (event.getPlayer().getHeldItemMainhand().getItem() != Items.BEETROOT) return;
 
         Entity target = event.getTarget();
         if (target != null && target.getCapability(TemperatureConfig.CAPABILITY, null).isPresent()) {
@@ -60,7 +60,7 @@ public class TestCapabilityWorldTemperatureMod {
     @SubscribeEvent
     public void onItemInteract(PlayerInteractEvent.RightClickItem event) {
         if (event.getItemStack().isEmpty()) return;
-        if (!event.getEntityPlayer().isSneaking()) return;
+        if (!event.getPlayer().isCrouching()) return;
 
         ItemStack itemStack = event.getItemStack();
         if (itemStack.getCapability(TemperatureConfig.CAPABILITY, null).isPresent()) {

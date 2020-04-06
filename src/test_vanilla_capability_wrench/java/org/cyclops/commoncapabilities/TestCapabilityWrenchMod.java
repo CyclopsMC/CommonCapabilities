@@ -69,7 +69,7 @@ public class TestCapabilityWrenchMod {
         BlockPos pos = event.getPos();
         Direction side = event.getFace();
         WrenchTarget wrenchTarget = WrenchTarget.forBlock(world, pos, side);
-        PlayerEntity player = event.getEntityPlayer();
+        PlayerEntity player = event.getPlayer();
         if (wrench.canUse(player, wrenchTarget)) {
             wrench.beforeUse(player, wrenchTarget);
             world.getBlockState(pos).getBlock().rotate(world.getBlockState(pos), world, pos, Rotation.CLOCKWISE_90);

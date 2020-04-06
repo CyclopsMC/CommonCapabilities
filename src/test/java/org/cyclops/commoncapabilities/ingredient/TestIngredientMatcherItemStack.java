@@ -40,22 +40,24 @@ public class TestIngredientMatcherItemStack {
         CompoundNBT tag2 = new CompoundNBT();
         tag2.putInt("key", 2);
 
-        W_1 = new ItemStack(Items.WOODEN_AXE, 1);
-        W_2 = new ItemStack(Items.WOODEN_AXE, 2);
-        W_100 = new ItemStack(Items.WOODEN_AXE, 100);
-        W_123 = new ItemStack(Items.WOODEN_AXE, 123);
-        W_1_T1 = new ItemStack(Items.WOODEN_AXE, 1);
+        W_1 = new ItemStack(Items.WHITE_WOOL, 1);
+        W_2 = new ItemStack(Items.WHITE_WOOL, 2);
+        W_100 = new ItemStack(Items.WHITE_WOOL, 100);
+        W_123 = new ItemStack(Items.WHITE_WOOL, 123);
+        W_1_T1 = new ItemStack(Items.WHITE_WOOL, 1);
         W_1_T1.setTag(tag1);
-        W_2_T1 = new ItemStack(Items.WOODEN_AXE, 2);
+        W_2_T1 = new ItemStack(Items.WHITE_WOOL, 2);
         W_2_T1.setTag(tag1);
-        W_1_T2 = new ItemStack(Items.WOODEN_AXE, 1);
+        W_1_T2 = new ItemStack(Items.WHITE_WOOL, 1);
         W_1_T2.setTag(tag2);
-        W_2_T2 = new ItemStack(Items.WOODEN_AXE, 2);
+        W_2_T2 = new ItemStack(Items.WHITE_WOOL, 2);
         W_2_T2.setTag(tag2);
 
         L_1 = new ItemStack(Items.LEAD, 1);
         L_1_T1 = new ItemStack(Items.LEAD, 1);
         L_1_T1.setTag(tag1);
+
+        ItemMatch.NBT_COMPARATOR = NBTComparator.INSTANCE = new NBTComparator(null);
     }
 
     @Test
@@ -270,8 +272,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1, W_2_T2), is(-1));
         assertThat(M.compare(W_1, W_1_T1), is(-1));
         assertThat(M.compare(W_1, W_1_T2), is(-1));
-        assertThat(M.compare(W_1, L_1), is(-260));
-        assertThat(M.compare(W_1, L_1_T1), is(-260));
+        assertThat(M.compare(W_1, L_1), is(-715));
+        assertThat(M.compare(W_1, L_1_T1), is(-715));
 
         assertThat(M.compare(W_1_T1, W_1), is(1));
         assertThat(M.compare(W_1_T1, W_2), is(-1));
@@ -279,8 +281,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T1, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T1, W_1_T1), is(0));
         assertThat(M.compare(W_1_T1, W_1_T2), is(-1));
-        assertThat(M.compare(W_1_T1, L_1), is(-260));
-        assertThat(M.compare(W_1_T1, L_1_T1), is(-260));
+        assertThat(M.compare(W_1_T1, L_1), is(-715));
+        assertThat(M.compare(W_1_T1, L_1_T1), is(-715));
 
         assertThat(M.compare(W_1_T2, W_1), is(1));
         assertThat(M.compare(W_1_T2, W_2), is(-1));
@@ -288,8 +290,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T2, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T2, W_1_T1), is(1));
         assertThat(M.compare(W_1_T2, W_1_T2), is(0));
-        assertThat(M.compare(W_1_T2, L_1), is(-260));
-        assertThat(M.compare(W_1_T2, L_1_T1), is(-260));
+        assertThat(M.compare(W_1_T2, L_1), is(-715));
+        assertThat(M.compare(W_1_T2, L_1_T1), is(-715));
 
         assertThat(M.compare(W_2, W_1), is(1));
         assertThat(M.compare(W_2, W_1_T1), is(1));
@@ -297,8 +299,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2, W_2), is(0));
         assertThat(M.compare(W_2, W_2_T1), is(-1));
         assertThat(M.compare(W_2, W_2_T2), is(-1));
-        assertThat(M.compare(W_2, L_1), is(-260));
-        assertThat(M.compare(W_2, L_1_T1), is(-260));
+        assertThat(M.compare(W_2, L_1), is(-715));
+        assertThat(M.compare(W_2, L_1_T1), is(-715));
 
         assertThat(M.compare(W_2_T1, W_1), is(1));
         assertThat(M.compare(W_2_T1, W_1_T1), is(1));
@@ -313,24 +315,24 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2_T2, W_2), is(1));
         assertThat(M.compare(W_2_T2, W_2_T1), is(1));
         assertThat(M.compare(W_2_T2, W_2_T2), is(0));
-        assertThat(M.compare(W_2_T2, L_1), is(-260));
-        assertThat(M.compare(W_2_T2, L_1_T1), is(-260));
+        assertThat(M.compare(W_2_T2, L_1), is(-715));
+        assertThat(M.compare(W_2_T2, L_1_T1), is(-715));
 
-        assertThat(M.compare(L_1, W_1), is(260));
-        assertThat(M.compare(L_1, W_1_T1), is(260));
-        assertThat(M.compare(L_1, W_1_T2), is(260));
-        assertThat(M.compare(L_1, W_2), is(260));
-        assertThat(M.compare(L_1, W_2_T1), is(260));
-        assertThat(M.compare(L_1, W_2_T2), is(260));
+        assertThat(M.compare(L_1, W_1), is(715));
+        assertThat(M.compare(L_1, W_1_T1), is(715));
+        assertThat(M.compare(L_1, W_1_T2), is(715));
+        assertThat(M.compare(L_1, W_2), is(715));
+        assertThat(M.compare(L_1, W_2_T1), is(715));
+        assertThat(M.compare(L_1, W_2_T2), is(715));
         assertThat(M.compare(L_1, L_1), is(0));
         assertThat(M.compare(L_1, L_1_T1), is(-1));
 
-        assertThat(M.compare(L_1_T1, W_1), is(260));
-        assertThat(M.compare(L_1_T1, W_1_T1), is(260));
-        assertThat(M.compare(L_1_T1, W_1_T2), is(260));
-        assertThat(M.compare(L_1_T1, W_2), is(260));
-        assertThat(M.compare(L_1_T1, W_2_T1), is(260));
-        assertThat(M.compare(L_1_T1, W_2_T2), is(260));
+        assertThat(M.compare(L_1_T1, W_1), is(715));
+        assertThat(M.compare(L_1_T1, W_1_T1), is(715));
+        assertThat(M.compare(L_1_T1, W_1_T2), is(715));
+        assertThat(M.compare(L_1_T1, W_2), is(715));
+        assertThat(M.compare(L_1_T1, W_2_T1), is(715));
+        assertThat(M.compare(L_1_T1, W_2_T2), is(715));
         assertThat(M.compare(L_1_T1, L_1), is(1));
         assertThat(M.compare(L_1_T1, L_1_T1), is(0));
     }

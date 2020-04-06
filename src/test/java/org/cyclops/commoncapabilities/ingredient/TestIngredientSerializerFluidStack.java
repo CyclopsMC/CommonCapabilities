@@ -60,22 +60,22 @@ public class TestIngredientSerializerFluidStack {
 
     @Test(expected = IllegalArgumentException.class)
     public void deserializeInstanceInvalid() {
-        S.deserializeInstance(new StringNBT("0"));
+        S.deserializeInstance(StringNBT.valueOf("0"));
     }
 
     @Test
     public void serializeCondition() {
-        assertThat(S.serializeCondition(1), is(new IntNBT(1)));
+        assertThat(S.serializeCondition(1), is(IntNBT.valueOf(1)));
     }
 
     @Test
     public void deserializeCondition() {
-        assertThat(S.deserializeCondition(new IntNBT(1)), is(1));
+        assertThat(S.deserializeCondition(IntNBT.valueOf(1)), is(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void deserializeConditionInvalid() {
-        S.deserializeCondition(new StringNBT("0"));
+        S.deserializeCondition(StringNBT.valueOf("0"));
     }
 
 }

@@ -1,10 +1,14 @@
 package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.nbt.*;
+import net.minecraft.util.text.ITextComponent;
 import org.cyclops.cyclopscore.nbt.path.NbtParseException;
 import org.cyclops.cyclopscore.nbt.path.NbtPath;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.DataOutput;
+import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -84,40 +88,40 @@ public class TestNBTBaseComparator {
     public static void init() {
         COMP = new NBTComparator(null);
 
-        E = new EndNBT();
+        E = EndNBT.INSTANCE;
 
-        B_0 = new ByteNBT((byte) 0);
-        B_1 = new ByteNBT((byte) 1);
-        B_2 = new ByteNBT((byte) 2);
+        B_0 = ByteNBT.valueOf((byte) 0);
+        B_1 = ByteNBT.valueOf((byte) 1);
+        B_2 = ByteNBT.valueOf((byte) 2);
 
-        S_0 = new ShortNBT((short) 0);
-        S_1 = new ShortNBT((short) 1);
-        S_2 = new ShortNBT((short) 2);
+        S_0 = ShortNBT.valueOf((short) 0);
+        S_1 = ShortNBT.valueOf((short) 1);
+        S_2 = ShortNBT.valueOf((short) 2);
 
-        I_0 = new IntNBT(0);
-        I_1 = new IntNBT(1);
-        I_2 = new IntNBT(2);
+        I_0 = IntNBT.valueOf(0);
+        I_1 = IntNBT.valueOf(1);
+        I_2 = IntNBT.valueOf(2);
 
-        L_0 = new LongNBT(0);
-        L_1 = new LongNBT(1);
-        L_2 = new LongNBT(2);
+        L_0 = LongNBT.valueOf(0);
+        L_1 = LongNBT.valueOf(1);
+        L_2 = LongNBT.valueOf(2);
 
-        F_0 = new FloatNBT(0);
-        F_1 = new FloatNBT(1);
-        F_2 = new FloatNBT(2);
+        F_0 = FloatNBT.valueOf(0);
+        F_1 = FloatNBT.valueOf(1);
+        F_2 = FloatNBT.valueOf(2);
 
-        D_0 = new DoubleNBT(0);
-        D_1 = new DoubleNBT(1);
-        D_2 = new DoubleNBT(2);
+        D_0 = DoubleNBT.valueOf(0);
+        D_1 = DoubleNBT.valueOf(1);
+        D_2 = DoubleNBT.valueOf(2);
 
         BA_0 = new ByteArrayNBT(new byte[]{0});
         BA_1 = new ByteArrayNBT(new byte[]{1});
         BA_2 = new ByteArrayNBT(new byte[]{2});
 
-        STR_0 = new StringNBT("0");
-        STR_1 = new StringNBT("1");
-        STR_2 = new StringNBT("2");
-        STR_X = new StringNBT("X");
+        STR_0 = StringNBT.valueOf("0");
+        STR_1 = StringNBT.valueOf("1");
+        STR_2 = StringNBT.valueOf("2");
+        STR_X = StringNBT.valueOf("X");
 
         LST_B_012 = new ListNBT();
         LST_B_012.add(B_0);
@@ -852,14 +856,30 @@ public class TestNBTBaseComparator {
         assertThat(COMP.compare(LA_0, UNKNOWN0), is(-8));
     }
 
-    public static class NBTUnknown extends IntNBT {
-        public NBTUnknown() {
-            super(0);
+    public static class NBTUnknown implements INBT {
+        @Override
+        public void write(DataOutput output) throws IOException {
+
         }
 
         @Override
         public byte getId() {
             return 20;
+        }
+
+        @Override
+        public INBTType<?> getType() {
+            return null;
+        }
+
+        @Override
+        public INBT copy() {
+            return null;
+        }
+
+        @Override
+        public ITextComponent toFormattedComponent(String indentation, int indentDepth) {
+            return null;
         }
     }
 

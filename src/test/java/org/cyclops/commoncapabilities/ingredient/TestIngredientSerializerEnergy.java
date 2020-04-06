@@ -21,31 +21,31 @@ public class TestIngredientSerializerEnergy {
 
     @Test
     public void serializeInstance() {
-        assertThat(S.serializeInstance(0), is(new IntNBT(0)));
-        assertThat(S.serializeInstance(100), is(new IntNBT(100)));
+        assertThat(S.serializeInstance(0), is(IntNBT.valueOf(0)));
+        assertThat(S.serializeInstance(100), is(IntNBT.valueOf(100)));
     }
 
     @Test
     public void deserializeInstance() {
-        assertThat(S.deserializeInstance(new IntNBT(0)), is(0));
-        assertThat(S.deserializeInstance(new IntNBT(100)), is(100));
+        assertThat(S.deserializeInstance(IntNBT.valueOf(0)), is(0));
+        assertThat(S.deserializeInstance(IntNBT.valueOf(100)), is(100));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void deserializeInstanceInvalid() {
-        S.deserializeInstance(new StringNBT("0"));
+        S.deserializeInstance(StringNBT.valueOf("0"));
     }
 
     @Test
     public void serializeCondition() {
-        assertThat(S.serializeCondition(true), is(new ByteNBT((byte) 1)));
-        assertThat(S.serializeCondition(false), is(new ByteNBT((byte) 0)));
+        assertThat(S.serializeCondition(true), is(ByteNBT.valueOf((byte) 1)));
+        assertThat(S.serializeCondition(false), is(ByteNBT.valueOf((byte) 0)));
     }
 
     @Test
     public void deserializeCondition() {
-        assertThat(S.deserializeCondition(new ByteNBT((byte) 1)), is(true));
-        assertThat(S.deserializeCondition(new ByteNBT((byte) 0)), is(false));
+        assertThat(S.deserializeCondition(ByteNBT.valueOf((byte) 1)), is(true));
+        assertThat(S.deserializeCondition(ByteNBT.valueOf((byte) 0)), is(false));
     }
 
 }

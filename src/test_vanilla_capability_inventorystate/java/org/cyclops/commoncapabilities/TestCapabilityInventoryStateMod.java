@@ -38,9 +38,9 @@ public class TestCapabilityInventoryStateMod {
 
     @SubscribeEvent
     public void onEntityInteract(AttackEntityEvent event) {
-        if (event.getEntityPlayer() == null) return;
-        if (event.getEntityPlayer().getHeldItemMainhand().isEmpty()) return;
-        if (event.getEntityPlayer().getHeldItemMainhand().getItem() != Items.ARROW) return;
+        if (event.getPlayer() == null) return;
+        if (event.getPlayer().getHeldItemMainhand().isEmpty()) return;
+        if (event.getPlayer().getHeldItemMainhand().getItem() != Items.ARROW) return;
 
         Entity target = event.getTarget();
         if (target != null && target.getCapability(InventoryStateConfig.CAPABILITY, null).isPresent()) {

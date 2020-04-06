@@ -30,7 +30,7 @@ public class TestCapabilityRecipeHandlerMod {
     public void onTileInteract(PlayerInteractEvent.LeftClickBlock event) {
         if (event.getItemStack().isEmpty()) return;
         if (event.getItemStack().getItem() != Item.getItemFromBlock(Blocks.CRAFTING_TABLE)) return;
-        if (event.getEntityPlayer().getEntityWorld().isRemote) return;
+        if (event.getPlayer().getEntityWorld().isRemote) return;
 
         IRecipeHandler recipeHandler = null;
         TileEntity te = event.getWorld().getTileEntity(event.getPos());

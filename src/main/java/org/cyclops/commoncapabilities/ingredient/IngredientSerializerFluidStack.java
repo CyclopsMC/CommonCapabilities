@@ -26,7 +26,7 @@ public class IngredientSerializerFluidStack implements IIngredientSerializer<Flu
 
     @Override
     public INBT serializeCondition(Integer matchCondition) {
-        return new IntNBT(matchCondition);
+        return IntNBT.valueOf(matchCondition);
     }
 
     @Override

@@ -12,7 +12,7 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 public class IngredientSerializerEnergy implements IIngredientSerializer<Integer, Boolean> {
     @Override
     public INBT serializeInstance(Integer instance) {
-        return new IntNBT(instance);
+        return IntNBT.valueOf(instance);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class IngredientSerializerEnergy implements IIngredientSerializer<Integer
 
     @Override
     public INBT serializeCondition(Boolean matchCondition) {
-        return new ByteNBT((byte) (matchCondition ? 1 : 0));
+        return ByteNBT.valueOf((byte) (matchCondition ? 1 : 0));
     }
 
     @Override
