@@ -226,7 +226,8 @@ task signJar(type: SignJar, dependsOn: jar) {
     inputFile = jar.archivePath
     outputFile = jar.archivePath
 }
-build.dependsOn signJar
+//build.dependsOn signJar
+// TODO: enable signing when this issue is fixed: https://github.com/MinecraftForge/ForgeGradle/issues/636
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
