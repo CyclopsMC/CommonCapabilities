@@ -32,8 +32,7 @@ deploy:
       tags: true
   - provider: releases
     skip_cleanup: true
-    api_key:
-      secure: PzNxpgPRi6PVyh1Y1yoNi+FYqy6Xi9EFsmHtRPbhep8GW2ADPyti0REsLb0k5Wq7hDRWj7EKPRUxtmJM4DC9uA9Ys0rXBDWIcj2xFSObwHUf7++hncD86O2QUp+kYNdnBpxKz4+JW/oJN6B+a9GBhv4VBbUfSTKbHVaVXCzhjYq5VWl8bbhhw/76B2Lsf0r5ZbQGhgXbgMB+ov2jIuIuEkzY5680U92/rUvBw7RRqanaO4cRM23Ax9VObw5WGIjaqpoyLsSLWp6cFlW5myEk4Z79KnSGWq5u0O+r8bbDmnwalD1AMwZJf9jzHD+UUPZLDT4z9eQpIUGX6+3ieRHBdtNtUxpc0fj17Q6kcnGEgOIEsqGAnbnBDm0uEDM7TYxwpqiFFy1idPzziieX2Sa3u6GP2bl351KF6rFURXCfPx1WY+7ZtZ0mbDueZ8KwqqC4caR/iRezAL+zTJRI5644bSi6HsKZjgJM8fvDR4cTukqPC9LnrlD/a9TXfPkXbwJDKNUyyLCVQAs/kp1j/O2u/hG/JclA5Lw2kvmKIKUkDXDz3o6Dc+WSGpKKwIgsjQSzPuIwZvSDvMf9nzxjT4YOGJIZAG/X2i/vZf8dQfahM0WhRy6JQ8EeJUhLQKrUbi7SOUOAHqMKrc+Qasi/gL7nFOb6rL8duEFv9Sr1bw6DVis=
+    api_key: $GITHUB_TOKEN
     on:
       all_branches: true
       repo: CyclopsMC/CommonCapabilities
