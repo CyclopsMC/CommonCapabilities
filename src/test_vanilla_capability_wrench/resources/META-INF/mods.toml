@@ -1,4 +1,0 @@
-modLoader="javafml"
-loaderVersion="*"
-[[mods]]
-	modId="test_commoncapabilities_vanilla_capability_wrench"

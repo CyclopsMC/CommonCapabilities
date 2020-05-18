@@ -83,10 +83,6 @@ sourceSets {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
     }
-    test_vanilla_capability_wrench {
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-    }
 }
 
 configurations {
@@ -96,14 +92,12 @@ configurations {
     test_vanilla_capability_recipehandlerCompile.extendsFrom(compile)
     test_vanilla_capability_temperatureCompile.extendsFrom(compile)
     test_vanilla_capability_workerCompile.extendsFrom(compile)
-    test_vanilla_capability_wrenchCompile.extendsFrom(compile)
     javadoc.classpath += sourceSets.test_vanilla_capability_entityitem.output
     javadoc.classpath += sourceSets.test_vanilla_capability_inventorystate.output
     javadoc.classpath += sourceSets.test_vanilla_capability_itemitemhandler.output
     javadoc.classpath += sourceSets.test_vanilla_capability_recipehandler.output
     javadoc.classpath += sourceSets.test_vanilla_capability_temperature.output
     javadoc.classpath += sourceSets.test_vanilla_capability_worker.output
-    javadoc.classpath += sourceSets.test_vanilla_capability_wrench.output
 }
 
 repositories {
@@ -164,9 +158,6 @@ minecraft {
                 }
                 test_commoncapabilities_vanilla_capability_worker {
                     source sourceSets.test_vanilla_capability_worker
-                }
-                test_commoncapabilities_vanilla_capability_wrench {
-                    source sourceSets.test_vanilla_capability_wrench
                 }
             }
         }

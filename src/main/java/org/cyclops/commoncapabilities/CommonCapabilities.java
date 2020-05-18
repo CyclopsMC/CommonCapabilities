@@ -15,7 +15,6 @@ import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandler
 import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 import org.cyclops.commoncapabilities.capability.temperature.TemperatureConfig;
 import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
-import org.cyclops.commoncapabilities.capability.wrench.WrenchConfig;
 import org.cyclops.commoncapabilities.modcompat.vanilla.VanillaModCompat;
 import org.cyclops.commoncapabilities.proxy.ClientProxy;
 import org.cyclops.commoncapabilities.proxy.CommonProxy;
@@ -77,7 +76,6 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
         configHandler.addConfigurable(new GeneralConfig());
 
         configHandler.addConfigurable(new WorkerConfig());
-        configHandler.addConfigurable(new WrenchConfig());
         configHandler.addConfigurable(new TemperatureConfig());
         configHandler.addConfigurable(new InventoryStateConfig());
         configHandler.addConfigurable(new SlotlessItemHandlerConfig());
