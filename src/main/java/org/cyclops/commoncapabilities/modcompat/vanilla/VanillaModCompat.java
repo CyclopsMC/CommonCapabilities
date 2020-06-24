@@ -18,6 +18,7 @@ import net.minecraft.tileentity.SmokerTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -43,6 +44,7 @@ import org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage.VanillaEntityItemFrameEnergyStorage;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler.VanillaEntityItemFluidHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler.VanillaEntityItemFrameFluidHandler;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaBlockComposterItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaEntityItemFrameItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaEntityItemItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaItemShulkerBoxItemHandler;
@@ -293,6 +295,27 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
+            BlockCapabilities.getInstance().register(new IBlockCapabilityConstructor() {
+                @Nullable
+                @Override
+                public Block getBlock() {
+                    return Blocks.COMPOSTER;
+                }
+
+                @Override
+                public IBlockCapabilityProvider createProvider() {
+                    return new IBlockCapabilityProvider() {
+                        @Override
+                        public <T> LazyOptional<T> getCapability(@Nonnull BlockState blockState, @Nonnull Capability<T> capability,
+                                                                 @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nullable Direction facing) {
+                            if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+                                return LazyOptional.of(() -> new VanillaBlockComposterItemHandler(blockState, (IWorld) world, pos, facing)).cast();
+                            }
+                            return LazyOptional.empty();
+                        }
+                    };
+                }
+            });
 
             // FluidHandler
             registry.registerEntity(ItemEntity.class,
