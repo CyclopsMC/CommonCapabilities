@@ -2,6 +2,7 @@ package org.cyclops.commoncapabilities;
 
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Level;
@@ -39,7 +40,7 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
 
     public CommonCapabilities() {
         super(Reference.MOD_ID, (instance) -> _instance = instance);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onRegister);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOW, this::onRegister);
     }
 
     @Override
@@ -83,21 +84,19 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
         configHandler.addConfigurable(new IngredientComponentStorageHandlerConfig());
     }
 
-    public void onRegister(RegistryEvent.Register event) {
-        if (event.getRegistry() == IngredientComponent.REGISTRY) {
-            IPrototypedIngredientAlternatives.SERIALIZERS.put(
-                    PrototypedIngredientAlternativesList.SERIALIZER.getId(),
-                    PrototypedIngredientAlternativesList.SERIALIZER);
-            IPrototypedIngredientAlternatives.SERIALIZERS.put(
-                    PrototypedIngredientAlternativesItemStackTag.SERIALIZER.getId(),
-                    PrototypedIngredientAlternativesItemStackTag.SERIALIZER);
+    public void onRegister(RegistryEvent.NewRegistry event) {
+        IPrototypedIngredientAlternatives.SERIALIZERS.put(
+                PrototypedIngredientAlternativesList.SERIALIZER.getId(),
+                PrototypedIngredientAlternativesList.SERIALIZER);
+        IPrototypedIngredientAlternatives.SERIALIZERS.put(
+                PrototypedIngredientAlternativesItemStackTag.SERIALIZER.getId(),
+                PrototypedIngredientAlternativesItemStackTag.SERIALIZER);
 
-            event.getRegistry().registerAll(
-                    IngredientComponents.ITEMSTACK,
-                    IngredientComponents.FLUIDSTACK,
-                    IngredientComponents.ENERGY
-            );
-        }
+        IngredientComponent.REGISTRY.registerAll(
+                IngredientComponents.ITEMSTACK,
+                IngredientComponents.FLUIDSTACK,
+                IngredientComponents.ENERGY
+        );
     }
 
     /**
