@@ -123,13 +123,7 @@ public class VanillaCraftingTableRecipeHandler implements IRecipeHandler {
             return null;
         }
 
-        int rows = 2;
-        int columns = 2;
-        if (recipeIngredients.size() > 4) {
-            rows = 3;
-            columns = 3;
-        }
-        InventoryCrafting inventoryCrafting = new InventoryCrafting(DUMMY_CONTAINTER, rows, columns);
+        InventoryCrafting inventoryCrafting = new InventoryCrafting(DUMMY_CONTAINTER, 3, 3);
         for (int i = 0; i < recipeIngredients.size(); i++) {
             inventoryCrafting.setInventorySlotContents(i, recipeIngredients.get(i));
         }
