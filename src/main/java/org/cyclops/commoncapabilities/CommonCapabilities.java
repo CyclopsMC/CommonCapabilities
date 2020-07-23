@@ -4,6 +4,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IPrototypedIngredientAlternatives;
@@ -41,6 +42,7 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
     public CommonCapabilities() {
         super(Reference.MOD_ID, (instance) -> _instance = instance);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOW, this::onRegister);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOW, this::afterCapabilitiesLoaded);
     }
 
     @Override
@@ -97,6 +99,10 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
                 IngredientComponents.FLUIDSTACK,
                 IngredientComponents.ENERGY
         );
+    }
+
+    public void afterCapabilitiesLoaded(InterModEnqueueEvent event) {
+        IngredientComponents.registerStorageWrapperHandlers();
     }
 
     /**

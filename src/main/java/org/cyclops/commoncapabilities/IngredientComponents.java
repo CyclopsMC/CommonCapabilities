@@ -64,7 +64,7 @@ public class IngredientComponents {
                             Integer.class, false, amount -> amount, true, true)
             )).setTranslationKey("recipecomponent.minecraft.energy");
 
-    static {
+    public static void registerStorageWrapperHandlers() {
         ENERGY.setStorageWrapperHandler(CapabilityEnergy.ENERGY, new IngredientComponentStorageWrapperHandlerEnergyStorage(ENERGY));
         ITEMSTACK.setStorageWrapperHandler(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, new IngredientComponentStorageWrapperHandlerItemStack(ITEMSTACK));
         ITEMSTACK.setStorageWrapperHandler(SlotlessItemHandlerConfig.CAPABILITY, new IngredientComponentStorageWrapperHandlerItemStackSlotless(ITEMSTACK));
