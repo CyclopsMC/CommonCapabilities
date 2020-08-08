@@ -3,7 +3,9 @@ package org.cyclops.commoncapabilities;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Level;
@@ -26,6 +28,8 @@ import org.cyclops.cyclopscore.modcompat.ModCompatLoader;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 
+import java.util.Objects;
+
 /**
  * The main mod class of this mod.
  * @author rubensworks (aka kroeserr)
@@ -38,11 +42,25 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
      * The unique instance of this mod.
      */
     public static CommonCapabilities _instance;
+    private final IEventBus modEventBus;
 
     public CommonCapabilities() {
         super(Reference.MOD_ID, (instance) -> _instance = instance);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOW, this::onRegister);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(EventPriority.LOW, this::afterCapabilitiesLoaded);
+        this.modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        this.modEventBus.addListener(EventPriority.LOW, this::onRegister);
+        this.modEventBus.addListener(EventPriority.LOW, this::afterCapabilitiesLoaded);
+    }
+
+    public IEventBus getModEventBus() {
+        return modEventBus;
+    }
+
+    @Override
+    protected void setup(FMLCommonSetupEvent event) {
+        super.setup(event);
+        Objects.requireNonNull(IngredientComponent.ITEMSTACK, "Item ingredient component is not initialized");
+        Objects.requireNonNull(IngredientComponent.FLUIDSTACK, "Fluid ingredient component is not initialized");
+        Objects.requireNonNull(IngredientComponent.ENERGY, "Energy ingredient component is not initialized");
     }
 
     @Override
