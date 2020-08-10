@@ -1,5 +1,6 @@
 package org.cyclops.commoncapabilities;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -8,6 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IPrototypedIngredientAlternatives;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesItemStackTag;
@@ -48,6 +50,7 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
         super(Reference.MOD_ID, (instance) -> _instance = instance);
         this.modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         this.modEventBus.addListener(EventPriority.LOW, this::onRegister);
+        this.modEventBus.addListener(EventPriority.LOW, this::onRegistriesLoad);
         this.modEventBus.addListener(EventPriority.LOW, this::afterCapabilitiesLoaded);
     }
 
@@ -111,12 +114,16 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
         IPrototypedIngredientAlternatives.SERIALIZERS.put(
                 PrototypedIngredientAlternativesItemStackTag.SERIALIZER.getId(),
                 PrototypedIngredientAlternativesItemStackTag.SERIALIZER);
+    }
 
-        IngredientComponent.REGISTRY.registerAll(
-                IngredientComponents.ITEMSTACK,
-                IngredientComponents.FLUIDSTACK,
-                IngredientComponents.ENERGY
-        );
+    public void onRegistriesLoad(RegistryEvent.Register<Block> event) {
+        if (event.getRegistry() == ForgeRegistries.BLOCKS) {
+            IngredientComponent.REGISTRY.registerAll(
+                    IngredientComponents.ITEMSTACK,
+                    IngredientComponents.FLUIDSTACK,
+                    IngredientComponents.ENERGY
+            );
+        }
     }
 
     public void afterCapabilitiesLoaded(InterModEnqueueEvent event) {
