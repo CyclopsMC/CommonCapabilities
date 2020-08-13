@@ -1,0 +1,9 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.8.2 or higher.
+
+Changes:
+* Register ingredient components during registry filling
+* Emit AttachCapabilitiesEventIngredientComponent on mod bus
+
+Fixes:
+* Fix null LazyOptional in BlockCapabilities
