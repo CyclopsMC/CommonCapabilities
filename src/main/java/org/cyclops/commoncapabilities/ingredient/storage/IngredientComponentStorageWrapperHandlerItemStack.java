@@ -357,37 +357,26 @@ public class IngredientComponentStorageWrapperHandlerItemStack
             return storage.getSlots();
         }
 
-        protected void validateSlotIndex(int slot) throws IndexOutOfBoundsException {
-            int slots = getSlots();
-            if (slot < 0 || slot >= slots) {
-                throw new IndexOutOfBoundsException("Slot " + slot + " not in valid range - [0," + slots + ")");
-            }
-        }
-
         @Nonnull
         @Override
         public ItemStack getStackInSlot(int slot) {
-            validateSlotIndex(slot);
             return storage.getSlotContents(slot);
         }
 
         @Nonnull
         @Override
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-            validateSlotIndex(slot);
             return storage.insert(slot, stack, simulate);
         }
 
         @Nonnull
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            validateSlotIndex(slot);
             return storage.extract(slot, amount, simulate);
         }
 
         @Override
         public int getSlotLimit(int slot) {
-            validateSlotIndex(slot);
             return Helpers.castSafe(storage.getMaxQuantity(slot));
         }
     }
