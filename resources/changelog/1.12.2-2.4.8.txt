@@ -1,0 +1,8 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.6.0 or higher.
+
+Changes:
+* Reduce unneeded slot range check to improve performance
+  This was not needed because the wrapped item inventory
+  already takes care of this.
+  Closes CyclopsMC/IntegratedDynamics#904

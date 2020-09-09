@@ -135,13 +135,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
             return null;
         }
 
-        int rows = 2;
-        int columns = 2;
-        if (recipeIngredients.size() > 4) {
-            rows = 3;
-            columns = 3;
-        }
-        CraftingInventory inventoryCrafting = new CraftingInventory(DUMMY_CONTAINTER, rows, columns);
+        CraftingInventory inventoryCrafting = new CraftingInventory(DUMMY_CONTAINTER, 3, 3);
         for (int i = 0; i < recipeIngredients.size(); i++) {
             inventoryCrafting.setInventorySlotContents(i, recipeIngredients.get(i));
         }

@@ -71,12 +71,12 @@ public class TestItemStackItemStorageWrapperSlotted {
         assertThat(eq(wrapper.getStackInSlot(8), APPLE_10), is(true));
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = RuntimeException.class)
     public void testGetStackInSlotTooSmall() {
         wrapper.getStackInSlot(-1);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = RuntimeException.class)
     public void testGetStackInSlotTooBig() {
         wrapper.getStackInSlot(10);
     }
