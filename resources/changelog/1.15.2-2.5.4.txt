@@ -1,0 +1,12 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.8.2 or higher.
+
+Changes:
+* Reduce unneeded slot range check to improve performance
+  This was not needed because the wrapped item inventory
+  already takes care of this.
+  Closes CyclopsMC/IntegratedDynamics#904
+
+Fixes:
+* Fix crafting table handler not accepting some recipes smaller than 3x3, Closes CyclopsMC/IntegratedCrafting#46
+* Fix oredict-based ingredients being compared too strictly, Closes CyclopsMC/IntegratedCrafting#45
