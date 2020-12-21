@@ -272,8 +272,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1, W_2_T2), is(-1));
         assertThat(M.compare(W_1, W_1_T1), is(-1));
         assertThat(M.compare(W_1, W_1_T2), is(-1));
-        assertThat(M.compare(W_1, L_1), is(-715));
-        assertThat(M.compare(W_1, L_1_T1), is(-715));
+        assertThat(M.compare(W_1, L_1), is(-770));
+        assertThat(M.compare(W_1, L_1_T1), is(-770));
 
         assertThat(M.compare(W_1_T1, W_1), is(1));
         assertThat(M.compare(W_1_T1, W_2), is(-1));
@@ -281,8 +281,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T1, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T1, W_1_T1), is(0));
         assertThat(M.compare(W_1_T1, W_1_T2), is(-1));
-        assertThat(M.compare(W_1_T1, L_1), is(-715));
-        assertThat(M.compare(W_1_T1, L_1_T1), is(-715));
+        assertThat(M.compare(W_1_T1, L_1), is(-770));
+        assertThat(M.compare(W_1_T1, L_1_T1), is(-770));
 
         assertThat(M.compare(W_1_T2, W_1), is(1));
         assertThat(M.compare(W_1_T2, W_2), is(-1));
@@ -290,8 +290,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T2, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T2, W_1_T1), is(1));
         assertThat(M.compare(W_1_T2, W_1_T2), is(0));
-        assertThat(M.compare(W_1_T2, L_1), is(-715));
-        assertThat(M.compare(W_1_T2, L_1_T1), is(-715));
+        assertThat(M.compare(W_1_T2, L_1), is(-770));
+        assertThat(M.compare(W_1_T2, L_1_T1), is(-770));
 
         assertThat(M.compare(W_2, W_1), is(1));
         assertThat(M.compare(W_2, W_1_T1), is(1));
@@ -299,8 +299,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2, W_2), is(0));
         assertThat(M.compare(W_2, W_2_T1), is(-1));
         assertThat(M.compare(W_2, W_2_T2), is(-1));
-        assertThat(M.compare(W_2, L_1), is(-715));
-        assertThat(M.compare(W_2, L_1_T1), is(-715));
+        assertThat(M.compare(W_2, L_1), is(-770));
+        assertThat(M.compare(W_2, L_1_T1), is(-770));
 
         assertThat(M.compare(W_2_T1, W_1), is(1));
         assertThat(M.compare(W_2_T1, W_1_T1), is(1));
@@ -315,24 +315,24 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2_T2, W_2), is(1));
         assertThat(M.compare(W_2_T2, W_2_T1), is(1));
         assertThat(M.compare(W_2_T2, W_2_T2), is(0));
-        assertThat(M.compare(W_2_T2, L_1), is(-715));
-        assertThat(M.compare(W_2_T2, L_1_T1), is(-715));
+        assertThat(M.compare(W_2_T2, L_1), is(-770));
+        assertThat(M.compare(W_2_T2, L_1_T1), is(-770));
 
-        assertThat(M.compare(L_1, W_1), is(715));
-        assertThat(M.compare(L_1, W_1_T1), is(715));
-        assertThat(M.compare(L_1, W_1_T2), is(715));
-        assertThat(M.compare(L_1, W_2), is(715));
-        assertThat(M.compare(L_1, W_2_T1), is(715));
-        assertThat(M.compare(L_1, W_2_T2), is(715));
+        assertThat(M.compare(L_1, W_1), is(770));
+        assertThat(M.compare(L_1, W_1_T1), is(770));
+        assertThat(M.compare(L_1, W_1_T2), is(770));
+        assertThat(M.compare(L_1, W_2), is(770));
+        assertThat(M.compare(L_1, W_2_T1), is(770));
+        assertThat(M.compare(L_1, W_2_T2), is(770));
         assertThat(M.compare(L_1, L_1), is(0));
         assertThat(M.compare(L_1, L_1_T1), is(-1));
 
-        assertThat(M.compare(L_1_T1, W_1), is(715));
-        assertThat(M.compare(L_1_T1, W_1_T1), is(715));
-        assertThat(M.compare(L_1_T1, W_1_T2), is(715));
-        assertThat(M.compare(L_1_T1, W_2), is(715));
-        assertThat(M.compare(L_1_T1, W_2_T1), is(715));
-        assertThat(M.compare(L_1_T1, W_2_T2), is(715));
+        assertThat(M.compare(L_1_T1, W_1), is(770));
+        assertThat(M.compare(L_1_T1, W_1_T1), is(770));
+        assertThat(M.compare(L_1_T1, W_1_T2), is(770));
+        assertThat(M.compare(L_1_T1, W_2), is(770));
+        assertThat(M.compare(L_1_T1, W_2_T1), is(770));
+        assertThat(M.compare(L_1_T1, W_2_T2), is(770));
         assertThat(M.compare(L_1_T1, L_1), is(1));
         assertThat(M.compare(L_1_T1, L_1_T1), is(0));
     }

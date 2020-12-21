@@ -50,7 +50,7 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
         super(Reference.MOD_ID, (instance) -> _instance = instance);
         this.modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         this.modEventBus.addListener(EventPriority.LOW, this::onRegister);
-        this.modEventBus.addListener(EventPriority.LOW, this::onRegistriesLoad);
+        this.modEventBus.addGenericListener(Block.class, EventPriority.LOW, this::onRegistriesLoad);
         this.modEventBus.addListener(EventPriority.LOW, this::afterCapabilitiesLoaded);
     }
 
@@ -117,13 +117,11 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
     }
 
     public void onRegistriesLoad(RegistryEvent.Register<Block> event) {
-        if (event.getRegistry() == ForgeRegistries.BLOCKS) {
-            IngredientComponent.REGISTRY.registerAll(
-                    IngredientComponents.ITEMSTACK,
-                    IngredientComponents.FLUIDSTACK,
-                    IngredientComponents.ENERGY
-            );
-        }
+        IngredientComponent.REGISTRY.registerAll(
+                IngredientComponents.ITEMSTACK,
+                IngredientComponents.FLUIDSTACK,
+                IngredientComponents.ENERGY
+        );
     }
 
     public void afterCapabilitiesLoaded(InterModEnqueueEvent event) {

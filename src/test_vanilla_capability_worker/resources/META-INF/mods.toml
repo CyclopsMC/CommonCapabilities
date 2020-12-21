@@ -1,4 +1,5 @@
 modLoader="javafml"
 loaderVersion="*"
+license="MIT"
 [[mods]]
 	modId="test_commoncapabilities_vanilla_capability_worker"
