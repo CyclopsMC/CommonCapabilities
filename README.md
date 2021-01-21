@@ -1,6 +1,6 @@
 ## CommonCapabilities
 
-[![Build Status](https://travis-ci.org/CyclopsMC/CommonCapabilities.svg)](https://travis-ci.org/CyclopsMC/CommonCapabilities)
+[![Build Status](https://github.com/CyclopsMC/CommonCapabilities/workflows/CI/badge.svg)](https://github.com/CyclopsMC/CommonCapabilities/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/github/CyclopsMC/CommonCapabilities/badge.svg)](https://coveralls.io/github/CyclopsMC/CommonCapabilities)
 [![Download](https://img.shields.io/maven-metadata/v/https/oss.jfrog.org/artifactory/simple/libs-release/org/cyclops/commoncapabilities/CommonCapabilities/maven-metadata.xml.svg) ](https://oss.jfrog.org/artifactory/simple/libs-release/org/cyclops/commoncapabilities/CommonCapabilities/)
 [![CurseForge](http://cf.way2muchnoise.eu/full_247007_downloads.svg)](http://minecraft.curseforge.com/projects/247007)
