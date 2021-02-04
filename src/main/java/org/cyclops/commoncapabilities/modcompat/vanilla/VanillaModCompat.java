@@ -3,6 +3,7 @@ package org.cyclops.commoncapabilities.modcompat.vanilla;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CraftingTableBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.item.BucketItem;
@@ -474,7 +475,7 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public Block getBlock() {
-                    return Blocks.CRAFTING_TABLE;
+                    return null;
                 }
 
                 @Override
@@ -483,7 +484,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public <T> LazyOptional<T> getCapability(@Nonnull BlockState blockState, @Nonnull Capability<T> capability,
                                                                  @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nullable Direction facing) {
-                            if (capability == RecipeHandlerConfig.CAPABILITY) {
+                            if (blockState.getBlock() instanceof CraftingTableBlock && capability == RecipeHandlerConfig.CAPABILITY) {
                                 return LazyOptional.of(() -> new VanillaRecipeTypeRecipeHandler<>(() -> (World) world,
                                         IRecipeType.CRAFTING, (size) -> size > 0)).cast();
                             }
