@@ -1,0 +1,10 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.11.1 or higher.
+
+Changes:
+* Enable Forge version checker
+
+Fixes:
+* Fix Recipe Handler not applying to Crafting Table overrides
+  This makes the Recipe Handler capability compatible with the FastWorkbench mod.
+  Closes CyclopsMC/IntegratedDynamics#936
