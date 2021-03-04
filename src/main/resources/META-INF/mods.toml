@@ -9,7 +9,7 @@ authors="rubensworks (aka kroeser)"
 modId="commoncapabilities"
 version="${file.jarVersion}"
 displayName="CommonCapabilities"
-updateJSONURL="https://raw.githubusercontent.com/CyclopsMC/Versions/master/forge_update/commoncapabilities.json"
+updateJSONURL="https://raw.githubusercontent.com/CyclopsMC/Versions/master/forge_update/common-capabilities.json"
 description='''
 Forge Capabilities that can be shared by multiple mods.
 '''
