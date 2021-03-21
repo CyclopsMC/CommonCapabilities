@@ -2,6 +2,7 @@ package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.IFormattableTextComponent;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.cyclopscore.helper.Helpers;
@@ -100,6 +101,11 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     @Override
     public String localize(ItemStack instance) {
         return instance.getDisplayName().getString();
+    }
+
+    @Override
+    public IFormattableTextComponent getDisplayName(ItemStack instance) {
+        return (IFormattableTextComponent) instance.getDisplayName();
     }
 
     @Override

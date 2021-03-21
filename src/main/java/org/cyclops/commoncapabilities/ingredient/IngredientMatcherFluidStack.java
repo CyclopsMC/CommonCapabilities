@@ -1,6 +1,7 @@
 package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.fluid.Fluids;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
@@ -113,6 +114,11 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     @Override
     public String localize(FluidStack instance) {
         return instance.getDisplayName().getString();
+    }
+
+    @Override
+    public IFormattableTextComponent getDisplayName(FluidStack instance) {
+        return (IFormattableTextComponent) instance.getDisplayName();
     }
 
     @Override

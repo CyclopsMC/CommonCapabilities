@@ -1,5 +1,7 @@
 package org.cyclops.commoncapabilities.ingredient;
 
+import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
@@ -92,6 +94,11 @@ public class IngredientMatcherEnergy implements IIngredientMatcher<Integer, Bool
     @Override
     public String localize(Integer instance) {
         return L10NHelpers.localize("recipecomponent.minecraft.energy");
+    }
+
+    @Override
+    public IFormattableTextComponent getDisplayName(Integer instance) {
+        return new TranslationTextComponent("recipecomponent.minecraft.energy");
     }
 
     @Override
