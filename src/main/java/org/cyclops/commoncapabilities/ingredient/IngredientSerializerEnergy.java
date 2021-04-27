@@ -3,24 +3,29 @@ package org.cyclops.commoncapabilities.ingredient;
 import net.minecraft.nbt.ByteNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.IntNBT;
+import net.minecraft.nbt.LongNBT;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 
 /**
  * Serializer for energy.
  * @author rubensworks
  */
-public class IngredientSerializerEnergy implements IIngredientSerializer<Integer, Boolean> {
+public class IngredientSerializerEnergy implements IIngredientSerializer<Long, Boolean> {
     @Override
-    public INBT serializeInstance(Integer instance) {
-        return IntNBT.valueOf(instance);
+    public INBT serializeInstance(Long instance) {
+        return LongNBT.valueOf(instance);
     }
 
     @Override
-    public Integer deserializeInstance(INBT tag) throws IllegalArgumentException {
-        if (!(tag instanceof IntNBT)) {
-            throw new IllegalArgumentException("This deserializer only accepts NBTTagInt");
+    public Long deserializeInstance(INBT tag) throws IllegalArgumentException {
+        if (tag instanceof IntNBT) {
+            // TODO: needed for backwards-compatibility, remove in next major version
+            return Long.valueOf(((IntNBT) tag).getInt());
         }
-        return ((IntNBT) tag).getInt();
+        if (tag instanceof LongNBT) {
+            return ((LongNBT) tag).getLong();
+        }
+        throw new IllegalArgumentException("This deserializer only accepts LongNBT");
     }
 
     @Override

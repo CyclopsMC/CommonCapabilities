@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 public class TestEnergyEnergyStorageWrapper {
 
     private IEnergyStorage innerStorage;
-    private IIngredientComponentStorage<Integer, Boolean> storage;
+    private IIngredientComponentStorage<Long, Boolean> storage;
     private IngredientComponentStorageWrapperHandlerEnergyStorage.EnergyStorageWrapper wrapper;
 
     @Before

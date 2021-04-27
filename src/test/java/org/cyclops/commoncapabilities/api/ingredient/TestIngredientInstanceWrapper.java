@@ -13,8 +13,8 @@ import static org.junit.Assert.assertThat;
 
 public class TestIngredientInstanceWrapper {
 
-    private static IngredientComponent<Integer, Boolean> C;
-    private static IngredientComponent<Integer, Boolean> C_OTHER;
+    private static IngredientComponent<Long, Boolean> C;
+    private static IngredientComponent<Long, Boolean> C_OTHER;
 
     @BeforeClass
     public static void init() {
@@ -22,29 +22,29 @@ public class TestIngredientInstanceWrapper {
         C_OTHER = new IngredientComponent<>("minecraft:energyother", new IngredientMatcherEnergy(),
                 new IngredientSerializerEnergy(), Lists.newArrayList(
                 new IngredientComponentCategoryType<>(new ResourceLocation("energy/amount"),
-                        Integer.class, false, amount -> amount, true, true)
+                        Long.class, false, amount -> amount, true, true)
         ));
     }
 
     @Test
     public void testInstance() {
-        assertThat(new IngredientInstanceWrapper<>(C, 0), not(equalTo("abc")));
-        assertThat(new IngredientInstanceWrapper<>(C, 0), not(equalTo(new IngredientInstanceWrapper<>(C_OTHER, 0))));
-        assertThat(new IngredientInstanceWrapper<>(C, 0), equalTo(new IngredientInstanceWrapper<>(C, 0)));
-        assertThat(new IngredientInstanceWrapper<>(C, 123), equalTo(new IngredientInstanceWrapper<>(C, 123)));
+        assertThat(new IngredientInstanceWrapper<>(C, 0L), not(equalTo("abc")));
+        assertThat(new IngredientInstanceWrapper<>(C, 0L), not(equalTo(new IngredientInstanceWrapper<>(C_OTHER, 0L))));
+        assertThat(new IngredientInstanceWrapper<>(C, 0L), equalTo(new IngredientInstanceWrapper<>(C, 0L)));
+        assertThat(new IngredientInstanceWrapper<>(C, 123L), equalTo(new IngredientInstanceWrapper<>(C, 123L)));
     }
 
     @Test
     public void testHashCode() {
-        assertThat(new IngredientInstanceWrapper<>(C, 0).hashCode(), is(new IngredientInstanceWrapper<>(C, 0).hashCode()));
-        assertThat(new IngredientInstanceWrapper<>(C, 123).hashCode(), is(new IngredientInstanceWrapper<>(C, 123).hashCode()));
+        assertThat(new IngredientInstanceWrapper<>(C, 0L).hashCode(), is(new IngredientInstanceWrapper<>(C, 0L).hashCode()));
+        assertThat(new IngredientInstanceWrapper<>(C, 123L).hashCode(), is(new IngredientInstanceWrapper<>(C, 123L).hashCode()));
     }
 
     @Test
     public void testCompareTo() {
-        assertThat(new IngredientInstanceWrapper<>(C, 0).compareTo(new IngredientInstanceWrapper<>(C, 0)), is(0));
-        assertThat(new IngredientInstanceWrapper<>(C, 0).compareTo(new IngredientInstanceWrapper<>(C, 123)), is(-123));
-        assertThat(new IngredientInstanceWrapper<>(C, 123).compareTo(new IngredientInstanceWrapper<>(C, 0)), is(123));
+        assertThat(new IngredientInstanceWrapper<>(C, 0L).compareTo(new IngredientInstanceWrapper<>(C, 0L)), is(0));
+        assertThat(new IngredientInstanceWrapper<>(C, 0L).compareTo(new IngredientInstanceWrapper<>(C, 123L)), is(-123));
+        assertThat(new IngredientInstanceWrapper<>(C, 123L).compareTo(new IngredientInstanceWrapper<>(C, 0L)), is(123));
     }
 
 }

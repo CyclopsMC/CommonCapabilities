@@ -33,100 +33,100 @@ public class TestEnergyComponentStorageWrapper {
 
     @Test
     public void testIterator() {
-        assertThat(Lists.newArrayList(wrapper.iterator()), is(Lists.newArrayList(100)));
+        assertThat(Lists.newArrayList(wrapper.iterator()), is(Lists.newArrayList(100L)));
     }
 
     @Test
     public void testIteratorMatch() {
-        assertThat(Lists.newArrayList(wrapper.iterator(100, true)), is(Lists.newArrayList(100)));
-        assertThat(Lists.newArrayList(wrapper.iterator(9, true)), is(Lists.newArrayList()));
-        assertThat(Lists.newArrayList(wrapper.iterator(0, true)), is(Lists.newArrayList()));
-        assertThat(Lists.newArrayList(wrapper.iterator(-1, true)), is(Lists.newArrayList()));
+        assertThat(Lists.newArrayList(wrapper.iterator(100L, true)), is(Lists.newArrayList(100L)));
+        assertThat(Lists.newArrayList(wrapper.iterator(9L, true)), is(Lists.newArrayList()));
+        assertThat(Lists.newArrayList(wrapper.iterator(0L, true)), is(Lists.newArrayList()));
+        assertThat(Lists.newArrayList(wrapper.iterator(-1L, true)), is(Lists.newArrayList()));
 
-        assertThat(Lists.newArrayList(wrapper.iterator(10, false)), is(Lists.newArrayList(100)));
-        assertThat(Lists.newArrayList(wrapper.iterator(9, false)), is(Lists.newArrayList(100)));
-        assertThat(Lists.newArrayList(wrapper.iterator(0, false)), is(Lists.newArrayList(100)));
-        assertThat(Lists.newArrayList(wrapper.iterator(-1, false)), is(Lists.newArrayList(100)));
+        assertThat(Lists.newArrayList(wrapper.iterator(10L, false)), is(Lists.newArrayList(100L)));
+        assertThat(Lists.newArrayList(wrapper.iterator(9L, false)), is(Lists.newArrayList(100L)));
+        assertThat(Lists.newArrayList(wrapper.iterator(0L, false)), is(Lists.newArrayList(100L)));
+        assertThat(Lists.newArrayList(wrapper.iterator(-1L, false)), is(Lists.newArrayList(100L)));
     }
 
     @Test
     public void testInsert() {
-        assertThat(wrapper.insert(0, true), is(0));
+        assertThat(wrapper.insert(0L, true), is(0L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.insert(1, true), is(0));
+        assertThat(wrapper.insert(1L, true), is(0L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.insert(10, true), is(0));
+        assertThat(wrapper.insert(10L, true), is(0L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.insert(11, true), is(1));
+        assertThat(wrapper.insert(11L, true), is(1L));
         assertThat(storage.getEnergyStored(), is(100));
 
-        assertThat(wrapper.insert(0, false), is(0));
+        assertThat(wrapper.insert(0L, false), is(0L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.insert(1, false), is(0));
+        assertThat(wrapper.insert(1L, false), is(0L));
         assertThat(storage.getEnergyStored(), is(101));
-        assertThat(wrapper.insert(10, false), is(0));
+        assertThat(wrapper.insert(10L, false), is(0L));
         assertThat(storage.getEnergyStored(), is(111));
-        assertThat(wrapper.insert(11, false), is(1));
+        assertThat(wrapper.insert(11L, false), is(1L));
         assertThat(storage.getEnergyStored(), is(121));
     }
 
     @Test
     public void testExtract() {
-        assertThat(wrapper.extract(0, true, true), is(0));
+        assertThat(wrapper.extract(0L, true, true), is(0L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(1, true, true), is(1));
+        assertThat(wrapper.extract(1L, true, true), is(1L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(10, true, true), is(10));
+        assertThat(wrapper.extract(10L, true, true), is(10L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(11, true, true), is(0));
-        assertThat(storage.getEnergyStored(), is(100));
-
-        assertThat(wrapper.extract(0, false, true), is(0));
-        assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(1, false, true), is(1));
-        assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(10, false, true), is(10));
-        assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(11, false, true), is(10));
+        assertThat(wrapper.extract(11L, true, true), is(0L));
         assertThat(storage.getEnergyStored(), is(100));
 
-        assertThat(wrapper.extract(0, true, false), is(0));
+        assertThat(wrapper.extract(0L, false, true), is(0L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(1, true, false), is(1));
+        assertThat(wrapper.extract(1L, false, true), is(1L));
+        assertThat(storage.getEnergyStored(), is(100));
+        assertThat(wrapper.extract(10L, false, true), is(10L));
+        assertThat(storage.getEnergyStored(), is(100));
+        assertThat(wrapper.extract(11L, false, true), is(10L));
+        assertThat(storage.getEnergyStored(), is(100));
+
+        assertThat(wrapper.extract(0L, true, false), is(0L));
+        assertThat(storage.getEnergyStored(), is(100));
+        assertThat(wrapper.extract(1L, true, false), is(1L));
         assertThat(storage.getEnergyStored(), is(99));
-        assertThat(wrapper.extract(10, true, false), is(10));
+        assertThat(wrapper.extract(10L, true, false), is(10L));
         assertThat(storage.getEnergyStored(), is(89));
-        assertThat(wrapper.extract(11, true, false), is(0));
+        assertThat(wrapper.extract(11L, true, false), is(0L));
         assertThat(storage.getEnergyStored(), is(89));
 
-        assertThat(wrapper.extract(0, false, false), is(0));
+        assertThat(wrapper.extract(0L, false, false), is(0L));
         assertThat(storage.getEnergyStored(), is(89));
-        assertThat(wrapper.extract(1, false, false), is(1));
+        assertThat(wrapper.extract(1L, false, false), is(1L));
         assertThat(storage.getEnergyStored(), is(88));
-        assertThat(wrapper.extract(10, false, false), is(10));
+        assertThat(wrapper.extract(10L, false, false), is(10L));
         assertThat(storage.getEnergyStored(), is(78));
-        assertThat(wrapper.extract(11, false, false), is(10));
+        assertThat(wrapper.extract(11L, false, false), is(10L));
         assertThat(storage.getEnergyStored(), is(68));
     }
 
     @Test
     public void testExtractMax() {
-        assertThat(wrapper.extract(0, true), is(0));
+        assertThat(wrapper.extract(0L, true), is(0L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(1, true), is(1));
+        assertThat(wrapper.extract(1L, true), is(1L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(10, true), is(10));
+        assertThat(wrapper.extract(10L, true), is(10L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(11, true), is(10));
+        assertThat(wrapper.extract(11L, true), is(10L));
         assertThat(storage.getEnergyStored(), is(100));
 
-        assertThat(wrapper.extract(0, false), is(0));
+        assertThat(wrapper.extract(0L, false), is(0L));
         assertThat(storage.getEnergyStored(), is(100));
-        assertThat(wrapper.extract(1, false), is(1));
+        assertThat(wrapper.extract(1L, false), is(1L));
         assertThat(storage.getEnergyStored(), is(99));
-        assertThat(wrapper.extract(10, false), is(10));
+        assertThat(wrapper.extract(10L, false), is(10L));
         assertThat(storage.getEnergyStored(), is(89));
-        assertThat(wrapper.extract(11, false), is(10));
+        assertThat(wrapper.extract(11L, false), is(10L));
         assertThat(storage.getEnergyStored(), is(79));
     }
 

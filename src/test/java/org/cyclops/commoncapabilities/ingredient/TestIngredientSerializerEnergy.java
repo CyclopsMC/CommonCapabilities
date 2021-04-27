@@ -2,6 +2,7 @@ package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.nbt.ByteNBT;
 import net.minecraft.nbt.IntNBT;
+import net.minecraft.nbt.LongNBT;
 import net.minecraft.nbt.StringNBT;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,14 +22,16 @@ public class TestIngredientSerializerEnergy {
 
     @Test
     public void serializeInstance() {
-        assertThat(S.serializeInstance(0), is(IntNBT.valueOf(0)));
-        assertThat(S.serializeInstance(100), is(IntNBT.valueOf(100)));
+        assertThat(S.serializeInstance(0L), is(LongNBT.valueOf(0L)));
+        assertThat(S.serializeInstance(100L), is(LongNBT.valueOf(100L)));
     }
 
     @Test
     public void deserializeInstance() {
-        assertThat(S.deserializeInstance(IntNBT.valueOf(0)), is(0));
-        assertThat(S.deserializeInstance(IntNBT.valueOf(100)), is(100));
+        assertThat(S.deserializeInstance(IntNBT.valueOf(0)), is(0L));
+        assertThat(S.deserializeInstance(IntNBT.valueOf(100)), is(100L));
+        assertThat(S.deserializeInstance(LongNBT.valueOf(0L)), is(0L));
+        assertThat(S.deserializeInstance(LongNBT.valueOf(100L)), is(100L));
     }
 
     @Test(expected = IllegalArgumentException.class)

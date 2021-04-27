@@ -94,13 +94,13 @@ public class TestIngredientComponentCategoryType {
     public void testEnergy() {
         assertThat(IngredientComponents.ENERGY.getCategoryTypes().size(), is(1));
 
-        assertThat(IngredientComponents.ENERGY.getCategoryTypes().get(0).getCategoryType(), equalTo(Integer.class));
+        assertThat(IngredientComponents.ENERGY.getCategoryTypes().get(0).getCategoryType(), equalTo(Long.class));
         assertThat(IngredientComponents.ENERGY.getCategoryTypes().get(0).isReferenceEqual(), is(false));
         assertThat(IngredientComponents.ENERGY.getCategoryTypes().get(0).isPrimaryQuantifier(), is(true));
-        Function<Integer, ?> classifier1 = IngredientComponents.ENERGY.getCategoryTypes().get(0).getClassifier();
-        assertThat(classifier1.apply(0), is(0));
-        assertThat(classifier1.apply(1), is(1));
-        assertThat(classifier1.apply(2), is(2));
+        Function<Long, ?> classifier1 = IngredientComponents.ENERGY.getCategoryTypes().get(0).getClassifier();
+        assertThat(classifier1.apply(0L), is(0L));
+        assertThat(classifier1.apply(1L), is(1L));
+        assertThat(classifier1.apply(2L), is(2L));
     }
 
 }

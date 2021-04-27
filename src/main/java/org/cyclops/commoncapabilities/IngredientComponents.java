@@ -57,11 +57,11 @@ public class IngredientComponents {
                             CompoundNBT.class, false, FluidStack::getTag, FluidMatch.NBT, false)
             )).setTranslationKey("recipecomponent.minecraft.fluidstack");
 
-    public static final IngredientComponent<Integer, Boolean> ENERGY =
+    public static final IngredientComponent<Long, Boolean> ENERGY =
             new IngredientComponent<>("minecraft:energy", new IngredientMatcherEnergy(),
                     new IngredientSerializerEnergy(), Lists.newArrayList(
                     new IngredientComponentCategoryType<>(new ResourceLocation("energy/amount"),
-                            Integer.class, false, amount -> amount, true, true)
+                            Long.class, false, amount -> amount, true, true)
             )).setTranslationKey("recipecomponent.minecraft.energy");
 
     public static void registerStorageWrapperHandlers() {
