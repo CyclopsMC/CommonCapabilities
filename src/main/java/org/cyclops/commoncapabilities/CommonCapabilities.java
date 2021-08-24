@@ -21,6 +21,7 @@ import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandler
 import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 import org.cyclops.commoncapabilities.capability.temperature.TemperatureConfig;
 import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
+import org.cyclops.commoncapabilities.modcompat.mekanism.MekanismModCompat;
 import org.cyclops.commoncapabilities.modcompat.vanilla.VanillaModCompat;
 import org.cyclops.commoncapabilities.proxy.ClientProxy;
 import org.cyclops.commoncapabilities.proxy.CommonProxy;
@@ -70,6 +71,7 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
     protected void loadModCompats(ModCompatLoader modCompatLoader) {
         super.loadModCompats(modCompatLoader);
         modCompatLoader.addModCompat(new VanillaModCompat());
+        modCompatLoader.addModCompat(new MekanismModCompat());
         // TODO: temporarily disable some mod compats
         //modCompatLoader.addModCompat(new TConstructModCompat());
         //modCompatLoader.addModCompat(new ForestryModCompat());

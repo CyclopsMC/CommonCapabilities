@@ -6,6 +6,10 @@
     "recipecomponent.minecraft.itemstack": "Item",
     "recipecomponent.minecraft.fluidstack": "Fluid",
     "recipecomponent.minecraft.energy": "Energy",
+    "recipecomponent.mekanism.gasstack": "Gas",
+    "recipecomponent.mekanism.infusionstack": "Infuse Type",
+    "recipecomponent.mekanism.pigmentstack": "Pigment",
+    "recipecomponent.mekanism.slurrystack": "Slurry",
 
     "_comment": "# Capability settings",
     "capability.commoncapabilities.inventoryState": "Inventory state",

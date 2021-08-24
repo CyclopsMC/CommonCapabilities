@@ -112,6 +112,9 @@ repositories {
             password = project.findProperty("gpr.key") ?: System.getenv("MAVEN_KEY")
         }
     }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
@@ -123,6 +126,8 @@ dependencies {
     } else {
         compile "org.cyclops.cyclopscore:cyclopscore:${config.minecraft_version}-${config.cyclopscore_version}:deobf"
     }
+
+    compile fg.deobf("curse.maven:mekanism-268560:${config.mekanism_file_id}")
 	
 	// TODO: port mod dependencies once they update
 

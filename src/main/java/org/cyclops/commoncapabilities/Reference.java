@@ -34,5 +34,6 @@ public class Reference {
     public static final String MOD_FORESTRY = "forestry";
     public static final String MOD_IC2 = "ic2";
     public static final String MOD_THERMALEXPANSION = "thermalexpansion";
+    public static final String MOD_MEKANISM = "mekanism";
 
 }
