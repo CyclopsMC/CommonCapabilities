@@ -12,7 +12,7 @@ it also provides default implementations of these capabilities for various mods.
 
 All stable releases (including deobfuscated builds) can be found on [CurseForge](http://minecraft.curseforge.com/projects/247007/files).
 
-[Development builds](https://oss.jfrog.org/artifactory/simple/libs-release/org/cyclops/commoncapabilities/CommonCapabilities/) are hosted by [JFrog Artifactory](https://www.jfrog.com/artifactory/).
+[Development builds](https://github.com/CyclopsMC/packages/packages/) are hosted as GitHub packages.
 
 ### Contributing
 * Before submitting a pull request containing a new feature, please discuss this first with one of the lead developers.
