@@ -481,4 +481,40 @@ public class TestFluidStackComponentStorageWrapper {
         assertThat(eq(storage.getFluidInTank(8), FluidStack.EMPTY), is(true));
     }
 
+    @Test
+    public void testGetSlots() {
+        assertThat(wrapper.getSlots(), is(10));
+    }
+
+    @Test
+    public void testGetSlotContents() {
+        assertThat(eq(wrapper.getSlotContents(0), FluidStack.EMPTY), is(true));
+        assertThat(eq(wrapper.getSlotContents(1), FluidStack.EMPTY), is(true));
+        assertThat(eq(wrapper.getSlotContents(2), WATER_1), is(true));
+    }
+
+    @Test
+    public void testGetMaxQuantitySlot() {
+        assertThat(wrapper.getMaxQuantity(0), is(64L));
+        assertThat(wrapper.getMaxQuantity(1), is(64L));
+        assertThat(wrapper.getMaxQuantity(2), is(64L));
+    }
+
+    @Test
+    public void testInsertSlot() {
+        assertThat(wrapper.insert(0, WATER_64, true), is(FluidStack.EMPTY));
+        assertThat(storage.getFluidInTank(0), is(FluidStack.EMPTY));
+
+        assertThat(wrapper.insert(0, WATER_64, false), is(FluidStack.EMPTY));
+        assertThat(eq(storage.getFluidInTank(0), WATER_64), is(true));
+    }
+
+    @Test
+    public void testExtractAmountSlot() {
+        assertThat(eq(wrapper.extract(0, 10, true), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
+
+        assertThat(eq(wrapper.extract(0, 10, false), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+    }
 }

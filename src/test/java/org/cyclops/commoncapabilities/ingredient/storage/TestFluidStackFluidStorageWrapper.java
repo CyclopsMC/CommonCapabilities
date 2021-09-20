@@ -91,7 +91,7 @@ public class TestFluidStackFluidStorageWrapper {
         assertThat(wrapper.getTanks(), is(11));
 
         for (int i = 0; i < wrapper.getTanks(); i++) {
-            assertThat(wrapper.getTankCapacity(i), is(Integer.MAX_VALUE));
+            assertThat(wrapper.getTankCapacity(i), is(640));
         }
 
         assertThat(eq(wrapper.getFluidInTank(0), FluidStack.EMPTY), is(true));

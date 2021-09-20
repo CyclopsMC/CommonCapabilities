@@ -67,7 +67,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
         return this.ingredientComponent;
     }
 
-    public static class ComponentStorageWrapper implements IIngredientComponentStorage<FluidStack, Integer> {
+    public static class ComponentStorageWrapper implements IIngredientComponentStorageSlotted<FluidStack, Integer> {
 
         private final IngredientComponent<FluidStack, Integer> ingredientComponent;
         private final IFluidHandler storage;
@@ -166,6 +166,33 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
         public FluidStack extract(long maxQuantity, boolean simulate) {
             return storage.drain(Helpers.castSafe(maxQuantity), simulateToFluidAction(simulate));
         }
+
+        @Override
+        public int getSlots() {
+            return storage.getTanks();
+        }
+
+        @Override
+        public FluidStack getSlotContents(int slot) {
+            return storage.getFluidInTank(slot);
+        }
+
+        @Override
+        public long getMaxQuantity(int slot) {
+            return storage.getTankCapacity(slot);
+        }
+
+        @Override
+        public FluidStack insert(int slot, @Nonnull FluidStack ingredient, boolean simulate) {
+            // There's no way to extract from a specific slot in IFluidHandler
+            return insert(ingredient, simulate);
+        }
+
+        @Override
+        public FluidStack extract(int slot, long maxQuantity, boolean simulate) {
+            // There's no way to extract from a specific slot in IFluidHandler
+            return extract(maxQuantity, simulate);
+        }
     }
 
     public static class FluidStorageWrapper implements IFluidHandler {
@@ -190,7 +217,8 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
 
         @Override
         public int getTankCapacity(int tank) {
-            return Integer.MAX_VALUE;
+            // Yes, this is an overestimate, as this is the total across ALL tanks
+            return Helpers.castSafe(this.storage.getMaxQuantity());
         }
 
         @Override
@@ -255,6 +283,11 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
                 throw new IndexOutOfBoundsException("Tank " + tank + " not in valid range - [0," + tanks + ")");
             }
             return this.storage.getSlotContents(tank);
+        }
+
+        @Override
+        public int getTankCapacity(int tank) {
+            return Helpers.castSafe(this.storage.getMaxQuantity(tank));
         }
     }
 
