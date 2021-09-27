@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.11.6 or higher.
+
+Fixes:
+* Fix fluid wrappers not correctly passing exact slot count and max quantity
+  Closes CyclopsMC/IntegratedDynamics#1083
+
