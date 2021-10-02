@@ -126,4 +126,9 @@ public class TestIngredientMatcherEnergy {
         assertThat(M.conditionCompare(false, false), is(0));
     }
 
+    @Test
+    public void testToString() {
+        assertThat(M.toString(10L), is("10"));
+    }
+
 }

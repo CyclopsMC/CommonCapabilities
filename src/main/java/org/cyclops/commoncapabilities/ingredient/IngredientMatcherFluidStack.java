@@ -122,6 +122,11 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     }
 
     @Override
+    public String toString(FluidStack instance) {
+        return String.format("%s %s %s", instance.getFluid().getRegistryName(), instance.getAmount(), instance.getTag());
+    }
+
+    @Override
     public int compare(FluidStack o1, FluidStack o2) {
         if (o1.isEmpty()) {
             if (o2.isEmpty()) {

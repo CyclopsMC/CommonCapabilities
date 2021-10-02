@@ -361,4 +361,10 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.conditionCompare(2, 10), is(-1));
     }
 
+    @Test
+    public void testToString() {
+        assertThat(M.toString(W_1), is("minecraft:white_wool 1 null"));
+        assertThat(M.toString(W_1_T1), is("minecraft:white_wool 1 {key:1}"));
+    }
+
 }

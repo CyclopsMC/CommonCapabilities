@@ -109,6 +109,11 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     }
 
     @Override
+    public String toString(ItemStack instance) {
+        return String.format("%s %s %s", instance.getItem().getRegistryName(), instance.getCount(), instance.getTag());
+    }
+
+    @Override
     public int compare(ItemStack o1, ItemStack o2) {
         if (o1.isEmpty()) {
             if (o2.isEmpty()) {
