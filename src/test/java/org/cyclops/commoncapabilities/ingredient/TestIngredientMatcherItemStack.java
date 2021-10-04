@@ -1,10 +1,14 @@
 package org.cyclops.commoncapabilities.ingredient;
 
+import com.google.common.collect.Lists;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.registry.Bootstrap;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
+import org.cyclops.cyclopscore.nbt.path.NbtParseException;
+import org.cyclops.cyclopscore.nbt.path.NbtPath;
+import org.cyclops.cyclopscore.nbt.path.navigate.NbtPathNavigationList;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,8 +31,12 @@ public class TestIngredientMatcherItemStack {
     private static ItemStack L_1;
     private static ItemStack L_1_T1;
 
+    private static ItemStack B_1;
+    private static ItemStack B_1_T3;
+    private static ItemStack B_1_T4;
+
     @BeforeClass
-    public static void init() {
+    public static void init() throws NbtParseException {
         // We need the Minecraft registries to be filled
         Bootstrap.register();
 
@@ -39,6 +47,12 @@ public class TestIngredientMatcherItemStack {
 
         CompoundNBT tag2 = new CompoundNBT();
         tag2.putInt("key", 2);
+
+        CompoundNBT tag3 = new CompoundNBT();
+        tag3.putInt("ignored", 0);
+
+        CompoundNBT tag4 = new CompoundNBT();
+        tag4.putInt("ignored", 100);
 
         W_1 = new ItemStack(Items.WHITE_WOOL, 1);
         W_2 = new ItemStack(Items.WHITE_WOOL, 2);
@@ -57,7 +71,13 @@ public class TestIngredientMatcherItemStack {
         L_1_T1 = new ItemStack(Items.LEAD, 1);
         L_1_T1.setTag(tag1);
 
-        ItemMatch.NBT_COMPARATOR = NBTComparator.INSTANCE = new NBTComparator(null);
+        B_1 = new ItemStack(Items.BLACK_WOOL, 1);
+        B_1_T3 = new ItemStack(Items.BLACK_WOOL, 1);
+        B_1_T3.setTag(tag3);
+        B_1_T4 = new ItemStack(Items.BLACK_WOOL, 1);
+        B_1_T4.setTag(tag4);
+
+        ItemMatch.NBT_COMPARATOR = NBTComparator.INSTANCE = new NBTComparator(new NbtPathNavigationList(Lists.newArrayList(NbtPath.parse("$.ignored").asNavigation())));
     }
 
     @Test
@@ -235,6 +255,12 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.matchesExactly(W_1, W_2_T2), is(false));
         assertThat(M.matchesExactly(W_1, L_1), is(false));
         assertThat(M.matchesExactly(W_1, L_1_T1), is(false));
+    }
+
+    @Test
+    public void testMatchesExactlyIgnoredTag() {
+        assertThat(M.matchesExactly(B_1, B_1_T3), is(true));
+        assertThat(M.matchesExactly(B_1_T3, B_1_T4), is(true));
     }
 
     @Test
