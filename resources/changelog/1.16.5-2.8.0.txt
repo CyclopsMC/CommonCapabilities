@@ -1,0 +1,11 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.11.6 or higher.
+
+Additions:
+* Allow ingredient instances to be stringified
+  Required for CyclopsMC/IntegratedCrafting#68
+
+Fixes:
+* Ignore energy NBT tag values by default
+  Required for CyclopsMC/IntegratedCrafting#68
+
