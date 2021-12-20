@@ -1,8 +1,10 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.fluid.Fluids;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.registry.Bootstrap;
+import net.minecraft.DetectedVersion;
+import net.minecraft.SharedConstants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.junit.BeforeClass;
@@ -30,14 +32,15 @@ public class TestIngredientMatcherFluidStack {
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
+        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
 
         M = new IngredientMatcherFluidStack();
 
-        CompoundNBT tag1 = new CompoundNBT();
+        CompoundTag tag1 = new CompoundTag();
         tag1.putInt("key", 1);
 
-        CompoundNBT tag2 = new CompoundNBT();
+        CompoundTag tag2 = new CompoundTag();
         tag2.putInt("key", 2);
 
         W_1 = new FluidStack(Fluids.WATER, 1);
@@ -72,44 +75,44 @@ public class TestIngredientMatcherFluidStack {
 
     @Test
     public void testGetExactNoQuantityMatchCondition() {
-        assertThat(M.getExactMatchNoQuantityCondition(), is(FluidMatch.FLUID | FluidMatch.NBT));
+        assertThat(M.getExactMatchNoQuantityCondition(), is(FluidMatch.FLUID | FluidMatch.TAG));
     }
 
     @Test
     public void testWithCondition() {
         assertThat(M.withCondition(M.getAnyMatchCondition(), FluidMatch.ANY), is(FluidMatch.ANY));
         assertThat(M.withCondition(M.getAnyMatchCondition(), FluidMatch.FLUID), is(FluidMatch.FLUID));
-        assertThat(M.withCondition(M.getAnyMatchCondition(), FluidMatch.NBT), is(FluidMatch.NBT));
+        assertThat(M.withCondition(M.getAnyMatchCondition(), FluidMatch.TAG), is(FluidMatch.TAG));
         assertThat(M.withCondition(M.getAnyMatchCondition(), FluidMatch.AMOUNT), is(FluidMatch.AMOUNT));
-        assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), FluidMatch.NBT), FluidMatch.AMOUNT), is(FluidMatch.NBT | FluidMatch.AMOUNT));
-        assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), FluidMatch.AMOUNT), FluidMatch.NBT), is(FluidMatch.NBT | FluidMatch.AMOUNT));
-        assertThat(M.withCondition(M.withCondition(M.withCondition(M.getAnyMatchCondition(), FluidMatch.FLUID), FluidMatch.NBT), FluidMatch.AMOUNT), is(FluidMatch.FLUID | FluidMatch.NBT | FluidMatch.AMOUNT));
-        assertThat(M.withCondition(M.withCondition(M.withCondition(M.getAnyMatchCondition(), FluidMatch.FLUID), FluidMatch.AMOUNT), FluidMatch.NBT), is(FluidMatch.FLUID | FluidMatch.NBT | FluidMatch.AMOUNT));
+        assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), FluidMatch.TAG), FluidMatch.AMOUNT), is(FluidMatch.TAG | FluidMatch.AMOUNT));
+        assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), FluidMatch.AMOUNT), FluidMatch.TAG), is(FluidMatch.TAG | FluidMatch.AMOUNT));
+        assertThat(M.withCondition(M.withCondition(M.withCondition(M.getAnyMatchCondition(), FluidMatch.FLUID), FluidMatch.TAG), FluidMatch.AMOUNT), is(FluidMatch.FLUID | FluidMatch.TAG | FluidMatch.AMOUNT));
+        assertThat(M.withCondition(M.withCondition(M.withCondition(M.getAnyMatchCondition(), FluidMatch.FLUID), FluidMatch.AMOUNT), FluidMatch.TAG), is(FluidMatch.FLUID | FluidMatch.TAG | FluidMatch.AMOUNT));
         assertThat(M.withCondition(M.getAnyMatchCondition(), FluidMatch.EXACT), is(FluidMatch.EXACT));
     }
 
     @Test
     public void testWithoutCondition() {
         assertThat(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.ANY), is(FluidMatch.EXACT));
-        assertThat(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.FLUID), is(FluidMatch.NBT | FluidMatch.AMOUNT));
-        assertThat(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.NBT), is(FluidMatch.FLUID | FluidMatch.AMOUNT));
-        assertThat(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.AMOUNT), is(FluidMatch.FLUID | FluidMatch.NBT));
-        assertThat(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.NBT), FluidMatch.AMOUNT), is(FluidMatch.FLUID));
-        assertThat(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.AMOUNT), FluidMatch.NBT), is(FluidMatch.FLUID));
-        assertThat(M.withoutCondition(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.FLUID), FluidMatch.NBT), FluidMatch.AMOUNT), is(FluidMatch.ANY));
-        assertThat(M.withoutCondition(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.FLUID), FluidMatch.AMOUNT), FluidMatch.NBT), is(FluidMatch.ANY));
+        assertThat(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.FLUID), is(FluidMatch.TAG | FluidMatch.AMOUNT));
+        assertThat(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.TAG), is(FluidMatch.FLUID | FluidMatch.AMOUNT));
+        assertThat(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.AMOUNT), is(FluidMatch.FLUID | FluidMatch.TAG));
+        assertThat(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.TAG), FluidMatch.AMOUNT), is(FluidMatch.FLUID));
+        assertThat(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.AMOUNT), FluidMatch.TAG), is(FluidMatch.FLUID));
+        assertThat(M.withoutCondition(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.FLUID), FluidMatch.TAG), FluidMatch.AMOUNT), is(FluidMatch.ANY));
+        assertThat(M.withoutCondition(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.FLUID), FluidMatch.AMOUNT), FluidMatch.TAG), is(FluidMatch.ANY));
         assertThat(M.withoutCondition(M.getExactMatchCondition(), FluidMatch.EXACT), is(FluidMatch.ANY));
     }
 
     @Test
     public void testHasCondition() {
         assertThat(M.hasCondition(M.getExactMatchCondition(), FluidMatch.ANY), is(false));
-        assertThat(M.hasCondition(M.getExactMatchCondition(), FluidMatch.NBT), is(true));
+        assertThat(M.hasCondition(M.getExactMatchCondition(), FluidMatch.TAG), is(true));
         assertThat(M.hasCondition(M.getExactMatchCondition(), FluidMatch.AMOUNT), is(true));
         assertThat(M.hasCondition(M.getExactMatchCondition(), FluidMatch.FLUID), is(true));
 
         assertThat(M.hasCondition(M.getAnyMatchCondition(), FluidMatch.ANY), is(false));
-        assertThat(M.hasCondition(M.getAnyMatchCondition(), FluidMatch.NBT), is(false));
+        assertThat(M.hasCondition(M.getAnyMatchCondition(), FluidMatch.TAG), is(false));
         assertThat(M.hasCondition(M.getAnyMatchCondition(), FluidMatch.AMOUNT), is(false));
         assertThat(M.hasCondition(M.getAnyMatchCondition(), FluidMatch.FLUID), is(false));
     }
@@ -160,14 +163,14 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.matches(W_1, L_1, FluidMatch.AMOUNT), is(true));
         assertThat(M.matches(W_1, L_1_T1, FluidMatch.AMOUNT), is(true));
 
-        assertThat(M.matches(W_1, W_1, FluidMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_2, FluidMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_1_T1, FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T1, FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_1_T2, FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T2, FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, L_1, FluidMatch.NBT), is(true));
-        assertThat(M.matches(W_1, L_1_T1, FluidMatch.NBT), is(false));
+        assertThat(M.matches(W_1, W_1, FluidMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_2, FluidMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_1_T1, FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T1, FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_1_T2, FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T2, FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, L_1, FluidMatch.TAG), is(true));
+        assertThat(M.matches(W_1, L_1_T1, FluidMatch.TAG), is(false));
 
         assertThat(M.matches(W_1, W_1, FluidMatch.FLUID | FluidMatch.AMOUNT), is(true));
         assertThat(M.matches(W_1, W_2, FluidMatch.FLUID | FluidMatch.AMOUNT), is(false));
@@ -178,23 +181,23 @@ public class TestIngredientMatcherFluidStack {
         assertThat(M.matches(W_1, L_1, FluidMatch.FLUID | FluidMatch.AMOUNT), is(false));
         assertThat(M.matches(W_1, L_1_T1, FluidMatch.FLUID | FluidMatch.AMOUNT), is(false));
 
-        assertThat(M.matches(W_1, W_1, FluidMatch.FLUID | FluidMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_2, FluidMatch.FLUID | FluidMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_1_T1, FluidMatch.FLUID | FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T1, FluidMatch.FLUID | FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_1_T2, FluidMatch.FLUID | FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T2, FluidMatch.FLUID | FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, L_1, FluidMatch.FLUID | FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, L_1_T1, FluidMatch.FLUID | FluidMatch.NBT), is(false));
+        assertThat(M.matches(W_1, W_1, FluidMatch.FLUID | FluidMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_2, FluidMatch.FLUID | FluidMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_1_T1, FluidMatch.FLUID | FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T1, FluidMatch.FLUID | FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_1_T2, FluidMatch.FLUID | FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T2, FluidMatch.FLUID | FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, L_1, FluidMatch.FLUID | FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, L_1_T1, FluidMatch.FLUID | FluidMatch.TAG), is(false));
 
-        assertThat(M.matches(W_1, W_1, FluidMatch.AMOUNT | FluidMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_2, FluidMatch.AMOUNT | FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_1_T1, FluidMatch.AMOUNT | FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T1, FluidMatch.AMOUNT | FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_1_T2, FluidMatch.AMOUNT | FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T2, FluidMatch.AMOUNT | FluidMatch.NBT), is(false));
-        assertThat(M.matches(W_1, L_1, FluidMatch.AMOUNT | FluidMatch.NBT), is(true));
-        assertThat(M.matches(W_1, L_1_T1, FluidMatch.AMOUNT | FluidMatch.NBT), is(false));
+        assertThat(M.matches(W_1, W_1, FluidMatch.AMOUNT | FluidMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_2, FluidMatch.AMOUNT | FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_1_T1, FluidMatch.AMOUNT | FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T1, FluidMatch.AMOUNT | FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_1_T2, FluidMatch.AMOUNT | FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T2, FluidMatch.AMOUNT | FluidMatch.TAG), is(false));
+        assertThat(M.matches(W_1, L_1, FluidMatch.AMOUNT | FluidMatch.TAG), is(true));
+        assertThat(M.matches(W_1, L_1_T1, FluidMatch.AMOUNT | FluidMatch.TAG), is(false));
     }
 
     @Test

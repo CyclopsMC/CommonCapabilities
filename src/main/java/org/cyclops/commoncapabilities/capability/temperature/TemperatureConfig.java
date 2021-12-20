@@ -1,12 +1,11 @@
 package org.cyclops.commoncapabilities.capability.temperature;
 
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import org.cyclops.commoncapabilities.CommonCapabilities;
-import org.cyclops.commoncapabilities.api.capability.temperature.DefaultTemperature;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
 import org.cyclops.cyclopscore.config.extendedconfig.CapabilityConfig;
-import org.cyclops.cyclopscore.modcompat.capabilities.DefaultCapabilityStorage;
 
 /**
  * Config for the temperature capability.
@@ -17,16 +16,13 @@ public class TemperatureConfig extends CapabilityConfig<ITemperature> {
 
     public static TemperatureConfig _instance;
 
-    @CapabilityInject(ITemperature.class)
-    public static Capability<ITemperature> CAPABILITY = null;
+    public static Capability<ITemperature> CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
     public TemperatureConfig() {
         super(
                 CommonCapabilities._instance,
                 "temperature",
-                ITemperature.class,
-                new DefaultCapabilityStorage<ITemperature>(),
-                DefaultTemperature::new
+                ITemperature.class
         );
     }
 }

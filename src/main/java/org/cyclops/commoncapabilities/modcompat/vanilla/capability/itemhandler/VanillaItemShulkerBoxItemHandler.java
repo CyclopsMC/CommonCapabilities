@@ -1,10 +1,10 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler;
 
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.NonNullList;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
 import org.cyclops.commoncapabilities.capability.itemhandler.ItemItemHandler;
 
 import javax.annotation.Nonnull;
@@ -22,11 +22,11 @@ public class VanillaItemShulkerBoxItemHandler extends ItemItemHandler {
     @Override
     protected NonNullList<ItemStack> getItemList() {
         NonNullList<ItemStack> itemStacks = NonNullList.withSize(getSlots(), ItemStack.EMPTY);
-        CompoundNBT rootTag = getItemStack().getTag();
-        if (rootTag != null && rootTag.contains("BlockEntityTag", Constants.NBT.TAG_COMPOUND)) {
-            CompoundNBT entityTag = rootTag.getCompound("BlockEntityTag");
-            if (entityTag.contains("Items", Constants.NBT.TAG_LIST)) {
-                ItemStackHelper.loadAllItems(entityTag, itemStacks);
+        CompoundTag rootTag = getItemStack().getTag();
+        if (rootTag != null && rootTag.contains("BlockEntityTag", Tag.TAG_COMPOUND)) {
+            CompoundTag entityTag = rootTag.getCompound("BlockEntityTag");
+            if (entityTag.contains("Items", Tag.TAG_LIST)) {
+                ContainerHelper.loadAllItems(entityTag, itemStacks);
             }
         }
         return itemStacks;
@@ -34,11 +34,11 @@ public class VanillaItemShulkerBoxItemHandler extends ItemItemHandler {
 
     @Override
     protected void setItemList(NonNullList<ItemStack> itemStacks) {
-        CompoundNBT rootTag = getItemStack().getOrCreateTag();
-        if (!rootTag.contains("BlockEntityTag", Constants.NBT.TAG_COMPOUND)) {
-            rootTag.put("BlockEntityTag", new CompoundNBT());
+        CompoundTag rootTag = getItemStack().getOrCreateTag();
+        if (!rootTag.contains("BlockEntityTag", Tag.TAG_COMPOUND)) {
+            rootTag.put("BlockEntityTag", new CompoundTag());
         }
-        ItemStackHelper.saveAllItems(rootTag.getCompound("BlockEntityTag"), itemStacks);
+        ContainerHelper.saveAllItems(rootTag.getCompound("BlockEntityTag"), itemStacks);
     }
 
     @Override

@@ -17,57 +17,57 @@ import java.util.stream.Collectors;
  * A comparator implementation for NBT tags.
  * @author rubensworks
  */
-public class NBTComparator implements Comparator<INBT> {
+public class TagComparator implements Comparator<Tag> {
 
     /**
      * A comparator for NBT tags. (This is set in GeneralConfig)
      */
-    public static Comparator<INBT> INSTANCE = new NBTComparator(null);
+    public static Comparator<Tag> INSTANCE = new TagComparator(null);
 
     private final INbtPathNavigation ignoreNbtNavigation;
 
-    public NBTComparator(@Nullable INbtPathNavigation ignoreNbtNavigation) {
+    public TagComparator(@Nullable INbtPathNavigation ignoreNbtNavigation) {
         this.ignoreNbtNavigation = ignoreNbtNavigation;
     }
 
     @Override
-    public int compare(INBT o1, INBT o2) {
+    public int compare(Tag o1, Tag o2) {
         return this.compare(o1, o2, this.ignoreNbtNavigation);
     }
 
-    protected int compare(INBT o1, INBT o2, @Nullable INbtPathNavigation ignoreNbtNavigation) {
+    protected int compare(Tag o1, Tag o2, @Nullable INbtPathNavigation ignoreNbtNavigation) {
         if (o1.getId() == o2.getId()) {
             switch (o1.getId()) {
                 case 0:
                     return 0;
                 case 1:
-                    return Byte.compare(((ByteNBT) o1).getAsByte(), ((ByteNBT) o2).getAsByte());
+                    return Byte.compare(((ByteTag) o1).getAsByte(), ((ByteTag) o2).getAsByte());
                 case 2:
-                    return Short.compare(((ShortNBT) o1).getAsShort(), ((ShortNBT) o2).getAsShort());
+                    return Short.compare(((ShortTag) o1).getAsShort(), ((ShortTag) o2).getAsShort());
                 case 3:
-                    return Integer.compare(((IntNBT) o1).getAsInt(), ((IntNBT) o2).getAsInt());
+                    return Integer.compare(((IntTag) o1).getAsInt(), ((IntTag) o2).getAsInt());
                 case 4:
-                    return Long.compare(((LongNBT) o1).getAsLong(), ((LongNBT) o2).getAsLong());
+                    return Long.compare(((LongTag) o1).getAsLong(), ((LongTag) o2).getAsLong());
                 case 5:
-                    return Float.compare(((FloatNBT) o1).getAsFloat(), ((FloatNBT) o2).getAsFloat());
+                    return Float.compare(((FloatTag) o1).getAsFloat(), ((FloatTag) o2).getAsFloat());
                 case 6:
-                    return Double.compare(((DoubleNBT) o1).getAsDouble(), ((DoubleNBT) o2).getAsDouble());
+                    return Double.compare(((DoubleTag) o1).getAsDouble(), ((DoubleTag) o2).getAsDouble());
                 case 7:
-                    return UnsignedBytes.lexicographicalComparator().compare(((ByteArrayNBT) o1).getAsByteArray(),
-                            ((ByteArrayNBT) o2).getAsByteArray());
+                    return UnsignedBytes.lexicographicalComparator().compare(((ByteArrayTag) o1).getAsByteArray(),
+                            ((ByteArrayTag) o2).getAsByteArray());
                 case 8:
-                    return ((StringNBT) o1).getAsString().compareTo(((StringNBT) o2).getAsString());
+                    return ((StringTag) o1).getAsString().compareTo(((StringTag) o2).getAsString());
                 case 9:
-                    ListNBT l1 = (ListNBT) o1;
-                    ListNBT l2 = (ListNBT) o2;
+                    ListTag l1 = (ListTag) o1;
+                    ListTag l2 = (ListTag) o2;
                     if (l1.getElementType() != l2.getElementType()) {
                         return l1.getElementType() - l2.getElementType();
                     }
                     if (l1.size() != l2.size()) {
                         return l1.size() - l2.size();
                     }
-                    Iterator<INBT> it1 = l1.iterator();
-                    Iterator<INBT> it2 = l2.iterator();
+                    Iterator<Tag> it1 = l1.iterator();
+                    Iterator<Tag> it2 = l2.iterator();
                     while (it1.hasNext()) {
                         int comp = this.compare(it1.next(), it2.next(), null);
                         if (comp != 0) {
@@ -76,8 +76,8 @@ public class NBTComparator implements Comparator<INBT> {
                     }
                     return 0;
                 case 10:
-                    CompoundNBT t1 = (CompoundNBT) o1;
-                    CompoundNBT t2 = (CompoundNBT) o2;
+                    CompoundTag t1 = (CompoundTag) o1;
+                    CompoundTag t2 = (CompoundTag) o2;
                     Set<String> k1 = t1.getAllKeys();
                     Set<String> k2 = t2.getAllKeys();
                     if (ignoreNbtNavigation != null) {
@@ -107,11 +107,11 @@ public class NBTComparator implements Comparator<INBT> {
                     }
                     return 0;
                 case 11:
-                    return Ints.lexicographicalComparator().compare(((IntArrayNBT) o1).getAsIntArray(),
-                            ((IntArrayNBT) o2).getAsIntArray());
+                    return Ints.lexicographicalComparator().compare(((IntArrayTag) o1).getAsIntArray(),
+                            ((IntArrayTag) o2).getAsIntArray());
                 case 12:
-                    return Longs.lexicographicalComparator().compare(((LongArrayNBT) o1).data,
-                            ((LongArrayNBT) o2).data);
+                    return Longs.lexicographicalComparator().compare(((LongArrayTag) o1).data,
+                            ((LongArrayTag) o2).data);
                 default:
                     return 0;
             }

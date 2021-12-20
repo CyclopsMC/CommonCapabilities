@@ -1,11 +1,13 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.registry.Bootstrap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.IntNBT;
-import net.minecraft.nbt.StringNBT;
+import net.minecraft.DetectedVersion;
+import net.minecraft.SharedConstants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -15,12 +17,12 @@ import static org.junit.Assert.assertThat;
 public class TestIngredientSerializerItemStack {
 
     private static IngredientSerializerItemStack S;
-    private static CompoundNBT TAG;
-    private static CompoundNBT I_TAG1;
-    private static CompoundNBT I_TAG2;
-    private static CompoundNBT I_TAG1L;
-    private static CompoundNBT I_TAG2L;
-    private static CompoundNBT I_TAG_EMPTY;
+    private static CompoundTag TAG;
+    private static CompoundTag I_TAG1;
+    private static CompoundTag I_TAG2;
+    private static CompoundTag I_TAG1L;
+    private static CompoundTag I_TAG2L;
+    private static CompoundTag I_TAG_EMPTY;
     private static ItemStack I1;
     private static ItemStack I2;
     private static ItemStack I1L;
@@ -29,34 +31,35 @@ public class TestIngredientSerializerItemStack {
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
+        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
 
         S = new IngredientSerializerItemStack();
 
-        TAG = new CompoundNBT();
+        TAG = new CompoundTag();
         TAG.putBoolean("flag", true);
 
-        I_TAG1 = new CompoundNBT();
+        I_TAG1 = new CompoundTag();
         I_TAG1.putString("id", "minecraft:apple");
         I_TAG1.putByte("Count", (byte) 1);
 
-        I_TAG2 = new CompoundNBT();
+        I_TAG2 = new CompoundTag();
         I_TAG2.putString("id", "minecraft:lead");
         I_TAG2.putByte("Count", (byte) 2);
         I_TAG2.put("tag", TAG);
 
-        I_TAG1L = new CompoundNBT();
+        I_TAG1L = new CompoundTag();
         I_TAG1L.putString("id", "minecraft:apple");
         I_TAG1L.putByte("Count", (byte) 1);
         I_TAG1L.putInt("ExtendedCount", 128);
 
-        I_TAG2L = new CompoundNBT();
+        I_TAG2L = new CompoundTag();
         I_TAG2L.putString("id", "minecraft:lead");
         I_TAG2L.putByte("Count", (byte) 1);
         I_TAG2L.put("tag", TAG);
         I_TAG2L.putInt("ExtendedCount", 2000);
 
-        I_TAG_EMPTY = new CompoundNBT();
+        I_TAG_EMPTY = new CompoundTag();
         I_TAG_EMPTY.putString("id", "minecraft:air");
         I_TAG_EMPTY.putByte("Count", (byte) 1);
 
@@ -95,22 +98,22 @@ public class TestIngredientSerializerItemStack {
 
     @Test(expected = IllegalArgumentException.class)
     public void deserializeInstanceInvalid() {
-        S.deserializeInstance(StringNBT.valueOf("0"));
+        S.deserializeInstance(StringTag.valueOf("0"));
     }
 
     @Test
     public void serializeCondition() {
-        assertThat(S.serializeCondition(1), is(IntNBT.valueOf(1)));
+        assertThat(S.serializeCondition(1), is(IntTag.valueOf(1)));
     }
 
     @Test
     public void deserializeCondition() {
-        assertThat(S.deserializeCondition(IntNBT.valueOf(1)), is(1));
+        assertThat(S.deserializeCondition(IntTag.valueOf(1)), is(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void deserializeConditionInvalid() {
-        S.deserializeCondition(StringNBT.valueOf("0"));
+        S.deserializeCondition(StringTag.valueOf("0"));
     }
 
 }

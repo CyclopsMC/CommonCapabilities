@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.work;
 
-import net.minecraft.block.CampfireBlock;
-import net.minecraft.tileentity.CampfireTileEntity;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.entity.CampfireBlockEntity;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
 /**
@@ -9,9 +9,9 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
  * @author rubensworks
  */
 public class VanillaCampfireWorker implements IWorker {
-    private final CampfireTileEntity campfire;
+    private final CampfireBlockEntity campfire;
 
-    public VanillaCampfireWorker(CampfireTileEntity campfire) {
+    public VanillaCampfireWorker(CampfireBlockEntity campfire) {
         this.campfire = campfire;
     }
 

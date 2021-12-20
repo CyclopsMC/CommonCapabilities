@@ -1,6 +1,6 @@
 package org.cyclops.commoncapabilities;
 
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.ObjectHolder;
 
 /**

@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.IntNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.IntTag;
 import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 
@@ -12,28 +12,28 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
  */
 public class IngredientSerializerFluidStack implements IIngredientSerializer<FluidStack, Integer> {
     @Override
-    public INBT serializeInstance(FluidStack instance) {
-        return instance.isEmpty() ? new CompoundNBT() : instance.writeToNBT(new CompoundNBT());
+    public Tag serializeInstance(FluidStack instance) {
+        return instance.isEmpty() ? new CompoundTag() : instance.writeToNBT(new CompoundTag());
     }
 
     @Override
-    public FluidStack deserializeInstance(INBT tag) throws IllegalArgumentException {
-        if (!(tag instanceof CompoundNBT)) {
+    public FluidStack deserializeInstance(Tag tag) throws IllegalArgumentException {
+        if (!(tag instanceof CompoundTag)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagCompound");
         }
-        return FluidStack.loadFluidStackFromNBT((CompoundNBT) tag);
+        return FluidStack.loadFluidStackFromNBT((CompoundTag) tag);
     }
 
     @Override
-    public INBT serializeCondition(Integer matchCondition) {
-        return IntNBT.valueOf(matchCondition);
+    public Tag serializeCondition(Integer matchCondition) {
+        return IntTag.valueOf(matchCondition);
     }
 
     @Override
-    public Integer deserializeCondition(INBT tag) throws IllegalArgumentException {
-        if (!(tag instanceof IntNBT)) {
+    public Integer deserializeCondition(Tag tag) throws IllegalArgumentException {
+        if (!(tag instanceof IntTag)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagInt");
         }
-        return ((IntNBT) tag).getAsInt();
+        return ((IntTag) tag).getAsInt();
     }
 }

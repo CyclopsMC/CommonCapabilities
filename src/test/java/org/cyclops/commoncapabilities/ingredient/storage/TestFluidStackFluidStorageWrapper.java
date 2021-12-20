@@ -1,8 +1,10 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
-import net.minecraft.fluid.Fluids;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.registry.Bootstrap;
+import net.minecraft.DetectedVersion;
+import net.minecraft.SharedConstants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -42,6 +44,7 @@ public class TestFluidStackFluidStorageWrapper {
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
+        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
     }
 
@@ -52,15 +55,15 @@ public class TestFluidStackFluidStorageWrapper {
     @Before
     public void beforeEach() {
         WATER_1 = new FluidStack(Fluids.WATER, 1);
-        LAVA_1_NB = new FluidStack(Fluids.LAVA, 1, new CompoundNBT());
+        LAVA_1_NB = new FluidStack(Fluids.LAVA, 1, new CompoundTag());
         LAVA_10 = new FluidStack(Fluids.LAVA, 10);
         WATER_10 = new FluidStack(Fluids.WATER, 10);
 
         WATER_64 = new FluidStack(Fluids.WATER, 64);
         LAVA_64 = new FluidStack(Fluids.LAVA, 64);
-        LAVA_64_NB = new FluidStack(Fluids.LAVA, 64, new CompoundNBT());
+        LAVA_64_NB = new FluidStack(Fluids.LAVA, 64, new CompoundTag());
         WATER_11 = new FluidStack(Fluids.WATER, 11);
-        LAVA_11_NB = new FluidStack(Fluids.LAVA, 11, new CompoundNBT());
+        LAVA_11_NB = new FluidStack(Fluids.LAVA, 11, new CompoundTag());
 
         t1 = new FluidTankFixed(64);
         t2 = new FluidTankFixed(64);

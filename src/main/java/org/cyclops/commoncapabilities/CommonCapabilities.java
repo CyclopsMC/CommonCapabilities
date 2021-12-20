@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -89,7 +89,7 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
     }
 
     @Override
-    protected ItemGroup constructDefaultItemGroup() {
+    protected CreativeModeTab constructDefaultCreativeModeTab() {
         return null;
     }
 

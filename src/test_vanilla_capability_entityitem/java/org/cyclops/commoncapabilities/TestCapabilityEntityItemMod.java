@@ -1,14 +1,14 @@
 package org.cyclops.commoncapabilities;
 
 import com.google.common.collect.Iterables;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -46,10 +46,10 @@ public class TestCapabilityEntityItemMod {
         if (event.getPlayer().getMainHandItem().isEmpty()) return;
 
         Entity target = Iterables.get(event.getPlayer().level.getEntities(null,
-                new AxisAlignedBB(event.getPos().relative(event.getFace()))), 0, null);
+                new AABB(event.getPos().relative(event.getFace()))), 0, null);
         if (target != null) {
             Item heldItem = event.getPlayer().getMainHandItem().getItem();
-            if (!(target instanceof ItemEntity) && !(target instanceof ItemFrameEntity)) return;
+            if (!(target instanceof ItemEntity) && !(target instanceof ItemFrame)) return;
             if (target.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, event.getFace()).isPresent()) {
                 event.setCanceled(true);
                 IItemHandler itemHandler = target.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, event.getFace()).orElse(null);

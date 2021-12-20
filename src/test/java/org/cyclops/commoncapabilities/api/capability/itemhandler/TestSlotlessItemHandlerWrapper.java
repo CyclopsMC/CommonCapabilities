@@ -1,9 +1,11 @@
 package org.cyclops.commoncapabilities.api.capability.itemhandler;
 
-import net.minecraft.item.Items;
-import net.minecraft.util.registry.Bootstrap;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.DetectedVersion;
+import net.minecraft.SharedConstants;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.junit.Before;
@@ -31,6 +33,7 @@ public class TestSlotlessItemHandlerWrapper {
     @Before
     public void init() {
         // We need the Minecraft registries to be filled
+        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
 
         handlerEmpty = new ItemStackHandler(NonNullList.withSize(10, ItemStack.EMPTY));

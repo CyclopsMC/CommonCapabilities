@@ -2,16 +2,16 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandle
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.NBTIngredient;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
@@ -38,23 +38,23 @@ import java.util.stream.Collectors;
  * Recipe handler capability for recipe types.
  * @author rubensworks
  */
-public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRecipe<C>> implements IRecipeHandler {
+public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recipe<C>> implements IRecipeHandler {
 
     private static final Set<IngredientComponent<?, ?>> COMPONENTS_INPUT  = Sets.newHashSet(IngredientComponent.ITEMSTACK);
     private static final Set<IngredientComponent<?, ?>> COMPONENTS_OUTPUT = Sets.newHashSet(IngredientComponent.ITEMSTACK);
 
-    public static final Container DUMMY_CONTAINTER = new Container(ContainerType.CRAFTING, 0) {
+    public static final AbstractContainerMenu DUMMY_CONTAINTER = new AbstractContainerMenu(MenuType.CRAFTING, 0) {
         @Override
-        public boolean stillValid(PlayerEntity playerIn) {
+        public boolean stillValid(Player playerIn) {
             return true;
         }
     };
 
-    private final Supplier<World> worldSupplier;
-    private final IRecipeType<T> recipeType;
+    private final Supplier<Level> worldSupplier;
+    private final RecipeType<T> recipeType;
     private final Predicate<Integer> inputSizePredicate;
 
-    public VanillaRecipeTypeRecipeHandler(Supplier<World> worldSupplier, IRecipeType<T> recipeType, Predicate<Integer> inputSizePredicate) {
+    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate) {
         this.worldSupplier = worldSupplier;
         this.recipeType = recipeType;
         this.inputSizePredicate = inputSizePredicate;
@@ -83,7 +83,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
     public static List<IPrototypedIngredient<ItemStack, Integer>> getPrototypesFromIngredient(Ingredient ingredient) {
         if (ingredient instanceof NBTIngredient) {
             return Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
-                    ingredient.getItems()[0], ItemMatch.ITEM | ItemMatch.NBT));
+                    ingredient.getItems()[0], ItemMatch.ITEM | ItemMatch.TAG));
 //        } else if (ingredient instanceof OreIngredient) { // TODO: somehow detect tags in the future, see ShapelessRecipeBuilder
 //            return Arrays.stream(ingredient.getMatchingStacks())
 //                    .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.ITEM))
@@ -96,7 +96,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
     }
 
     @Nullable
-    public static <C extends IInventory, T extends IRecipe<C>> IRecipeDefinition recipeToRecipeDefinition(T recipe) {
+    public static <C extends Container, T extends Recipe<C>> IRecipeDefinition recipeToRecipeDefinition(T recipe) {
         if (recipe.getResultItem().isEmpty()) {
             return null;
         }
@@ -135,7 +135,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
             return null;
         }
 
-        CraftingInventory inventoryCrafting = new CraftingInventory(DUMMY_CONTAINTER, 3, 3);
+        CraftingContainer inventoryCrafting = new CraftingContainer(DUMMY_CONTAINTER, 3, 3);
         for (int i = 0; i < recipeIngredients.size(); i++) {
             inventoryCrafting.setItem(i, recipeIngredients.get(i));
         }

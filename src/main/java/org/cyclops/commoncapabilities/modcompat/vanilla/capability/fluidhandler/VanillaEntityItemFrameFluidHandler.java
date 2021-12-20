@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler;
 
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -19,7 +19,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
  */
 public class VanillaEntityItemFrameFluidHandler extends VanillaEntityItemFrameCapabilityDelegator<IFluidHandlerItem> implements IFluidHandler {
 
-    public VanillaEntityItemFrameFluidHandler(ItemFrameEntity entity, Direction side) {
+    public VanillaEntityItemFrameFluidHandler(ItemFrame entity, Direction side) {
         super(entity, side);
     }
 

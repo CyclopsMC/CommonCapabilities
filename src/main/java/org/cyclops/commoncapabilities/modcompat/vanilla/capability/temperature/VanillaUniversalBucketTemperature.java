@@ -1,6 +1,6 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.temperature;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;

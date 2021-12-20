@@ -2,9 +2,9 @@ package org.cyclops.commoncapabilities.modcompat.thermalexpansion.itemhandler;
 
 import cofh.core.util.helpers.ItemHelper;
 import cofh.thermalexpansion.block.storage.ItemBlockCache;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
 import org.cyclops.commoncapabilities.capability.itemhandler.ItemItemHandler;
 
 /**

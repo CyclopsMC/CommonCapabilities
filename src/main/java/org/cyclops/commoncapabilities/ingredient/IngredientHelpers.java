@@ -1,6 +1,6 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.Tag;
 
 import javax.annotation.Nullable;
 
@@ -18,7 +18,7 @@ public final class IngredientHelpers {
      *         first argument is less than, equal to, or greater than the
      *         second.
      */
-    public static int compareTags(@Nullable INBT tag1, @Nullable INBT tag2) {
+    public static int compareTags(@Nullable Tag tag1, @Nullable Tag tag2) {
         if (tag1 == null) {
             if (tag2 == null) {
                 return 0;
@@ -28,7 +28,7 @@ public final class IngredientHelpers {
         } else if (tag2 == null) {
             return 1;
         } else {
-            return NBTComparator.INSTANCE.compare(tag1, tag2);
+            return TagComparator.INSTANCE.compare(tag1, tag2);
         }
     }
 

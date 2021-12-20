@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage;
 
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -14,7 +14,7 @@ import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntity
  */
 public class VanillaEntityItemFrameEnergyStorage extends VanillaEntityItemFrameCapabilityDelegator<IEnergyStorage> implements IEnergyStorage {
 
-    public VanillaEntityItemFrameEnergyStorage(ItemFrameEntity entity, Direction side) {
+    public VanillaEntityItemFrameEnergyStorage(ItemFrame entity, Direction side) {
         super(entity, side);
     }
 

@@ -2,7 +2,7 @@ package org.cyclops.commoncapabilities.ingredient.storage;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,8 +22,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Objects;
-
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 /**
  * Fluid storage wrapper handler for {@link IFluidHandler}.
@@ -245,7 +243,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
                 return FluidStack.EMPTY;
             }
 
-            FluidStack extractSimulated = storage.extract(resource, FluidMatch.FLUID | FluidMatch.NBT, true);
+            FluidStack extractSimulated = storage.extract(resource, FluidMatch.FLUID | FluidMatch.TAG, true);
             if (extractSimulated != null) {
                 FluidStack prototype = resource;
                 if (prototype.getAmount() > extractSimulated.getAmount()) {

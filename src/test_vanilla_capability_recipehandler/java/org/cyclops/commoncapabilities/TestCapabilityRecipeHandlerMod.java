@@ -1,9 +1,9 @@
 package org.cyclops.commoncapabilities;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,7 +33,7 @@ public class TestCapabilityRecipeHandlerMod {
         if (event.getPlayer().level.isClientSide()) return;
 
         IRecipeHandler recipeHandler = null;
-        TileEntity te = event.getWorld().getBlockEntity(event.getPos());
+        BlockEntity te = event.getWorld().getBlockEntity(event.getPos());
         BlockState blockState = event.getWorld().getBlockState(event.getPos());
         if (te != null && te.getCapability(RecipeHandlerConfig.CAPABILITY, event.getFace()).isPresent()) {
             recipeHandler = te.getCapability(RecipeHandlerConfig.CAPABILITY, event.getFace()).orElse(null);

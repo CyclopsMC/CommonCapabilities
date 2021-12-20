@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
 import com.google.common.collect.Iterators;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;

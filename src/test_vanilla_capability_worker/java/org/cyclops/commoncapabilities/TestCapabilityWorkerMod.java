@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities;
 
-import net.minecraft.item.Items;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,7 +25,7 @@ public class TestCapabilityWorkerMod {
         if (event.getItemStack().isEmpty()) return;
         if (event.getItemStack().getItem() != Items.BLAZE_ROD) return;
 
-        TileEntity te = event.getWorld().getBlockEntity(event.getPos());
+        BlockEntity te = event.getWorld().getBlockEntity(event.getPos());
         if (te != null && te.getCapability(WorkerConfig.CAPABILITY, event.getFace()).isPresent()) {
             event.setCanceled(true);
             IWorker worker = te.getCapability(WorkerConfig.CAPABILITY, event.getFace()).orElse(null);

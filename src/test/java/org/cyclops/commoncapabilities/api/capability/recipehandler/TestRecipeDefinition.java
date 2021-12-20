@@ -3,9 +3,11 @@ package org.cyclops.commoncapabilities.api.capability.recipehandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.registry.Bootstrap;
+import net.minecraft.DetectedVersion;
+import net.minecraft.SharedConstants;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
@@ -15,15 +17,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import org.junit.Ignore;
 
-@Ignore // TODO: unignore
 public class TestRecipeDefinition {
 
     private static RecipeDefinition D_1;
@@ -31,20 +30,16 @@ public class TestRecipeDefinition {
     private static RecipeDefinition D_2;
     private static RecipeDefinition D_3;
 
-    private static void setFinalStatic(Field field, Object newValue) throws NoSuchFieldException, IllegalAccessException {
+    private static void setStatic(Field field, Object newValue) throws IllegalAccessException {
         field.setAccessible(true);
-
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
         field.set(null, newValue);
     }
 
     @BeforeClass
     public static void init() throws NoSuchFieldException, IllegalAccessException {
+        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
-        setFinalStatic(IngredientComponent.class.getField("ITEMSTACK"), IngredientComponents.ITEMSTACK);
+        setStatic(IngredientComponent.class.getField("ITEMSTACK"), IngredientComponents.ITEMSTACK);
 
         Map<IngredientComponent<?, ?>, List<IPrototypedIngredientAlternatives<?, ?>>> dInputMap = Maps.newIdentityHashMap();
         dInputMap.put(IngredientComponents.ITEMSTACK, Lists.newArrayList(

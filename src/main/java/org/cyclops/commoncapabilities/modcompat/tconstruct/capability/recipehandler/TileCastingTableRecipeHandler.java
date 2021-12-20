@@ -2,7 +2,7 @@ package org.cyclops.commoncapabilities.modcompat.tconstruct.capability.recipehan
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import org.apache.commons.lang3.tuple.Triple;

@@ -1,6 +1,6 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.temperature;
 
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
 
 /**
@@ -8,9 +8,9 @@ import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
  * @author rubensworks
  */
 public class VanillaAbstractFurnaceTemperature implements ITemperature {
-    private final AbstractFurnaceTileEntity furnace;
+    private final AbstractFurnaceBlockEntity furnace;
 
-    public VanillaAbstractFurnaceTemperature(AbstractFurnaceTileEntity furnace) {
+    public VanillaAbstractFurnaceTemperature(AbstractFurnaceBlockEntity furnace) {
         this.furnace = furnace;
     }
 

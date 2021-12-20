@@ -1,8 +1,10 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.registry.Bootstrap;
+import net.minecraft.DetectedVersion;
+import net.minecraft.SharedConstants;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.cyclops.commoncapabilities.IngredientComponents;
@@ -36,6 +38,7 @@ public class TestItemStackComponentStorageWrapper {
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
+        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
     }
 

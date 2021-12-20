@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.MutableComponent;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.cyclopscore.helper.Helpers;
@@ -30,7 +30,7 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
 
     @Override
     public Integer getExactMatchNoQuantityCondition() {
-        return ItemMatch.ITEM | ItemMatch.NBT;
+        return ItemMatch.ITEM | ItemMatch.TAG;
     }
 
     @Override
@@ -104,8 +104,8 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     }
 
     @Override
-    public IFormattableTextComponent getDisplayName(ItemStack instance) {
-        return (IFormattableTextComponent) instance.getHoverName();
+    public MutableComponent getDisplayName(ItemStack instance) {
+        return (MutableComponent) instance.getHoverName();
     }
 
     @Override

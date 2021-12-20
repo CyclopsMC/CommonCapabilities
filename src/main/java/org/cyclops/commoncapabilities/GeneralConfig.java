@@ -3,10 +3,11 @@ package org.cyclops.commoncapabilities;
 import com.google.common.collect.Lists;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
-import org.cyclops.commoncapabilities.ingredient.NBTComparator;
+import org.cyclops.commoncapabilities.ingredient.TagComparator;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.extendedconfig.DummyConfig;
 import org.cyclops.cyclopscore.init.ModBase;
@@ -64,12 +65,12 @@ public class GeneralConfig extends DummyConfig {
     }
 
     @SubscribeEvent
-    public void onConfigLoad(ModConfig.Loading event) {
+    public void onConfigLoad(ModConfigEvent.Loading event) {
         updateNbtComparator();
     }
 
     @SubscribeEvent
-    public void onConfigReload(ModConfig.Reloading event) {
+    public void onConfigReload(ModConfigEvent.Reloading event) {
         updateNbtComparator();
     }
 
@@ -82,6 +83,6 @@ public class GeneralConfig extends DummyConfig {
                 CommonCapabilities.clog(Level.ERROR, String.format("Failed to parse NBT path to filter: %s", path));
             }
         }
-        ItemMatch.NBT_COMPARATOR = NBTComparator.INSTANCE = new NBTComparator(new NbtPathNavigationList(navigations));
+        ItemMatch.TAG_COMPARATOR = TagComparator.INSTANCE = new TagComparator(new NbtPathNavigationList(navigations));
     }
 }

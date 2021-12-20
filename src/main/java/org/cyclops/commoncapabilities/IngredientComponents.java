@@ -1,11 +1,11 @@
 package org.cyclops.commoncapabilities;
 
 import com.google.common.collect.Lists;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -43,7 +43,7 @@ public class IngredientComponents {
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/count"),
                             Integer.class, false, ItemStack::getCount, ItemMatch.STACKSIZE, true),
                     new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/tag"),
-                            CompoundNBT.class, false, ItemStack::getTag, ItemMatch.NBT, false)
+                            CompoundTag.class, false, ItemStack::getTag, ItemMatch.TAG, false)
             )).setTranslationKey("recipecomponent.minecraft.itemstack");
 
     public static final IngredientComponent<FluidStack, Integer> FLUIDSTACK =
@@ -54,7 +54,7 @@ public class IngredientComponents {
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/amount"),
                             Integer.class, false, FluidStack::getAmount, FluidMatch.AMOUNT, true),
                     new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/tag"),
-                            CompoundNBT.class, false, FluidStack::getTag, FluidMatch.NBT, false)
+                            CompoundTag.class, false, FluidStack::getTag, FluidMatch.TAG, false)
             )).setTranslationKey("recipecomponent.minecraft.fluidstack");
 
     public static final IngredientComponent<Long, Boolean> ENERGY =

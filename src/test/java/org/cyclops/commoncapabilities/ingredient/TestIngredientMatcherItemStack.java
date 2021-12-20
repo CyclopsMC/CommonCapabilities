@@ -1,10 +1,12 @@
 package org.cyclops.commoncapabilities.ingredient;
 
 import com.google.common.collect.Lists;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.registry.Bootstrap;
+import net.minecraft.DetectedVersion;
+import net.minecraft.SharedConstants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.Bootstrap;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.cyclopscore.nbt.path.NbtParseException;
 import org.cyclops.cyclopscore.nbt.path.NbtPath;
@@ -38,20 +40,21 @@ public class TestIngredientMatcherItemStack {
     @BeforeClass
     public static void init() throws NbtParseException {
         // We need the Minecraft registries to be filled
+        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
 
         M = new IngredientMatcherItemStack();
 
-        CompoundNBT tag1 = new CompoundNBT();
+        CompoundTag tag1 = new CompoundTag();
         tag1.putInt("key", 1);
 
-        CompoundNBT tag2 = new CompoundNBT();
+        CompoundTag tag2 = new CompoundTag();
         tag2.putInt("key", 2);
 
-        CompoundNBT tag3 = new CompoundNBT();
+        CompoundTag tag3 = new CompoundTag();
         tag3.putInt("ignored", 0);
 
-        CompoundNBT tag4 = new CompoundNBT();
+        CompoundTag tag4 = new CompoundTag();
         tag4.putInt("ignored", 100);
 
         W_1 = new ItemStack(Items.WHITE_WOOL, 1);
@@ -77,7 +80,7 @@ public class TestIngredientMatcherItemStack {
         B_1_T4 = new ItemStack(Items.BLACK_WOOL, 1);
         B_1_T4.setTag(tag4);
 
-        ItemMatch.NBT_COMPARATOR = NBTComparator.INSTANCE = new NBTComparator(new NbtPathNavigationList(Lists.newArrayList(NbtPath.parse("$.ignored").asNavigation())));
+        ItemMatch.TAG_COMPARATOR = TagComparator.INSTANCE = new TagComparator(new NbtPathNavigationList(Lists.newArrayList(NbtPath.parse("$.ignored").asNavigation())));
     }
 
     @Test
@@ -99,23 +102,23 @@ public class TestIngredientMatcherItemStack {
 
     @Test
     public void testGetExactNoQuantityMatchCondition() {
-        assertThat(M.getExactMatchNoQuantityCondition(), is(ItemMatch.ITEM | ItemMatch.NBT));
+        assertThat(M.getExactMatchNoQuantityCondition(), is(ItemMatch.ITEM | ItemMatch.TAG));
     }
 
     @Test
     public void testWithCondition() {
         assertThat(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ANY), is(ItemMatch.ANY));
         assertThat(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ITEM), is(ItemMatch.ITEM));
-        assertThat(M.withCondition(M.getAnyMatchCondition(), ItemMatch.NBT), is(ItemMatch.NBT));
+        assertThat(M.withCondition(M.getAnyMatchCondition(), ItemMatch.TAG), is(ItemMatch.TAG));
         assertThat(M.withCondition(M.getAnyMatchCondition(), ItemMatch.STACKSIZE), is(ItemMatch.STACKSIZE));
 
         assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ITEM), ItemMatch.STACKSIZE), is(ItemMatch.ITEM | ItemMatch.STACKSIZE));
-        assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ITEM), ItemMatch.NBT), is(ItemMatch.ITEM | ItemMatch.NBT));
-        assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.NBT), ItemMatch.STACKSIZE), is(ItemMatch.NBT | ItemMatch.STACKSIZE));
-        assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.STACKSIZE), ItemMatch.NBT), is(ItemMatch.NBT | ItemMatch.STACKSIZE));
+        assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ITEM), ItemMatch.TAG), is(ItemMatch.ITEM | ItemMatch.TAG));
+        assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.TAG), ItemMatch.STACKSIZE), is(ItemMatch.TAG | ItemMatch.STACKSIZE));
+        assertThat(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.STACKSIZE), ItemMatch.TAG), is(ItemMatch.TAG | ItemMatch.STACKSIZE));
 
-        assertThat(M.withCondition(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ITEM), ItemMatch.NBT), ItemMatch.STACKSIZE), is(ItemMatch.ITEM | ItemMatch.NBT | ItemMatch.STACKSIZE));
-        assertThat(M.withCondition(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ITEM), ItemMatch.STACKSIZE), ItemMatch.NBT), is(ItemMatch.ITEM | ItemMatch.NBT | ItemMatch.STACKSIZE));
+        assertThat(M.withCondition(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ITEM), ItemMatch.TAG), ItemMatch.STACKSIZE), is(ItemMatch.ITEM | ItemMatch.TAG | ItemMatch.STACKSIZE));
+        assertThat(M.withCondition(M.withCondition(M.withCondition(M.getAnyMatchCondition(), ItemMatch.ITEM), ItemMatch.STACKSIZE), ItemMatch.TAG), is(ItemMatch.ITEM | ItemMatch.TAG | ItemMatch.STACKSIZE));
 
         assertThat(M.withCondition(M.getAnyMatchCondition(), ItemMatch.EXACT), is(ItemMatch.EXACT));
     }
@@ -123,15 +126,15 @@ public class TestIngredientMatcherItemStack {
     @Test
     public void testWithoutCondition() {
         assertThat(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.ANY), is(ItemMatch.EXACT));
-        assertThat(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.ITEM), is(ItemMatch.STACKSIZE | ItemMatch.NBT));
-        assertThat(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.NBT), is(ItemMatch.ITEM | ItemMatch.STACKSIZE));
-        assertThat(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.STACKSIZE), is(ItemMatch.ITEM | ItemMatch.NBT));
+        assertThat(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.ITEM), is(ItemMatch.STACKSIZE | ItemMatch.TAG));
+        assertThat(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.TAG), is(ItemMatch.ITEM | ItemMatch.STACKSIZE));
+        assertThat(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.STACKSIZE), is(ItemMatch.ITEM | ItemMatch.TAG));
 
-        assertThat(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.NBT), ItemMatch.STACKSIZE), is(ItemMatch.ITEM));
-        assertThat(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.STACKSIZE), ItemMatch.NBT), is(ItemMatch.ITEM));
+        assertThat(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.TAG), ItemMatch.STACKSIZE), is(ItemMatch.ITEM));
+        assertThat(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.STACKSIZE), ItemMatch.TAG), is(ItemMatch.ITEM));
 
-        assertThat(M.withoutCondition(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.ITEM), ItemMatch.NBT), ItemMatch.STACKSIZE), is(ItemMatch.ANY));
-        assertThat(M.withoutCondition(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.ITEM), ItemMatch.STACKSIZE), ItemMatch.NBT), is(ItemMatch.ANY));
+        assertThat(M.withoutCondition(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.ITEM), ItemMatch.TAG), ItemMatch.STACKSIZE), is(ItemMatch.ANY));
+        assertThat(M.withoutCondition(M.withoutCondition(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.ITEM), ItemMatch.STACKSIZE), ItemMatch.TAG), is(ItemMatch.ANY));
 
         assertThat(M.withoutCondition(M.getExactMatchCondition(), ItemMatch.EXACT), is(ItemMatch.ANY));
     }
@@ -139,12 +142,12 @@ public class TestIngredientMatcherItemStack {
     @Test
     public void testHasCondition() {
         assertThat(M.hasCondition(M.getExactMatchCondition(), ItemMatch.ANY), is(false));
-        assertThat(M.hasCondition(M.getExactMatchCondition(), ItemMatch.NBT), is(true));
+        assertThat(M.hasCondition(M.getExactMatchCondition(), ItemMatch.TAG), is(true));
         assertThat(M.hasCondition(M.getExactMatchCondition(), ItemMatch.STACKSIZE), is(true));
         assertThat(M.hasCondition(M.getExactMatchCondition(), ItemMatch.ITEM), is(true));
 
         assertThat(M.hasCondition(M.getAnyMatchCondition(), ItemMatch.ANY), is(false));
-        assertThat(M.hasCondition(M.getAnyMatchCondition(), ItemMatch.NBT), is(false));
+        assertThat(M.hasCondition(M.getAnyMatchCondition(), ItemMatch.TAG), is(false));
         assertThat(M.hasCondition(M.getAnyMatchCondition(), ItemMatch.STACKSIZE), is(false));
         assertThat(M.hasCondition(M.getAnyMatchCondition(), ItemMatch.ITEM), is(false));
     }
@@ -195,14 +198,14 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.matches(W_1, L_1, ItemMatch.STACKSIZE), is(true));
         assertThat(M.matches(W_1, L_1_T1, ItemMatch.STACKSIZE), is(true));
 
-        assertThat(M.matches(W_1, W_1, ItemMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_2, ItemMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_1_T1, ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T1, ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_1_T2, ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T2, ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, L_1, ItemMatch.NBT), is(true));
-        assertThat(M.matches(W_1, L_1_T1, ItemMatch.NBT), is(false));
+        assertThat(M.matches(W_1, W_1, ItemMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_2, ItemMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_1_T1, ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T1, ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_1_T2, ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T2, ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, L_1, ItemMatch.TAG), is(true));
+        assertThat(M.matches(W_1, L_1_T1, ItemMatch.TAG), is(false));
 
         assertThat(M.matches(W_1, W_1, ItemMatch.ITEM | ItemMatch.STACKSIZE), is(true));
         assertThat(M.matches(W_1, W_2, ItemMatch.ITEM | ItemMatch.STACKSIZE), is(false));
@@ -213,32 +216,32 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.matches(W_1, L_1, ItemMatch.ITEM | ItemMatch.STACKSIZE), is(false));
         assertThat(M.matches(W_1, L_1_T1, ItemMatch.ITEM | ItemMatch.STACKSIZE), is(false));
 
-        assertThat(M.matches(W_1, W_1, ItemMatch.ITEM | ItemMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_2, ItemMatch.ITEM | ItemMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_1_T1, ItemMatch.ITEM | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T1, ItemMatch.ITEM | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_1_T2, ItemMatch.ITEM | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T2, ItemMatch.ITEM | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, L_1, ItemMatch.ITEM | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, L_1_T1, ItemMatch.ITEM | ItemMatch.NBT), is(false));
+        assertThat(M.matches(W_1, W_1, ItemMatch.ITEM | ItemMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_2, ItemMatch.ITEM | ItemMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_1_T1, ItemMatch.ITEM | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T1, ItemMatch.ITEM | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_1_T2, ItemMatch.ITEM | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T2, ItemMatch.ITEM | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, L_1, ItemMatch.ITEM | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, L_1_T1, ItemMatch.ITEM | ItemMatch.TAG), is(false));
 
-        assertThat(M.matches(W_1, W_1, ItemMatch.STACKSIZE | ItemMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_2, ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_1_T1, ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T1, ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_1_T2, ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T2, ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, L_1, ItemMatch.STACKSIZE | ItemMatch.NBT), is(true));
-        assertThat(M.matches(W_1, L_1_T1, ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
+        assertThat(M.matches(W_1, W_1, ItemMatch.STACKSIZE | ItemMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_2, ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_1_T1, ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T1, ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_1_T2, ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T2, ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, L_1, ItemMatch.STACKSIZE | ItemMatch.TAG), is(true));
+        assertThat(M.matches(W_1, L_1_T1, ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
 
-        assertThat(M.matches(W_1, W_1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.NBT), is(true));
-        assertThat(M.matches(W_1, W_2, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_1_T1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_1_T2, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, W_2_T2, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, L_1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
-        assertThat(M.matches(W_1, L_1_T1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.NBT), is(false));
+        assertThat(M.matches(W_1, W_1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.TAG), is(true));
+        assertThat(M.matches(W_1, W_2, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_1_T1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_1_T2, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, W_2_T2, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, L_1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
+        assertThat(M.matches(W_1, L_1_T1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.TAG), is(false));
     }
 
     @Test
@@ -298,8 +301,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1, W_2_T2), is(-1));
         assertThat(M.compare(W_1, W_1_T1), is(-1));
         assertThat(M.compare(W_1, W_1_T2), is(-1));
-        assertThat(M.compare(W_1, L_1), is(-770));
-        assertThat(M.compare(W_1, L_1_T1), is(-770));
+        assertThat(M.compare(W_1, L_1), is(-820));
+        assertThat(M.compare(W_1, L_1_T1), is(-820));
 
         assertThat(M.compare(W_1_T1, W_1), is(1));
         assertThat(M.compare(W_1_T1, W_2), is(-1));
@@ -307,8 +310,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T1, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T1, W_1_T1), is(0));
         assertThat(M.compare(W_1_T1, W_1_T2), is(-1));
-        assertThat(M.compare(W_1_T1, L_1), is(-770));
-        assertThat(M.compare(W_1_T1, L_1_T1), is(-770));
+        assertThat(M.compare(W_1_T1, L_1), is(-820));
+        assertThat(M.compare(W_1_T1, L_1_T1), is(-820));
 
         assertThat(M.compare(W_1_T2, W_1), is(1));
         assertThat(M.compare(W_1_T2, W_2), is(-1));
@@ -316,8 +319,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T2, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T2, W_1_T1), is(1));
         assertThat(M.compare(W_1_T2, W_1_T2), is(0));
-        assertThat(M.compare(W_1_T2, L_1), is(-770));
-        assertThat(M.compare(W_1_T2, L_1_T1), is(-770));
+        assertThat(M.compare(W_1_T2, L_1), is(-820));
+        assertThat(M.compare(W_1_T2, L_1_T1), is(-820));
 
         assertThat(M.compare(W_2, W_1), is(1));
         assertThat(M.compare(W_2, W_1_T1), is(1));
@@ -325,8 +328,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2, W_2), is(0));
         assertThat(M.compare(W_2, W_2_T1), is(-1));
         assertThat(M.compare(W_2, W_2_T2), is(-1));
-        assertThat(M.compare(W_2, L_1), is(-770));
-        assertThat(M.compare(W_2, L_1_T1), is(-770));
+        assertThat(M.compare(W_2, L_1), is(-820));
+        assertThat(M.compare(W_2, L_1_T1), is(-820));
 
         assertThat(M.compare(W_2_T1, W_1), is(1));
         assertThat(M.compare(W_2_T1, W_1_T1), is(1));
@@ -341,24 +344,24 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2_T2, W_2), is(1));
         assertThat(M.compare(W_2_T2, W_2_T1), is(1));
         assertThat(M.compare(W_2_T2, W_2_T2), is(0));
-        assertThat(M.compare(W_2_T2, L_1), is(-770));
-        assertThat(M.compare(W_2_T2, L_1_T1), is(-770));
+        assertThat(M.compare(W_2_T2, L_1), is(-820));
+        assertThat(M.compare(W_2_T2, L_1_T1), is(-820));
 
-        assertThat(M.compare(L_1, W_1), is(770));
-        assertThat(M.compare(L_1, W_1_T1), is(770));
-        assertThat(M.compare(L_1, W_1_T2), is(770));
-        assertThat(M.compare(L_1, W_2), is(770));
-        assertThat(M.compare(L_1, W_2_T1), is(770));
-        assertThat(M.compare(L_1, W_2_T2), is(770));
+        assertThat(M.compare(L_1, W_1), is(820));
+        assertThat(M.compare(L_1, W_1_T1), is(820));
+        assertThat(M.compare(L_1, W_1_T2), is(820));
+        assertThat(M.compare(L_1, W_2), is(820));
+        assertThat(M.compare(L_1, W_2_T1), is(820));
+        assertThat(M.compare(L_1, W_2_T2), is(820));
         assertThat(M.compare(L_1, L_1), is(0));
         assertThat(M.compare(L_1, L_1_T1), is(-1));
 
-        assertThat(M.compare(L_1_T1, W_1), is(770));
-        assertThat(M.compare(L_1_T1, W_1_T1), is(770));
-        assertThat(M.compare(L_1_T1, W_1_T2), is(770));
-        assertThat(M.compare(L_1_T1, W_2), is(770));
-        assertThat(M.compare(L_1_T1, W_2_T1), is(770));
-        assertThat(M.compare(L_1_T1, W_2_T2), is(770));
+        assertThat(M.compare(L_1_T1, W_1), is(820));
+        assertThat(M.compare(L_1_T1, W_1_T1), is(820));
+        assertThat(M.compare(L_1_T1, W_1_T2), is(820));
+        assertThat(M.compare(L_1_T1, W_2), is(820));
+        assertThat(M.compare(L_1_T1, W_2_T1), is(820));
+        assertThat(M.compare(L_1_T1, W_2_T2), is(820));
         assertThat(M.compare(L_1_T1, L_1), is(1));
         assertThat(M.compare(L_1_T1, L_1_T1), is(0));
     }

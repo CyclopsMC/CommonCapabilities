@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.fluid.Fluids;
-import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
@@ -30,7 +30,7 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
 
     @Override
     public Integer getExactMatchNoQuantityCondition() {
-        return FluidMatch.FLUID | FluidMatch.NBT;
+        return FluidMatch.FLUID | FluidMatch.TAG;
     }
 
     @Override
@@ -117,8 +117,8 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     }
 
     @Override
-    public IFormattableTextComponent getDisplayName(FluidStack instance) {
-        return (IFormattableTextComponent) instance.getDisplayName();
+    public MutableComponent getDisplayName(FluidStack instance) {
+        return (MutableComponent) instance.getDisplayName();
     }
 
     @Override

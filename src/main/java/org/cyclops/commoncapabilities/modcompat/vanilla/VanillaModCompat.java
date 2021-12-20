@@ -1,26 +1,25 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CraftingTableBlock;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.tileentity.BlastFurnaceTileEntity;
-import net.minecraft.tileentity.BrewingStandTileEntity;
-import net.minecraft.tileentity.CampfireTileEntity;
-import net.minecraft.tileentity.FurnaceTileEntity;
-import net.minecraft.tileentity.SmokerTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CraftingTableBlock;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
+import net.minecraft.world.level.block.entity.CampfireBlockEntity;
+import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.SmokerBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -94,8 +93,8 @@ public class VanillaModCompat implements IModCompat {
         return () -> {
             CapabilityConstructorRegistry registry = CommonCapabilities._instance.getCapabilityConstructorRegistry();
             // Worker
-            registry.registerTile(FurnaceTileEntity.class,
-                    new SimpleCapabilityConstructor<IWorker, FurnaceTileEntity>() {
+            registry.registerTile(FurnaceBlockEntity.class,
+                    new SimpleCapabilityConstructor<IWorker, FurnaceBlockEntity>() {
                         @Override
                         public Capability<IWorker> getCapability() {
                             return WorkerConfig.CAPABILITY;
@@ -103,12 +102,12 @@ public class VanillaModCompat implements IModCompat {
 
                         @Nullable
                         @Override
-                        public ICapabilityProvider createProvider(FurnaceTileEntity host) {
+                        public ICapabilityProvider createProvider(FurnaceBlockEntity host) {
                             return new DefaultCapabilityProvider<>(this::getCapability, new VanillaAbstractFurnaceWorker(host));
                         }
                     });
-            registry.registerTile(BlastFurnaceTileEntity.class,
-                    new SimpleCapabilityConstructor<IWorker, BlastFurnaceTileEntity>() {
+            registry.registerTile(BlastFurnaceBlockEntity.class,
+                    new SimpleCapabilityConstructor<IWorker, BlastFurnaceBlockEntity>() {
                         @Override
                         public Capability<IWorker> getCapability() {
                             return WorkerConfig.CAPABILITY;
@@ -116,12 +115,12 @@ public class VanillaModCompat implements IModCompat {
 
                         @Nullable
                         @Override
-                        public ICapabilityProvider createProvider(BlastFurnaceTileEntity host) {
+                        public ICapabilityProvider createProvider(BlastFurnaceBlockEntity host) {
                             return new DefaultCapabilityProvider<>(this::getCapability, new VanillaAbstractFurnaceWorker(host));
                         }
                     });
-            registry.registerTile(SmokerTileEntity.class,
-                    new SimpleCapabilityConstructor<IWorker, SmokerTileEntity>() {
+            registry.registerTile(SmokerBlockEntity.class,
+                    new SimpleCapabilityConstructor<IWorker, SmokerBlockEntity>() {
                         @Override
                         public Capability<IWorker> getCapability() {
                             return WorkerConfig.CAPABILITY;
@@ -129,38 +128,38 @@ public class VanillaModCompat implements IModCompat {
 
                         @Nullable
                         @Override
-                        public ICapabilityProvider createProvider(SmokerTileEntity host) {
+                        public ICapabilityProvider createProvider(SmokerBlockEntity host) {
                             return new DefaultCapabilityProvider<>(this::getCapability, new VanillaAbstractFurnaceWorker(host));
                         }
                     });
-            registry.registerTile(BrewingStandTileEntity.class,
-                    new SimpleCapabilityConstructor<IWorker, BrewingStandTileEntity>() {
+            registry.registerTile(BrewingStandBlockEntity.class,
+                    new SimpleCapabilityConstructor<IWorker, BrewingStandBlockEntity>() {
                         @Override
                         public Capability<IWorker> getCapability() {
                             return WorkerConfig.CAPABILITY;
                         }
 
                         @Override
-                        public ICapabilityProvider createProvider(BrewingStandTileEntity host) {
+                        public ICapabilityProvider createProvider(BrewingStandBlockEntity host) {
                             return new DefaultCapabilityProvider<>(this::getCapability, new VanillaBrewingStandWorker(host));
                         }
                     });
-            registry.registerTile(CampfireTileEntity.class,
-                    new SimpleCapabilityConstructor<IWorker, CampfireTileEntity>() {
+            registry.registerTile(CampfireBlockEntity.class,
+                    new SimpleCapabilityConstructor<IWorker, CampfireBlockEntity>() {
                         @Override
                         public Capability<IWorker> getCapability() {
                             return WorkerConfig.CAPABILITY;
                         }
 
                         @Override
-                        public ICapabilityProvider createProvider(CampfireTileEntity host) {
+                        public ICapabilityProvider createProvider(CampfireBlockEntity host) {
                             return new DefaultCapabilityProvider<>(this::getCapability, new VanillaCampfireWorker(host));
                         }
                     });
 
             // Temperature
-            registry.registerTile(FurnaceTileEntity.class,
-                    new SimpleCapabilityConstructor<ITemperature, FurnaceTileEntity>() {
+            registry.registerTile(FurnaceBlockEntity.class,
+                    new SimpleCapabilityConstructor<ITemperature, FurnaceBlockEntity>() {
                         @Override
                         public Capability<ITemperature> getCapability() {
                             return TemperatureConfig.CAPABILITY;
@@ -168,12 +167,12 @@ public class VanillaModCompat implements IModCompat {
 
                         @Nullable
                         @Override
-                        public ICapabilityProvider createProvider(FurnaceTileEntity host) {
+                        public ICapabilityProvider createProvider(FurnaceBlockEntity host) {
                             return new DefaultCapabilityProvider<>(this::getCapability, new VanillaAbstractFurnaceTemperature(host));
                         }
                     });
-            registry.registerTile(BlastFurnaceTileEntity.class,
-                    new SimpleCapabilityConstructor<ITemperature, BlastFurnaceTileEntity>() {
+            registry.registerTile(BlastFurnaceBlockEntity.class,
+                    new SimpleCapabilityConstructor<ITemperature, BlastFurnaceBlockEntity>() {
                         @Override
                         public Capability<ITemperature> getCapability() {
                             return TemperatureConfig.CAPABILITY;
@@ -181,12 +180,12 @@ public class VanillaModCompat implements IModCompat {
 
                         @Nullable
                         @Override
-                        public ICapabilityProvider createProvider(BlastFurnaceTileEntity host) {
+                        public ICapabilityProvider createProvider(BlastFurnaceBlockEntity host) {
                             return new DefaultCapabilityProvider<>(this::getCapability, new VanillaAbstractFurnaceTemperature(host));
                         }
                     });
-            registry.registerTile(SmokerTileEntity.class,
-                    new SimpleCapabilityConstructor<ITemperature, SmokerTileEntity>() {
+            registry.registerTile(SmokerBlockEntity.class,
+                    new SimpleCapabilityConstructor<ITemperature, SmokerBlockEntity>() {
                         @Override
                         public Capability<ITemperature> getCapability() {
                             return TemperatureConfig.CAPABILITY;
@@ -194,12 +193,12 @@ public class VanillaModCompat implements IModCompat {
 
                         @Nullable
                         @Override
-                        public ICapabilityProvider createProvider(SmokerTileEntity host) {
+                        public ICapabilityProvider createProvider(SmokerBlockEntity host) {
                             return new DefaultCapabilityProvider<>(this::getCapability, new VanillaAbstractFurnaceTemperature(host));
                         }
                     });
-            registry.registerTile(CampfireTileEntity.class,
-                    new SimpleCapabilityConstructor<ITemperature, CampfireTileEntity>() {
+            registry.registerTile(CampfireBlockEntity.class,
+                    new SimpleCapabilityConstructor<ITemperature, CampfireBlockEntity>() {
                         @Override
                         public Capability<ITemperature> getCapability() {
                             return TemperatureConfig.CAPABILITY;
@@ -207,7 +206,7 @@ public class VanillaModCompat implements IModCompat {
 
                         @Nullable
                         @Override
-                        public ICapabilityProvider createProvider(CampfireTileEntity host) {
+                        public ICapabilityProvider createProvider(CampfireBlockEntity host) {
                             return new DefaultCapabilityProvider<>(this::getCapability, new VanillaCampfireTemperature(host));
                         }
                     });
@@ -275,8 +274,8 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
-            registry.registerEntity(ItemFrameEntity.class,
-                    new ICapabilityConstructor<IItemHandler, ItemFrameEntity, ItemFrameEntity>() {
+            registry.registerEntity(ItemFrame.class,
+                    new ICapabilityConstructor<IItemHandler, ItemFrame, ItemFrame>() {
                         @Override
                         public Capability<IItemHandler> getCapability() {
                             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
@@ -284,7 +283,7 @@ public class VanillaModCompat implements IModCompat {
 
                         @Nullable
                         @Override
-                        public ICapabilityProvider createProvider(ItemFrameEntity hostType, final ItemFrameEntity host) {
+                        public ICapabilityProvider createProvider(ItemFrame hostType, final ItemFrame host) {
                             return new ICapabilityProvider() {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
@@ -308,9 +307,9 @@ public class VanillaModCompat implements IModCompat {
                     return new IBlockCapabilityProvider() {
                         @Override
                         public <T> LazyOptional<T> getCapability(@Nonnull BlockState blockState, @Nonnull Capability<T> capability,
-                                                                 @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nullable Direction facing) {
+                                                                 @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nullable Direction facing) {
                             if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-                                return LazyOptional.of(() -> new VanillaBlockComposterItemHandler(blockState, (IWorld) world, pos, facing)).cast();
+                                return LazyOptional.of(() -> new VanillaBlockComposterItemHandler(blockState, (LevelAccessor) world, pos, facing)).cast();
                             }
                             return LazyOptional.empty();
                         }
@@ -340,8 +339,8 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
-            registry.registerEntity(ItemFrameEntity.class,
-                    new ICapabilityConstructor<IFluidHandler, ItemFrameEntity, ItemFrameEntity>() {
+            registry.registerEntity(ItemFrame.class,
+                    new ICapabilityConstructor<IFluidHandler, ItemFrame, ItemFrame>() {
                         @Override
                         public Capability<IFluidHandler> getCapability() {
                             return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
@@ -349,7 +348,7 @@ public class VanillaModCompat implements IModCompat {
 
                         @Nullable
                         @Override
-                        public ICapabilityProvider createProvider(ItemFrameEntity hostType, final ItemFrameEntity host) {
+                        public ICapabilityProvider createProvider(ItemFrame hostType, final ItemFrame host) {
                             return new ICapabilityProvider() {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
@@ -384,8 +383,8 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
-            registry.registerEntity(ItemFrameEntity.class,
-                    new ICapabilityConstructor<IEnergyStorage, ItemFrameEntity, ItemFrameEntity>() {
+            registry.registerEntity(ItemFrame.class,
+                    new ICapabilityConstructor<IEnergyStorage, ItemFrame, ItemFrame>() {
                         @Override
                         public Capability<IEnergyStorage> getCapability() {
                             return CapabilityEnergy.ENERGY;
@@ -393,7 +392,7 @@ public class VanillaModCompat implements IModCompat {
 
                         @Nullable
                         @Override
-                        public ICapabilityProvider createProvider(ItemFrameEntity hostType, final ItemFrameEntity host) {
+                        public ICapabilityProvider createProvider(ItemFrame hostType, final ItemFrame host) {
                             return new ICapabilityProvider() {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
@@ -407,7 +406,7 @@ public class VanillaModCompat implements IModCompat {
                     });
 
             // RecipeHandler
-            registry.registerTile(BrewingStandTileEntity.class, new ICapabilityConstructor<IRecipeHandler, BrewingStandTileEntity, BrewingStandTileEntity>() {
+            registry.registerTile(BrewingStandBlockEntity.class, new ICapabilityConstructor<IRecipeHandler, BrewingStandBlockEntity, BrewingStandBlockEntity>() {
                 @Override
                 public Capability<IRecipeHandler> getCapability() {
                     return RecipeHandlerConfig.CAPABILITY;
@@ -415,11 +414,11 @@ public class VanillaModCompat implements IModCompat {
 
                 @Nullable
                 @Override
-                public ICapabilityProvider createProvider(BrewingStandTileEntity hostType, BrewingStandTileEntity host) {
+                public ICapabilityProvider createProvider(BrewingStandBlockEntity hostType, BrewingStandBlockEntity host) {
                     return new DefaultCapabilityProvider<>(this::getCapability, VanillaBrewingStandRecipeHandler.getInstance());
                 }
             });
-            registry.registerTile(FurnaceTileEntity.class, new ICapabilityConstructor<IRecipeHandler, FurnaceTileEntity, FurnaceTileEntity>() {
+            registry.registerTile(FurnaceBlockEntity.class, new ICapabilityConstructor<IRecipeHandler, FurnaceBlockEntity, FurnaceBlockEntity>() {
                 @Override
                 public Capability<IRecipeHandler> getCapability() {
                     return RecipeHandlerConfig.CAPABILITY;
@@ -427,12 +426,12 @@ public class VanillaModCompat implements IModCompat {
 
                 @Nullable
                 @Override
-                public ICapabilityProvider createProvider(FurnaceTileEntity hostType, FurnaceTileEntity host) {
+                public ICapabilityProvider createProvider(FurnaceBlockEntity hostType, FurnaceBlockEntity host) {
                     return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
-                            IRecipeType.SMELTING, (size) -> size == 1));
+                            RecipeType.SMELTING, (size) -> size == 1));
                 }
             });
-            registry.registerTile(BlastFurnaceTileEntity.class, new ICapabilityConstructor<IRecipeHandler, BlastFurnaceTileEntity, BlastFurnaceTileEntity>() {
+            registry.registerTile(BlastFurnaceBlockEntity.class, new ICapabilityConstructor<IRecipeHandler, BlastFurnaceBlockEntity, BlastFurnaceBlockEntity>() {
                 @Override
                 public Capability<IRecipeHandler> getCapability() {
                     return RecipeHandlerConfig.CAPABILITY;
@@ -440,12 +439,12 @@ public class VanillaModCompat implements IModCompat {
 
                 @Nullable
                 @Override
-                public ICapabilityProvider createProvider(BlastFurnaceTileEntity hostType, BlastFurnaceTileEntity host) {
+                public ICapabilityProvider createProvider(BlastFurnaceBlockEntity hostType, BlastFurnaceBlockEntity host) {
                     return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
-                            IRecipeType.BLASTING, (size) -> size == 1));
+                            RecipeType.BLASTING, (size) -> size == 1));
                 }
             });
-            registry.registerTile(SmokerTileEntity.class, new ICapabilityConstructor<IRecipeHandler, SmokerTileEntity, SmokerTileEntity>() {
+            registry.registerTile(SmokerBlockEntity.class, new ICapabilityConstructor<IRecipeHandler, SmokerBlockEntity, SmokerBlockEntity>() {
                 @Override
                 public Capability<IRecipeHandler> getCapability() {
                     return RecipeHandlerConfig.CAPABILITY;
@@ -453,12 +452,12 @@ public class VanillaModCompat implements IModCompat {
 
                 @Nullable
                 @Override
-                public ICapabilityProvider createProvider(SmokerTileEntity hostType, SmokerTileEntity host) {
+                public ICapabilityProvider createProvider(SmokerBlockEntity hostType, SmokerBlockEntity host) {
                     return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
-                            IRecipeType.SMOKING, (size) -> size == 1));
+                            RecipeType.SMOKING, (size) -> size == 1));
                 }
             });
-            registry.registerTile(CampfireTileEntity.class, new ICapabilityConstructor<IRecipeHandler, CampfireTileEntity, CampfireTileEntity>() {
+            registry.registerTile(CampfireBlockEntity.class, new ICapabilityConstructor<IRecipeHandler, CampfireBlockEntity, CampfireBlockEntity>() {
                 @Override
                 public Capability<IRecipeHandler> getCapability() {
                     return RecipeHandlerConfig.CAPABILITY;
@@ -466,9 +465,9 @@ public class VanillaModCompat implements IModCompat {
 
                 @Nullable
                 @Override
-                public ICapabilityProvider createProvider(CampfireTileEntity hostType, CampfireTileEntity host) {
+                public ICapabilityProvider createProvider(CampfireBlockEntity hostType, CampfireBlockEntity host) {
                     return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
-                            IRecipeType.CAMPFIRE_COOKING, (size) -> size == 1));
+                            RecipeType.CAMPFIRE_COOKING, (size) -> size == 1));
                 }
             });
             BlockCapabilities.getInstance().register(new IBlockCapabilityConstructor() {
@@ -483,10 +482,10 @@ public class VanillaModCompat implements IModCompat {
                     return new IBlockCapabilityProvider() {
                         @Override
                         public <T> LazyOptional<T> getCapability(@Nonnull BlockState blockState, @Nonnull Capability<T> capability,
-                                                                 @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nullable Direction facing) {
+                                                                 @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nullable Direction facing) {
                             if (blockState.getBlock() instanceof CraftingTableBlock && capability == RecipeHandlerConfig.CAPABILITY) {
-                                return LazyOptional.of(() -> new VanillaRecipeTypeRecipeHandler<>(() -> (World) world,
-                                        IRecipeType.CRAFTING, (size) -> size > 0)).cast();
+                                return LazyOptional.of(() -> new VanillaRecipeTypeRecipeHandler<>(() -> (Level) world,
+                                        RecipeType.CRAFTING, (size) -> size > 0)).cast();
                             }
                             return LazyOptional.empty();
                         }
@@ -505,10 +504,10 @@ public class VanillaModCompat implements IModCompat {
                     return new IBlockCapabilityProvider() {
                         @Override
                         public <T> LazyOptional<T> getCapability(@Nonnull BlockState blockState, @Nonnull Capability<T> capability,
-                                                                 @Nonnull IBlockReader world, @Nonnull BlockPos pos, @Nullable Direction facing) {
+                                                                 @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nullable Direction facing) {
                             if (capability == RecipeHandlerConfig.CAPABILITY) {
-                                return LazyOptional.of(() -> new VanillaRecipeTypeRecipeHandler<>(() -> (World) world,
-                                        IRecipeType.STONECUTTING, (size) -> size == 1)).cast();
+                                return LazyOptional.of(() -> new VanillaRecipeTypeRecipeHandler<>(() -> (Level) world,
+                                        RecipeType.STONECUTTING, (size) -> size == 1)).cast();
                             }
                             return LazyOptional.empty();
                         }

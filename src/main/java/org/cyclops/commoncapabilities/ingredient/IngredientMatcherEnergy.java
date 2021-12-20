@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.helper.L10NHelpers;
@@ -97,8 +97,8 @@ public class IngredientMatcherEnergy implements IIngredientMatcher<Long, Boolean
     }
 
     @Override
-    public IFormattableTextComponent getDisplayName(Long instance) {
-        return new TranslationTextComponent("recipecomponent.minecraft.energy");
+    public MutableComponent getDisplayName(Long instance) {
+        return new TranslatableComponent("recipecomponent.minecraft.energy");
     }
 
     @Override

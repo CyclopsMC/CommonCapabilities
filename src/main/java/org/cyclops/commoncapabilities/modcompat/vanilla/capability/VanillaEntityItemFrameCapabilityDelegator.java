@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability;
 
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -13,15 +13,15 @@ import net.minecraftforge.common.util.LazyOptional;
  */
 public abstract class VanillaEntityItemFrameCapabilityDelegator<C> {
 
-    private final ItemFrameEntity entity;
+    private final ItemFrame entity;
     private final Direction side;
 
-    public VanillaEntityItemFrameCapabilityDelegator(ItemFrameEntity entity, Direction side) {
+    public VanillaEntityItemFrameCapabilityDelegator(ItemFrame entity, Direction side) {
         this.entity = entity;
         this.side = side;
     }
 
-    public ItemFrameEntity getEntity() {
+    public ItemFrame getEntity() {
         return entity;
     }
 

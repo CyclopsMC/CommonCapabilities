@@ -1,8 +1,9 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.work;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.tileentity.AbstractFurnaceTileEntity;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
 /**
@@ -10,17 +11,17 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
  * @author rubensworks
  */
 public class VanillaAbstractFurnaceWorker implements IWorker {
-    private final AbstractFurnaceTileEntity furnace;
+    private final AbstractFurnaceBlockEntity furnace;
 
-    public VanillaAbstractFurnaceWorker(AbstractFurnaceTileEntity furnace) {
+    public VanillaAbstractFurnaceWorker(AbstractFurnaceBlockEntity furnace) {
         this.furnace = furnace;
     }
 
     @Override
     public boolean hasWork() {
         ItemStack toMelt = furnace.getItem(0);
-        IRecipe<?> recipe = furnace.getLevel().getRecipeManager().getRecipeFor(furnace.recipeType, furnace, furnace.getLevel()).orElse(null);
-        return !toMelt.isEmpty() && furnace.canBurn(recipe);
+        Recipe<?> recipe = furnace.getLevel().getRecipeManager().getRecipeFor(furnace.recipeType, furnace, furnace.getLevel()).orElse(null);
+        return !toMelt.isEmpty() && recipe != null && !((Recipe<WorldlyContainer>) recipe).assemble(furnace).isEmpty();
     }
 
     @Override

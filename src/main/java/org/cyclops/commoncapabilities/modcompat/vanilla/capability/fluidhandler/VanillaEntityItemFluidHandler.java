@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler;
 
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;

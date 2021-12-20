@@ -1,9 +1,9 @@
 package org.cyclops.commoncapabilities;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -28,7 +28,8 @@ public class TestCapabilityInventoryStateMod {
         if (event.getItemStack().isEmpty()) return;
         if (event.getItemStack().getItem() != Items.ARROW) return;
 
-        TileEntity te = event.getWorld().getBlockEntity(event.getPos());
+
+        BlockEntity te = event.getWorld().getBlockEntity(event.getPos());
         if (te != null && te.getCapability(InventoryStateConfig.CAPABILITY, event.getFace()).isPresent()) {
             event.setCanceled(true);
             IInventoryState inventoryState = te.getCapability(InventoryStateConfig.CAPABILITY, event.getFace()).orElse(null);

@@ -1,10 +1,9 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.IntNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 
 /**
@@ -13,8 +12,8 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
  */
 public class IngredientSerializerItemStack implements IIngredientSerializer<ItemStack, Integer> {
     @Override
-    public INBT serializeInstance(ItemStack instance) {
-        CompoundNBT tag = instance.serializeNBT();
+    public Tag serializeInstance(ItemStack instance) {
+        CompoundTag tag = instance.serializeNBT();
         if (instance.getCount() > 127) {
             tag.putInt("ExtendedCount", instance.getCount());
             tag.putByte("Count", (byte)1);
@@ -23,28 +22,28 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
     }
 
     @Override
-    public ItemStack deserializeInstance(INBT tag) throws IllegalArgumentException {
-        if (!(tag instanceof CompoundNBT)) {
+    public ItemStack deserializeInstance(Tag tag) throws IllegalArgumentException {
+        if (!(tag instanceof CompoundTag)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagCompound");
         }
-        CompoundNBT stackTag = (CompoundNBT) tag;
+        CompoundTag stackTag = (CompoundTag) tag;
         ItemStack itemStack = ItemStack.of(stackTag);
-        if (stackTag.contains("ExtendedCount", Constants.NBT.TAG_INT)) {
+        if (stackTag.contains("ExtendedCount", Tag.TAG_INT)) {
             itemStack.setCount(stackTag.getInt("ExtendedCount"));
         }
         return itemStack;
     }
 
     @Override
-    public INBT serializeCondition(Integer matchCondition) {
-        return IntNBT.valueOf(matchCondition);
+    public Tag serializeCondition(Integer matchCondition) {
+        return IntTag.valueOf(matchCondition);
     }
 
     @Override
-    public Integer deserializeCondition(INBT tag) throws IllegalArgumentException {
-        if (!(tag instanceof IntNBT)) {
+    public Integer deserializeCondition(Tag tag) throws IllegalArgumentException {
+        if (!(tag instanceof IntTag)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagInt");
         }
-        return ((IntNBT) tag).getAsInt();
+        return ((IntTag) tag).getAsInt();
     }
 }

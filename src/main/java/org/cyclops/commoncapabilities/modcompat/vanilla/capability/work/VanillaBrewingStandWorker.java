@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.work;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.BrewingStandTileEntity;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
+import net.minecraft.core.NonNullList;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
@@ -13,9 +13,9 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 public class VanillaBrewingStandWorker implements IWorker {
     private static final int[] outputSlots = new int[] {0, 1, 2};
     
-    private final BrewingStandTileEntity brewingStand;
+    private final BrewingStandBlockEntity brewingStand;
 
-    public VanillaBrewingStandWorker(BrewingStandTileEntity brewingStand) {
+    public VanillaBrewingStandWorker(BrewingStandBlockEntity brewingStand) {
         this.brewingStand = brewingStand;
     }
 
