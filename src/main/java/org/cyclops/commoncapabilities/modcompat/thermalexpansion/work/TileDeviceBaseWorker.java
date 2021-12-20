@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.thermalexpansion.work;
 import cofh.thermalexpansion.block.device.TileDeviceBase;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TileDeviceBase;
+
 /**
  * Worker capability for TileDeviceBase machines.
  * @author rubensworks

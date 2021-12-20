@@ -8,6 +8,8 @@ import org.cyclops.commoncapabilities.core.Helpers;
 import org.cyclops.commoncapabilities.modcompat.ic2.Ic2Helpers;
 import org.cyclops.cyclopscore.helper.TileHelpers;
 
+import TileEntityStirlingGenerator;
+
 /**
  * Worker capability for {@link TileEntityStirlingGenerator}.
  * @author rubensworks

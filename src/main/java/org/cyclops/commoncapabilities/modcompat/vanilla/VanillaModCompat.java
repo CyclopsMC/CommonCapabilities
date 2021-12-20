@@ -289,7 +289,7 @@ public class VanillaModCompat implements IModCompat {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
                                     return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
-                                            && host.getDisplayedItem().getCapability(capability, facing).isPresent()
+                                            && host.getItem().getCapability(capability, facing).isPresent()
                                             ? LazyOptional.of(() -> new VanillaEntityItemFrameItemHandler(host, facing)).cast()
                                             : LazyOptional.empty();
                                 }
@@ -354,7 +354,7 @@ public class VanillaModCompat implements IModCompat {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
                                     return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY
-                                            && host.getDisplayedItem().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, facing).isPresent()
+                                            && host.getItem().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, facing).isPresent()
                                             ? LazyOptional.of(() -> new VanillaEntityItemFrameFluidHandler(host, facing)).cast()
                                             : LazyOptional.empty();
                                 }
@@ -398,7 +398,7 @@ public class VanillaModCompat implements IModCompat {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
                                     return capability == CapabilityEnergy.ENERGY
-                                            && host.getDisplayedItem().getCapability(capability, facing).isPresent()
+                                            && host.getItem().getCapability(capability, facing).isPresent()
                                             ? LazyOptional.of(() -> new VanillaEntityItemFrameEnergyStorage(host, facing)).cast()
                                             : LazyOptional.empty();
                                 }
@@ -428,7 +428,7 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public ICapabilityProvider createProvider(FurnaceTileEntity hostType, FurnaceTileEntity host) {
-                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getWorld,
+                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
                             IRecipeType.SMELTING, (size) -> size == 1));
                 }
             });
@@ -441,7 +441,7 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public ICapabilityProvider createProvider(BlastFurnaceTileEntity hostType, BlastFurnaceTileEntity host) {
-                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getWorld,
+                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
                             IRecipeType.BLASTING, (size) -> size == 1));
                 }
             });
@@ -454,7 +454,7 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public ICapabilityProvider createProvider(SmokerTileEntity hostType, SmokerTileEntity host) {
-                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getWorld,
+                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
                             IRecipeType.SMOKING, (size) -> size == 1));
                 }
             });
@@ -467,7 +467,7 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public ICapabilityProvider createProvider(CampfireTileEntity hostType, CampfireTileEntity host) {
-                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getWorld,
+                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
                             IRecipeType.CAMPFIRE_COOKING, (size) -> size == 1));
                 }
             });

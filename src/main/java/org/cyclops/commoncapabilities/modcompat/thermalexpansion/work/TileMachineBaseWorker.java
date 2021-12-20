@@ -5,6 +5,8 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.core.Helpers;
 import org.cyclops.commoncapabilities.modcompat.thermalexpansion.ThermalExpansionHelpers;
 
+import TileMachineBase;
+
 /**
  * Worker capability for TileMachineBase machines.
  * @author rubensworks

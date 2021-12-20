@@ -22,10 +22,10 @@ public class TestItemHandlerItemStackIterator {
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
-        Bootstrap.register();
+        Bootstrap.bootStrap();
 
         HANDLER_EMPTY = new ImmutableListItemHandler(NonNullList.withSize(0, ItemStack.EMPTY));
-        HANDLER = new ImmutableListItemHandler(NonNullList.from(ItemStack.EMPTY,
+        HANDLER = new ImmutableListItemHandler(NonNullList.of(ItemStack.EMPTY,
                 new ItemStack(Items.APPLE),
                 new ItemStack(Items.LEAD),
                 new ItemStack(Items.BOWL)

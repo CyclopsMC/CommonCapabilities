@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.ic2.capability.temperature;
 import ic2.api.reactor.IReactor;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
 
+import IReactor;
+
 /**
  * Temperature capability for {@link IReactor}.
  * @author rubensworks

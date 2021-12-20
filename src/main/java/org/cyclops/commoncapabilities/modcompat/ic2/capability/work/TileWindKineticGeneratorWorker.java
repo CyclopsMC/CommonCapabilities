@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.ic2.capability.work;
 import ic2.core.block.kineticgenerator.tileentity.TileEntityWindKineticGenerator;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TileEntityWindKineticGenerator;
+
 /**
  * Worker capability for {@link TileEntityWindKineticGenerator}.
  * @author rubensworks

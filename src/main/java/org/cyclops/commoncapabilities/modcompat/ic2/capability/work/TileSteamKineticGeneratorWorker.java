@@ -7,6 +7,8 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.core.Helpers;
 import org.cyclops.commoncapabilities.modcompat.ic2.Ic2Helpers;
 
+import TileEntitySteamKineticGenerator;
+
 /**
  * Worker capability for {@link TileEntityManualKineticGenerator}.
  * @author rubensworks

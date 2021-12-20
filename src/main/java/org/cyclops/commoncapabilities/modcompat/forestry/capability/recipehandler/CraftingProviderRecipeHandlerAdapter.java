@@ -12,6 +12,9 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import ICraftingProvider;
+import IForestryRecipe;
+
 /**
  * Abstract recipe handler for {@link ICraftingProvider}.
  * @author rubensworks

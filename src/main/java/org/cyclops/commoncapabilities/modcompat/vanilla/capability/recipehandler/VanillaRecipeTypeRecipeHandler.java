@@ -45,7 +45,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
 
     public static final Container DUMMY_CONTAINTER = new Container(ContainerType.CRAFTING, 0) {
         @Override
-        public boolean canInteractWith(PlayerEntity playerIn) {
+        public boolean stillValid(PlayerEntity playerIn) {
             return true;
         }
     };
@@ -83,13 +83,13 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
     public static List<IPrototypedIngredient<ItemStack, Integer>> getPrototypesFromIngredient(Ingredient ingredient) {
         if (ingredient instanceof NBTIngredient) {
             return Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
-                    ingredient.getMatchingStacks()[0], ItemMatch.ITEM | ItemMatch.NBT));
+                    ingredient.getItems()[0], ItemMatch.ITEM | ItemMatch.NBT));
 //        } else if (ingredient instanceof OreIngredient) { // TODO: somehow detect tags in the future, see ShapelessRecipeBuilder
 //            return Arrays.stream(ingredient.getMatchingStacks())
 //                    .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.ITEM))
 //                    .collect(Collectors.toList());
         } else {
-            return Arrays.stream(ingredient.getMatchingStacks())
+            return Arrays.stream(ingredient.getItems())
                     .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.ITEM))
                     .collect(Collectors.toList());
         }
@@ -97,7 +97,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
 
     @Nullable
     public static <C extends IInventory, T extends IRecipe<C>> IRecipeDefinition recipeToRecipeDefinition(T recipe) {
-        if (recipe.getRecipeOutput().isEmpty()) {
+        if (recipe.getResultItem().isEmpty()) {
             return null;
         }
         int inputSize = recipe.getIngredients().size();
@@ -115,7 +115,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
             inputIngredients.add(i, prototypes);
         }
         return RecipeDefinition.ofIngredients(IngredientComponent.ITEMSTACK, inputIngredients,
-                MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getRecipeOutput()));
+                MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem()));
     }
 
     @Override
@@ -137,7 +137,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
 
         CraftingInventory inventoryCrafting = new CraftingInventory(DUMMY_CONTAINTER, 3, 3);
         for (int i = 0; i < recipeIngredients.size(); i++) {
-            inventoryCrafting.setInventorySlotContents(i, recipeIngredients.get(i));
+            inventoryCrafting.setItem(i, recipeIngredients.get(i));
         }
 
         T recipe = CraftingHelpers.findRecipeCached(recipeType, (C) inventoryCrafting, worldSupplier.get(), true).orElse(null);
@@ -145,6 +145,6 @@ public class VanillaRecipeTypeRecipeHandler<C extends IInventory, T extends IRec
             return null;
         }
 
-        return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getRecipeOutput());
+        return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem());
     }
 }

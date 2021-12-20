@@ -38,7 +38,7 @@ public class TestIngredientMatcherItemStack {
     @BeforeClass
     public static void init() throws NbtParseException {
         // We need the Minecraft registries to be filled
-        Bootstrap.register();
+        Bootstrap.bootStrap();
 
         M = new IngredientMatcherItemStack();
 

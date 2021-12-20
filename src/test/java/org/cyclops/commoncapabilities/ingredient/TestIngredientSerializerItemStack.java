@@ -29,7 +29,7 @@ public class TestIngredientSerializerItemStack {
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
-        Bootstrap.register();
+        Bootstrap.bootStrap();
 
         S = new IngredientSerializerItemStack();
 
@@ -83,14 +83,14 @@ public class TestIngredientSerializerItemStack {
 
     @Test
     public void deserializeInstance() {
-        assertThat(ItemStack.areItemStacksEqual(I1, S.deserializeInstance(I_TAG1)), is(true));
-        assertThat(ItemStack.areItemStacksEqual(I2, S.deserializeInstance(I_TAG2)), is(true));
+        assertThat(ItemStack.isSame(I1, S.deserializeInstance(I_TAG1)), is(true));
+        assertThat(ItemStack.isSame(I2, S.deserializeInstance(I_TAG2)), is(true));
     }
 
     @Test
     public void deserializeInstanceLarge() {
-        assertThat(ItemStack.areItemStacksEqual(I1L, S.deserializeInstance(I_TAG1L)), is(true));
-        assertThat(ItemStack.areItemStacksEqual(I2L, S.deserializeInstance(I_TAG2L)), is(true));
+        assertThat(ItemStack.isSame(I1L, S.deserializeInstance(I_TAG1L)), is(true));
+        assertThat(ItemStack.isSame(I2L, S.deserializeInstance(I_TAG2L)), is(true));
     }
 
     @Test(expected = IllegalArgumentException.class)

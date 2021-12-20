@@ -17,7 +17,7 @@ public class VanillaCampfireTemperature implements ITemperature {
 
     @Override
     public double getTemperature() {
-        return campfire.getBlockState().get(CampfireBlock.LIT) ? getMaximumTemperature() : getDefaultTemperature();
+        return campfire.getBlockState().getValue(CampfireBlock.LIT) ? getMaximumTemperature() : getDefaultTemperature();
     }
 
     @Override

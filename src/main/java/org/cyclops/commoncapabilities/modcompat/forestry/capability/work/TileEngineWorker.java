@@ -5,6 +5,8 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.core.Helpers;
 import org.cyclops.commoncapabilities.modcompat.forestry.ForestryHelpers;
 
+import TileEngine;
+
 /**
  * Worker capability for TileEngine machines.
  * @author rubensworks

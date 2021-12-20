@@ -5,6 +5,8 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.core.Helpers;
 import org.cyclops.commoncapabilities.modcompat.ic2.Ic2Helpers;
 
+import TileEntitySolarDestiller;
+
 /**
  * Worker capability for {@link TileEntitySolarDestiller}.
  * @author rubensworks

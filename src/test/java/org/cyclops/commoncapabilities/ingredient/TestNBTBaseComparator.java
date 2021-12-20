@@ -878,7 +878,7 @@ public class TestNBTBaseComparator {
         }
 
         @Override
-        public ITextComponent toFormattedComponent(String indentation, int indentDepth) {
+        public ITextComponent getPrettyDisplay(String indentation, int indentDepth) {
             return null;
         }
     }

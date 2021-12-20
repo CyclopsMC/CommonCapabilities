@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.ic2.capability.work;
 import ic2.core.block.machine.tileentity.TileEntityChunkloader;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TileEntityChunkloader;
+
 /**
  * Worker capability for {@link TileEntityChunkloader}.
  * @author rubensworks

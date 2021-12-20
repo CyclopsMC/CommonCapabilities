@@ -5,6 +5,8 @@ import forestry.core.errors.EnumErrorCode;
 import forestry.factory.tiles.TileMoistener;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TileMoistener;
+
 /**
  * Worker capability for the TileMoistener.
  * @author rubensworks

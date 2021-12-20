@@ -18,13 +18,13 @@ public class VanillaAbstractFurnaceWorker implements IWorker {
 
     @Override
     public boolean hasWork() {
-        ItemStack toMelt = furnace.getStackInSlot(0);
-        IRecipe<?> recipe = furnace.getWorld().getRecipeManager().getRecipe(furnace.recipeType, furnace, furnace.getWorld()).orElse(null);
-        return !toMelt.isEmpty() && furnace.canSmelt(recipe);
+        ItemStack toMelt = furnace.getItem(0);
+        IRecipe<?> recipe = furnace.getLevel().getRecipeManager().getRecipeFor(furnace.recipeType, furnace, furnace.getLevel()).orElse(null);
+        return !toMelt.isEmpty() && furnace.canBurn(recipe);
     }
 
     @Override
     public boolean canWork() {
-        return furnace.isBurning() || furnace.getBurnTime(furnace.getStackInSlot(1)) > 0;
+        return furnace.isLit() || furnace.getBurnDuration(furnace.getItem(1)) > 0;
     }
 }

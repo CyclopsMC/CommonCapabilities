@@ -6,6 +6,8 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.core.Helpers;
 import org.cyclops.commoncapabilities.modcompat.ic2.Ic2Helpers;
 
+import TileEntityBaseGenerator;
+
 /**
  * Worker capability for TileEntityBaseGenerator.
  * @author rubensworks

@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.ic2.capability.work;
 import ic2.core.block.reactor.tileentity.TileEntityNuclearReactorElectric;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TileEntityNuclearReactorElectric;
+
 /**
  * Worker capability for {@link TileEntityNuclearReactorElectric}.
  * @author rubensworks

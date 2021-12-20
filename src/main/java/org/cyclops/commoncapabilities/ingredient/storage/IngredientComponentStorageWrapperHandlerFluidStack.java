@@ -23,6 +23,8 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Objects;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 /**
  * Fluid storage wrapper handler for {@link IFluidHandler}.
  * @author rubensworks

@@ -25,7 +25,7 @@ public class TestIngredientComponentCategoryType {
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
-        Bootstrap.register();
+        Bootstrap.bootStrap();
     }
 
     @Test
@@ -37,7 +37,7 @@ public class TestIngredientComponentCategoryType {
         assertThat(IngredientComponents.ITEMSTACK.getCategoryTypes().get(0).isPrimaryQuantifier(), is(false));
         Function<ItemStack, ?> classifier0 = IngredientComponents.ITEMSTACK.getCategoryTypes().get(0).getClassifier();
         assertThat(classifier0.apply(new ItemStack(Items.APPLE)), is(Items.APPLE));
-        assertThat(classifier0.apply(new ItemStack(Blocks.DIRT)), is(Item.getItemFromBlock(Blocks.DIRT)));
+        assertThat(classifier0.apply(new ItemStack(Blocks.DIRT)), is(Item.byBlock(Blocks.DIRT)));
 
         assertThat(IngredientComponents.ITEMSTACK.getCategoryTypes().get(1).getCategoryType(), equalTo(Integer.class));
         assertThat(IngredientComponents.ITEMSTACK.getCategoryTypes().get(1).isReferenceEqual(), is(false));

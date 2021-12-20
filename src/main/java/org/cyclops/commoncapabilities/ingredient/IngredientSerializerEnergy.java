@@ -20,10 +20,10 @@ public class IngredientSerializerEnergy implements IIngredientSerializer<Long, B
     public Long deserializeInstance(INBT tag) throws IllegalArgumentException {
         if (tag instanceof IntNBT) {
             // TODO: needed for backwards-compatibility, remove in next major version
-            return Long.valueOf(((IntNBT) tag).getInt());
+            return Long.valueOf(((IntNBT) tag).getAsInt());
         }
         if (tag instanceof LongNBT) {
-            return ((LongNBT) tag).getLong();
+            return ((LongNBT) tag).getAsLong();
         }
         throw new IllegalArgumentException("This deserializer only accepts LongNBT");
     }
@@ -38,6 +38,6 @@ public class IngredientSerializerEnergy implements IIngredientSerializer<Long, B
         if (!(tag instanceof ByteNBT)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagByte");
         }
-        return ((ByteNBT) tag).getByte() == 1;
+        return ((ByteNBT) tag).getAsByte() == 1;
     }
 }

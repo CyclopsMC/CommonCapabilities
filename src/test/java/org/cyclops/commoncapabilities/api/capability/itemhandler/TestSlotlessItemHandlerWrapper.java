@@ -31,10 +31,10 @@ public class TestSlotlessItemHandlerWrapper {
     @Before
     public void init() {
         // We need the Minecraft registries to be filled
-        Bootstrap.register();
+        Bootstrap.bootStrap();
 
         handlerEmpty = new ItemStackHandler(NonNullList.withSize(10, ItemStack.EMPTY));
-        handler = new ItemStackHandler(NonNullList.from(ItemStack.EMPTY,
+        handler = new ItemStackHandler(NonNullList.of(ItemStack.EMPTY,
                 new ItemStack(Items.APPLE, 5),
                 new ItemStack(Items.LEAD, 11),
                 new ItemStack(Items.BOWL, 64),

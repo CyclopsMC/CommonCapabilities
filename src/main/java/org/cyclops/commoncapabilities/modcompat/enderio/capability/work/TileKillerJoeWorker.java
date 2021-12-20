@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.enderio.capability.work;
 import crazypants.enderio.machine.killera.TileKillerJoe;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TileKillerJoe;
+
 /**
  * Worker capability for AbstractPoweredTaskEntity machines.
  *

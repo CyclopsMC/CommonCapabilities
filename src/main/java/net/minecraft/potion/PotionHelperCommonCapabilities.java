@@ -27,14 +27,14 @@ public class PotionHelperCommonCapabilities {
     public static List<IRecipeDefinition> getVanillaRecipes() {
         if (VANILLA_RECIPES == null) {
             VANILLA_RECIPES = Lists.newArrayList();
-            List<ItemStack> inputItems = Lists.newArrayList(PotionUtils.addPotionToItemStack(
+            List<ItemStack> inputItems = Lists.newArrayList(PotionUtils.setPotion(
                     new ItemStack(Items.POTION), Potions.WATER));
             List<IPrototypedIngredient<ItemStack, Integer>> ingredients = Lists.newArrayList();
-            for (PotionBrewing.MixPredicate<Item> mixPredicate : PotionBrewing.POTION_ITEM_CONVERSIONS) {
-                ingredients.addAll(VanillaRecipeTypeRecipeHandler.getPrototypesFromIngredient(mixPredicate.reagent));
+            for (PotionBrewing.MixPredicate<Item> mixPredicate : PotionBrewing.CONTAINER_MIXES) {
+                ingredients.addAll(VanillaRecipeTypeRecipeHandler.getPrototypesFromIngredient(mixPredicate.ingredient));
             }
-            for (PotionBrewing.MixPredicate<Potion> mixPredicate : PotionBrewing.POTION_TYPE_CONVERSIONS) {
-                ingredients.addAll(VanillaRecipeTypeRecipeHandler.getPrototypesFromIngredient(mixPredicate.reagent));
+            for (PotionBrewing.MixPredicate<Potion> mixPredicate : PotionBrewing.POTION_MIXES) {
+                ingredients.addAll(VanillaRecipeTypeRecipeHandler.getPrototypesFromIngredient(mixPredicate.ingredient));
             }
 
             List<ItemStack> checkInputItems = Lists.newArrayList(inputItems);
@@ -44,7 +44,7 @@ public class PotionHelperCommonCapabilities {
                     IPrototypedIngredient<ItemStack, Integer> item =
                             new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, inputItem, ItemMatch.ITEM | ItemMatch.NBT);
                     for (IPrototypedIngredient<ItemStack, Integer> ingredient : ingredients) {
-                        ItemStack output = PotionBrewing.doReaction(ingredient.getPrototype().copy(), inputItem.copy());
+                        ItemStack output = PotionBrewing.mix(ingredient.getPrototype().copy(), inputItem.copy());
                         if (isPotionOutputValid(inputItem, output)) {
                             addRecipeIfNew(ingredient, item, output, newItems);
                         }
@@ -65,9 +65,9 @@ public class PotionHelperCommonCapabilities {
 
     protected static boolean isPotionOutputValid(ItemStack input, ItemStack output) {
         return !input.isEmpty() && !output.isEmpty() && (input.getItem() != output.getItem()
-                || (PotionUtils.getPotionFromItem(output) != Potions.WATER
-                && !Objects.equals(ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotionFromItem(output)),
-                ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotionFromItem(input)))));
+                || (PotionUtils.getPotion(output) != Potions.WATER
+                && !Objects.equals(ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotion(output)),
+                ForgeRegistries.POTION_TYPES.getKey(PotionUtils.getPotion(input)))));
     }
 
     protected static void addRecipeIfNew(IPrototypedIngredient<ItemStack, Integer> ingredient,

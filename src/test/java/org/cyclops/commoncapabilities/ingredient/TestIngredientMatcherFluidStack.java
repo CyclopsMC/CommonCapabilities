@@ -30,7 +30,7 @@ public class TestIngredientMatcherFluidStack {
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
-        Bootstrap.register();
+        Bootstrap.bootStrap();
 
         M = new IngredientMatcherFluidStack();
 

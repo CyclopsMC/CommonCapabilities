@@ -10,6 +10,8 @@ import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 
 import javax.annotation.Nonnull;
 
+import TileCache;
+
 /**
  * A slotless item handler for TE's cache.
  * This allows item extraction for 64+ items at a time.

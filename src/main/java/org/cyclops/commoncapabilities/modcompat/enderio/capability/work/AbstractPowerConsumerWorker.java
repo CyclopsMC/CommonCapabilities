@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.enderio.capability.work;
 import crazypants.enderio.machine.AbstractPowerConsumerEntity;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import AbstractPowerConsumerEntity;
+
 /**
  * Worker capability for AbstractPoweredTaskEntity machines.
  * @author rubensworks

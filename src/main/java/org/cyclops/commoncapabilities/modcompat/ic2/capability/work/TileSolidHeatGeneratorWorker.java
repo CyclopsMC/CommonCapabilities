@@ -5,6 +5,8 @@ import ic2.core.item.type.MiscResourceType;
 import ic2.core.ref.ItemName;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TileEntitySolidHeatGenerator;
+
 /**
  * Worker capability for {@link TileEntitySolidHeatGenerator}.
  * @author rubensworks

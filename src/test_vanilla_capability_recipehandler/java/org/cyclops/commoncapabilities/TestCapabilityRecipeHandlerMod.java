@@ -29,11 +29,11 @@ public class TestCapabilityRecipeHandlerMod {
     @SubscribeEvent
     public void onTileInteract(PlayerInteractEvent.LeftClickBlock event) {
         if (event.getItemStack().isEmpty()) return;
-        if (event.getItemStack().getItem() != Item.getItemFromBlock(Blocks.CRAFTING_TABLE)) return;
-        if (event.getPlayer().getEntityWorld().isRemote) return;
+        if (event.getItemStack().getItem() != Item.byBlock(Blocks.CRAFTING_TABLE)) return;
+        if (event.getPlayer().level.isClientSide()) return;
 
         IRecipeHandler recipeHandler = null;
-        TileEntity te = event.getWorld().getTileEntity(event.getPos());
+        TileEntity te = event.getWorld().getBlockEntity(event.getPos());
         BlockState blockState = event.getWorld().getBlockState(event.getPos());
         if (te != null && te.getCapability(RecipeHandlerConfig.CAPABILITY, event.getFace()).isPresent()) {
             recipeHandler = te.getCapability(RecipeHandlerConfig.CAPABILITY, event.getFace()).orElse(null);

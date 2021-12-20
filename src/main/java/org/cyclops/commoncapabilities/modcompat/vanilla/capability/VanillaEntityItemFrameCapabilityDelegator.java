@@ -30,11 +30,11 @@ public abstract class VanillaEntityItemFrameCapabilityDelegator<C> {
     }
 
     protected ItemStack getItemStack() {
-        return entity.getDisplayedItem();
+        return entity.getItem();
     }
 
     protected void updateItemStack(ItemStack itemStack) {
-        entity.setDisplayedItem(itemStack);
+        entity.setItem(itemStack);
     }
 
     protected abstract Capability<C> getCapabilityType();

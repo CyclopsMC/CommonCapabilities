@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.tconstruct.capability.work;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import slimeknights.tconstruct.smeltery.tileentity.TileCasting;
 
+import TileCasting;
+
 /**
  * Worker capability for the casting tiles.
  * @author rubensworks

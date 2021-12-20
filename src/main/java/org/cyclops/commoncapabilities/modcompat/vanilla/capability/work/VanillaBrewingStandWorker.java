@@ -23,9 +23,9 @@ public class VanillaBrewingStandWorker implements IWorker {
     public boolean hasWork() {
         NonNullList<ItemStack> inputs = NonNullList.withSize(outputSlots.length, ItemStack.EMPTY);
         for (int i = 0; i < inputs.size(); i++) {
-            inputs.set(i, brewingStand.getStackInSlot(outputSlots[i]));
+            inputs.set(i, brewingStand.getItem(outputSlots[i]));
         }
-        return BrewingRecipeRegistry.canBrew(inputs, brewingStand.getStackInSlot(outputSlots.length), outputSlots);
+        return BrewingRecipeRegistry.canBrew(inputs, brewingStand.getItem(outputSlots.length), outputSlots);
     }
 
     @Override

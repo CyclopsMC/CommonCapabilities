@@ -100,12 +100,12 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
 
     @Override
     public String localize(ItemStack instance) {
-        return instance.getDisplayName().getString();
+        return instance.getHoverName().getString();
     }
 
     @Override
     public IFormattableTextComponent getDisplayName(ItemStack instance) {
-        return (IFormattableTextComponent) instance.getDisplayName();
+        return (IFormattableTextComponent) instance.getHoverName();
     }
 
     @Override
@@ -131,6 +131,6 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
             }
             return c1 - c2;
         }
-        return Item.getIdFromItem(o1.getItem()) - Item.getIdFromItem(o2.getItem());
+        return Item.getId(o1.getItem()) - Item.getId(o2.getItem());
     }
 }

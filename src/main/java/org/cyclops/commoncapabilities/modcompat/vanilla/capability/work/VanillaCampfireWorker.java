@@ -17,11 +17,11 @@ public class VanillaCampfireWorker implements IWorker {
 
     @Override
     public boolean hasWork() {
-        return campfire.getInventory().stream().anyMatch(itemStack -> !itemStack.isEmpty());
+        return campfire.getItems().stream().anyMatch(itemStack -> !itemStack.isEmpty());
     }
 
     @Override
     public boolean canWork() {
-        return campfire.getBlockState().get(CampfireBlock.LIT);
+        return campfire.getBlockState().getValue(CampfireBlock.LIT);
     }
 }

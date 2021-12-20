@@ -4,6 +4,8 @@ import forestry.core.errors.EnumErrorCode;
 import forestry.core.tiles.TilePowered;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TilePowered;
+
 /**
  * Worker capability for TilePowered machines.
  * @author rubensworks

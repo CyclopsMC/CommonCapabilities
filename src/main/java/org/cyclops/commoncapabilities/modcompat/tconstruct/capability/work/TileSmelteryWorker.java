@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.tconstruct.capability.work;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import slimeknights.tconstruct.smeltery.tileentity.TileSmeltery;
 
+import TileSmeltery;
+
 /**
  * Worker capability for the smeltery.
  * @author rubensworks

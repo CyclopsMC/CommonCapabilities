@@ -41,27 +41,27 @@ public class NBTComparator implements Comparator<INBT> {
                 case 0:
                     return 0;
                 case 1:
-                    return Byte.compare(((ByteNBT) o1).getByte(), ((ByteNBT) o2).getByte());
+                    return Byte.compare(((ByteNBT) o1).getAsByte(), ((ByteNBT) o2).getAsByte());
                 case 2:
-                    return Short.compare(((ShortNBT) o1).getShort(), ((ShortNBT) o2).getShort());
+                    return Short.compare(((ShortNBT) o1).getAsShort(), ((ShortNBT) o2).getAsShort());
                 case 3:
-                    return Integer.compare(((IntNBT) o1).getInt(), ((IntNBT) o2).getInt());
+                    return Integer.compare(((IntNBT) o1).getAsInt(), ((IntNBT) o2).getAsInt());
                 case 4:
-                    return Long.compare(((LongNBT) o1).getLong(), ((LongNBT) o2).getLong());
+                    return Long.compare(((LongNBT) o1).getAsLong(), ((LongNBT) o2).getAsLong());
                 case 5:
-                    return Float.compare(((FloatNBT) o1).getFloat(), ((FloatNBT) o2).getFloat());
+                    return Float.compare(((FloatNBT) o1).getAsFloat(), ((FloatNBT) o2).getAsFloat());
                 case 6:
-                    return Double.compare(((DoubleNBT) o1).getDouble(), ((DoubleNBT) o2).getDouble());
+                    return Double.compare(((DoubleNBT) o1).getAsDouble(), ((DoubleNBT) o2).getAsDouble());
                 case 7:
-                    return UnsignedBytes.lexicographicalComparator().compare(((ByteArrayNBT) o1).getByteArray(),
-                            ((ByteArrayNBT) o2).getByteArray());
+                    return UnsignedBytes.lexicographicalComparator().compare(((ByteArrayNBT) o1).getAsByteArray(),
+                            ((ByteArrayNBT) o2).getAsByteArray());
                 case 8:
-                    return ((StringNBT) o1).getString().compareTo(((StringNBT) o2).getString());
+                    return ((StringNBT) o1).getAsString().compareTo(((StringNBT) o2).getAsString());
                 case 9:
                     ListNBT l1 = (ListNBT) o1;
                     ListNBT l2 = (ListNBT) o2;
-                    if (l1.getTagType() != l2.getTagType()) {
-                        return l1.getTagType() - l2.getTagType();
+                    if (l1.getElementType() != l2.getElementType()) {
+                        return l1.getElementType() - l2.getElementType();
                     }
                     if (l1.size() != l2.size()) {
                         return l1.size() - l2.size();
@@ -78,8 +78,8 @@ public class NBTComparator implements Comparator<INBT> {
                 case 10:
                     CompoundNBT t1 = (CompoundNBT) o1;
                     CompoundNBT t2 = (CompoundNBT) o2;
-                    Set<String> k1 = t1.keySet();
-                    Set<String> k2 = t2.keySet();
+                    Set<String> k1 = t1.getAllKeys();
+                    Set<String> k2 = t2.getAllKeys();
                     if (ignoreNbtNavigation != null) {
                         k1 = k1.stream().filter(k -> !ignoreNbtNavigation.isLeafKey(k)).collect(Collectors.toSet());
                         k2 = k2.stream().filter(k -> !ignoreNbtNavigation.isLeafKey(k)).collect(Collectors.toSet());
@@ -107,8 +107,8 @@ public class NBTComparator implements Comparator<INBT> {
                     }
                     return 0;
                 case 11:
-                    return Ints.lexicographicalComparator().compare(((IntArrayNBT) o1).getIntArray(),
-                            ((IntArrayNBT) o2).getIntArray());
+                    return Ints.lexicographicalComparator().compare(((IntArrayNBT) o1).getAsIntArray(),
+                            ((IntArrayNBT) o2).getAsIntArray());
                 case 12:
                     return Longs.lexicographicalComparator().compare(((LongArrayNBT) o1).data,
                             ((LongArrayNBT) o2).data);

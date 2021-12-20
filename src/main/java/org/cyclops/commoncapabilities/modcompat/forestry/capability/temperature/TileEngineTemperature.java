@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.forestry.capability.temperature
 import forestry.core.tiles.TileEngine;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
 
+import TileEngine;
+
 /**
  * Temperature capability implementation for {@link forestry.core.tiles.TileEngine}.
  * @author rubensworks

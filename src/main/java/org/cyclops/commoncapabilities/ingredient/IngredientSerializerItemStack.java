@@ -28,7 +28,7 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
             throw new IllegalArgumentException("This deserializer only accepts NBTTagCompound");
         }
         CompoundNBT stackTag = (CompoundNBT) tag;
-        ItemStack itemStack = ItemStack.read(stackTag);
+        ItemStack itemStack = ItemStack.of(stackTag);
         if (stackTag.contains("ExtendedCount", Constants.NBT.TAG_INT)) {
             itemStack.setCount(stackTag.getInt("ExtendedCount"));
         }
@@ -45,6 +45,6 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
         if (!(tag instanceof IntNBT)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagInt");
         }
-        return ((IntNBT) tag).getInt();
+        return ((IntNBT) tag).getAsInt();
     }
 }

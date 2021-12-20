@@ -43,7 +43,7 @@ public class TestRecipeDefinition {
 
     @BeforeClass
     public static void init() throws NoSuchFieldException, IllegalAccessException {
-        Bootstrap.register();
+        Bootstrap.bootStrap();
         setFinalStatic(IngredientComponent.class.getField("ITEMSTACK"), IngredientComponents.ITEMSTACK);
 
         Map<IngredientComponent<?, ?>, List<IPrototypedIngredientAlternatives<?, ?>>> dInputMap = Maps.newIdentityHashMap();

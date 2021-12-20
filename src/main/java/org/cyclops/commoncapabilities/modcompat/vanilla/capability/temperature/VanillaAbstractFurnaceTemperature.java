@@ -16,7 +16,7 @@ public class VanillaAbstractFurnaceTemperature implements ITemperature {
 
     @Override
     public double getTemperature() {
-        return ITemperature.ZERO_CELCIUS + furnace.burnTime;
+        return ITemperature.ZERO_CELCIUS + furnace.litTime;
     }
 
     @Override

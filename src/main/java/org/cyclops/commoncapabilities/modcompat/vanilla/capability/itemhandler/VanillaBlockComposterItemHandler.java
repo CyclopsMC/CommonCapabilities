@@ -15,7 +15,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 public class VanillaBlockComposterItemHandler extends SidedInvWrapper {
 
     public VanillaBlockComposterItemHandler(BlockState blockState, IWorld world, BlockPos blockPos, Direction facing) {
-        super(((ComposterBlock) Blocks.COMPOSTER).createInventory(blockState, world, blockPos), facing);
+        super(((ComposterBlock) Blocks.COMPOSTER).getContainer(blockState, world, blockPos), facing);
     }
 
 }

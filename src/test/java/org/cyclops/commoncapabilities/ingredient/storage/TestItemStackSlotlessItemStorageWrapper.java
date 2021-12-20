@@ -33,7 +33,7 @@ public class TestItemStackSlotlessItemStorageWrapper {
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
-        Bootstrap.register();
+        Bootstrap.bootStrap();
     }
 
     public static boolean eq(ItemStack a, ItemStack b) {

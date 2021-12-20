@@ -5,6 +5,8 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.core.Helpers;
 import org.cyclops.commoncapabilities.modcompat.forestry.ForestryHelpers;
 
+import TileMillRainmaker;
+
 /**
  * Worker capability for the TileMillRainmaker.
  * @author rubensworks

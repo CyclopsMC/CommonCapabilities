@@ -4,6 +4,8 @@ import forestry.api.core.IErrorLogic;
 import forestry.farming.tiles.TileFarmGearbox;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TileFarmGearbox;
+
 /**
  * Worker capability for the TileFarmGearbox.
  * @author rubensworks

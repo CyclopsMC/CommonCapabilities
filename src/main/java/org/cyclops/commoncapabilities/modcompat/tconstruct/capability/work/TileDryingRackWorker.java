@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.tconstruct.capability.work;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import slimeknights.tconstruct.gadgets.tileentity.TileDryingRack;
 
+import TileDryingRack;
+
 /**
  * Worker capability for the drying rack.
  * @author rubensworks

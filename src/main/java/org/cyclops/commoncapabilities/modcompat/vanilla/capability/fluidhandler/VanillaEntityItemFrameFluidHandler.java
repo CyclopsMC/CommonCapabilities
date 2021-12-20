@@ -11,6 +11,8 @@ import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntity
 
 import javax.annotation.Nonnull;
 
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
 /**
  * A fluid handler for entity item frames that have a fluid handler.
  * @author rubensworks

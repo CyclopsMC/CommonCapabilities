@@ -6,6 +6,9 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.core.Helpers;
 import org.cyclops.commoncapabilities.modcompat.ic2.Ic2Helpers;
 
+import Energy;
+import TileEntityElectricMachine;
+
 /**
  * Base Worker capability for TileEntityElectricMachine machines.
  * @author rubensworks

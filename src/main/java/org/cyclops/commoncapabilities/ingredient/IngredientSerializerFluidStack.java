@@ -34,6 +34,6 @@ public class IngredientSerializerFluidStack implements IIngredientSerializer<Flu
         if (!(tag instanceof IntNBT)) {
             throw new IllegalArgumentException("This deserializer only accepts NBTTagInt");
         }
-        return ((IntNBT) tag).getInt();
+        return ((IntNBT) tag).getAsInt();
     }
 }

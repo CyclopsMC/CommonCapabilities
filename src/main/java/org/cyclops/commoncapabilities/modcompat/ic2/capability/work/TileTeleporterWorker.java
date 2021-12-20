@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.ic2.capability.work;
 import ic2.core.block.machine.tileentity.TileEntityTeleporter;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TileEntityTeleporter;
+
 /**
  * Worker capability for {@link TileEntityTeleporter}.
  * @author rubensworks

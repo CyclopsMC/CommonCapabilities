@@ -7,6 +7,8 @@ import ic2.core.block.machine.tileentity.TileEntityFermenter;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.cyclopscore.helper.TileHelpers;
 
+import TileEntityFermenter;
+
 /**
  * Worker capability for {@link TileEntityFermenter}.
  * @author rubensworks

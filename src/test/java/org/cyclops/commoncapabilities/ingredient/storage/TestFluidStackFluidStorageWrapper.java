@@ -42,7 +42,7 @@ public class TestFluidStackFluidStorageWrapper {
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
-        Bootstrap.register();
+        Bootstrap.bootStrap();
     }
 
     public static boolean eq(FluidStack a, FluidStack b) {

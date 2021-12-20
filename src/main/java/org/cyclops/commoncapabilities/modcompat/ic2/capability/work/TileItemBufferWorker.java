@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.ic2.capability.work;
 import ic2.core.block.machine.tileentity.TileEntityItemBuffer;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
+import TileEntityItemBuffer;
+
 /**
  * Worker capability for {@link TileEntityItemBuffer}.
  * @author rubensworks
