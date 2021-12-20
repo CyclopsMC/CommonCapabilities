@@ -6,9 +6,9 @@ import org.cyclops.commoncapabilities.CommonCapabilities;
 
 /**
  * Proxy for the client side.
- * 
+ *
  * @author rubensworks
- * 
+ *
  */
 public class ClientProxy extends ClientProxyComponent {
 
@@ -20,5 +20,5 @@ public class ClientProxy extends ClientProxyComponent {
 	public ModBase getMod() {
 		return CommonCapabilities._instance;
 	}
-    
+
 }

@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IPrototypedIngredientAlternatives;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesItemStackTag;
@@ -39,7 +38,7 @@ import java.util.Objects;
  */
 @Mod(Reference.MOD_ID)
 public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
-    
+
     /**
      * The unique instance of this mod.
      */
@@ -135,7 +134,7 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
     public static void clog(String message) {
         clog(Level.INFO, message);
     }
-    
+
     /**
      * Log a new message of the given level for this mod.
      * @param level The level in which the message must be shown.
@@ -144,5 +143,5 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
     public static void clog(Level level, String message) {
         CommonCapabilities._instance.getLoggerHelper().log(level, message);
     }
-    
+
 }
