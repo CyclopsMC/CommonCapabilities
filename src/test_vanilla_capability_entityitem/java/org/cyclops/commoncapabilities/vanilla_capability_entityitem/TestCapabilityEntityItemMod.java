@@ -1,4 +1,4 @@
-package org.cyclops.commoncapabilities;
+package org.cyclops.commoncapabilities.vanilla_capability_entityitem;
 
 import com.google.common.collect.Iterables;
 import net.minecraft.world.entity.Entity;

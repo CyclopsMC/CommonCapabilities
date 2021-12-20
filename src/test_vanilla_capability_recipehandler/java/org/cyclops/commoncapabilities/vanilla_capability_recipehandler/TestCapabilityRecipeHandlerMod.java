@@ -1,4 +1,4 @@
-package org.cyclops.commoncapabilities;
+package org.cyclops.commoncapabilities.vanilla_capability_recipehandler;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;

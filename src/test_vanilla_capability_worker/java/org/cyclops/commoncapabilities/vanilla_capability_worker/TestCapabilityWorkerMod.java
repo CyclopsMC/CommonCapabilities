@@ -1,4 +1,4 @@
-package org.cyclops.commoncapabilities;
+package org.cyclops.commoncapabilities.vanilla_capability_worker;
 
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;

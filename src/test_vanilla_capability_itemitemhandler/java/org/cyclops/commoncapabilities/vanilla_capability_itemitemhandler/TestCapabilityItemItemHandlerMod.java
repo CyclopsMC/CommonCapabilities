@@ -1,4 +1,4 @@
-package org.cyclops.commoncapabilities;
+package org.cyclops.commoncapabilities.vanilla_capability_itemitemhandler;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
