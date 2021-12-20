@@ -47,6 +47,7 @@ import org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler.
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaBlockComposterItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaEntityItemFrameItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaEntityItemItemHandler;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaItemBundleItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaItemShulkerBoxItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler.VanillaBrewingStandRecipeHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler.VanillaRecipeTypeRecipeHandler;
@@ -253,6 +254,18 @@ public class VanillaModCompat implements IModCompat {
             registry.registerItem(() -> RegistryEntries.ITEM_GREEN_SHULKER_BOX, shulkerboxConstructor);
             registry.registerItem(() -> RegistryEntries.ITEM_RED_SHULKER_BOX, shulkerboxConstructor);
             registry.registerItem(() -> RegistryEntries.ITEM_BLACK_SHULKER_BOX, shulkerboxConstructor);
+            registry.registerItem(() -> RegistryEntries.ITEM_BUNDLE, new ICapabilityConstructor<IItemHandler, Item, ItemStack>() {
+                @Override
+                public Capability<IItemHandler> getCapability() {
+                    return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+                }
+
+                @Nullable
+                @Override
+                public ICapabilityProvider createProvider(Item hostType, ItemStack host) {
+                    return new DefaultCapabilityProvider<>(this::getCapability, new VanillaItemBundleItemHandler(host));
+                }
+            });
             registry.registerEntity(ItemEntity.class,
                     new ICapabilityConstructor<IItemHandler, ItemEntity, ItemEntity>() {
                         @Override

@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -57,6 +58,17 @@ public class TestCapabilityItemItemHandlerMod {
                 ItemStack extracted = itemHandler.extractItem(slot, 1, false);
                 System.out.println("Extracted: " + extracted);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        if (event.getItemStack().isEmpty()) return;
+
+        Block block = event.getWorld().getBlockState(event.getPlayer().getOnPos()).getBlock();
+        if (block == Blocks.HAY_BLOCK || block == Blocks.STONE) {
+            event.setCanceled(true);
+            event.setResult(Event.Result.DENY);
         }
     }
 }

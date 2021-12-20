@@ -43,5 +43,7 @@ public class RegistryEntries {
     public static final Item ITEM_RED_SHULKER_BOX = null;
     @ObjectHolder("minecraft:black_shulker_box")
     public static final Item ITEM_BLACK_SHULKER_BOX = null;
+    @ObjectHolder("minecraft:bundle")
+    public static final Item ITEM_BUNDLE = null;
 
 }
