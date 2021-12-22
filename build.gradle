@@ -303,14 +303,6 @@ curseforge {
     }
 }
 
-configurations {
-    deployerJars
-}
-
-dependencies {
-    deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
-}
-
 publishing {
     repositories {
         if (project.hasProperty("filesmaven_url")) {
