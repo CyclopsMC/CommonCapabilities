@@ -1,7 +1,9 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.Container;
@@ -13,6 +15,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.crafting.NBTIngredient;
+import org.apache.commons.lang3.tuple.Pair;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
@@ -28,6 +31,7 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -53,6 +57,8 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
     private final Supplier<Level> worldSupplier;
     private final RecipeType<T> recipeType;
     private final Predicate<Integer> inputSizePredicate;
+
+    private static Map<Pair<RecipeType<?>, ResourceLocation>, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
 
     public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate) {
         this.worldSupplier = worldSupplier;
@@ -120,11 +126,17 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
 
     @Override
     public Collection<IRecipeDefinition> getRecipes() {
-        return worldSupplier.get().getRecipeManager().getRecipes().stream()
-                .filter(recipe -> recipe.getType() == recipeType)
-                .map(VanillaRecipeTypeRecipeHandler::recipeToRecipeDefinition)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        Pair<RecipeType<?>, ResourceLocation> cacheKey = Pair.of(recipeType, worldSupplier.get().dimension().location());
+        Collection<IRecipeDefinition> cached = CACHED_RECIPES.get(cacheKey);
+        if (cached == null) {
+            cached = worldSupplier.get().getRecipeManager().getRecipes().stream()
+                    .filter(recipe -> recipe.getType() == recipeType)
+                    .map(VanillaRecipeTypeRecipeHandler::recipeToRecipeDefinition)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+            CACHED_RECIPES.put(cacheKey, cached);
+        }
+        return cached;
     }
 
     @Nullable
