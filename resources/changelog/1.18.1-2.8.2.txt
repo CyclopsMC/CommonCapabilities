@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.12.1 or higher.
+
+Changes:
+* Cache crafting recipes in vanilla recipe handler
+  This fixes performance issues when handling recipes in ID.
+  Closes CyclopsMC/IntegratedDynamics#1131
