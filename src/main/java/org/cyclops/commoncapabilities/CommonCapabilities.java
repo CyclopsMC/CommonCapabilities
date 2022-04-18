@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.NewRegistryEvent;
 import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IPrototypedIngredientAlternatives;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesItemStackTag;
@@ -106,7 +107,7 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
         configHandler.addConfigurable(new IngredientComponentStorageHandlerConfig());
     }
 
-    public void onRegister(RegistryEvent.NewRegistry event) {
+    public void onRegister(NewRegistryEvent event) {
         IPrototypedIngredientAlternatives.SERIALIZERS.put(
                 PrototypedIngredientAlternativesList.SERIALIZER.getId(),
                 PrototypedIngredientAlternativesList.SERIALIZER);
