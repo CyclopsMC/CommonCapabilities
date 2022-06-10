@@ -1,15 +1,15 @@
 package org.cyclops.commoncapabilities;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.NewRegistryEvent;
+import net.minecraftforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IPrototypedIngredientAlternatives;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesItemStackTag;
@@ -50,7 +50,7 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
         super(Reference.MOD_ID, (instance) -> _instance = instance);
         this.modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         this.modEventBus.addListener(EventPriority.LOW, this::onRegister);
-        this.modEventBus.addGenericListener(Block.class, EventPriority.LOW, this::onRegistriesLoad);
+        this.modEventBus.addListener(EventPriority.LOW, this::onRegistriesLoad);
         this.modEventBus.addListener(EventPriority.LOW, this::afterCapabilitiesLoaded);
     }
 
@@ -116,12 +116,12 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
                 PrototypedIngredientAlternativesItemStackTag.SERIALIZER);
     }
 
-    public void onRegistriesLoad(RegistryEvent.Register<Block> event) {
-        IngredientComponent.REGISTRY.registerAll(
-                IngredientComponents.ITEMSTACK,
-                IngredientComponents.FLUIDSTACK,
-                IngredientComponents.ENERGY
-        );
+    public void onRegistriesLoad(RegisterEvent event) {
+        if (event.getRegistryKey().equals(ForgeRegistries.BLOCKS.getRegistryKey())) {
+            IngredientComponent.REGISTRY.register(IngredientComponents.ITEMSTACK.getName(), IngredientComponents.ITEMSTACK);
+            IngredientComponent.REGISTRY.register(IngredientComponents.FLUIDSTACK.getName(), IngredientComponents.FLUIDSTACK);
+            IngredientComponent.REGISTRY.register(IngredientComponents.ENERGY.getName(), IngredientComponents.ENERGY);
+        }
     }
 
     public void afterCapabilitiesLoaded(InterModEnqueueEvent event) {
