@@ -25,7 +25,7 @@ public class TestCapabilityWorkerMod {
         if (event.getItemStack().isEmpty()) return;
         if (event.getItemStack().getItem() != Items.BLAZE_ROD) return;
 
-        BlockEntity te = event.getWorld().getBlockEntity(event.getPos());
+        BlockEntity te = event.getLevel().getBlockEntity(event.getPos());
         if (te != null && te.getCapability(WorkerConfig.CAPABILITY, event.getFace()).isPresent()) {
             event.setCanceled(true);
             IWorker worker = te.getCapability(WorkerConfig.CAPABILITY, event.getFace()).orElse(null);

@@ -34,7 +34,7 @@ public class TestCapabilityItemItemHandlerMod {
     public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
         if (event.getItemStack().isEmpty()) return;
 
-        Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
+        Block block = event.getLevel().getBlockState(event.getPos()).getBlock();
         if (block == Blocks.HAY_BLOCK) {
             ItemStack itemStack = event.getItemStack();
             if (itemStack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).isPresent()) {
@@ -65,7 +65,7 @@ public class TestCapabilityItemItemHandlerMod {
     public void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
         if (event.getItemStack().isEmpty()) return;
 
-        Block block = event.getWorld().getBlockState(event.getPlayer().getOnPos()).getBlock();
+        Block block = event.getLevel().getBlockState(event.getEntity().getOnPos()).getBlock();
         if (block == Blocks.HAY_BLOCK || block == Blocks.STONE) {
             event.setCanceled(true);
             event.setResult(Event.Result.DENY);

@@ -30,17 +30,17 @@ public class TestCapabilityRecipeHandlerMod {
     public void onTileInteract(PlayerInteractEvent.LeftClickBlock event) {
         if (event.getItemStack().isEmpty()) return;
         if (event.getItemStack().getItem() != Item.byBlock(Blocks.CRAFTING_TABLE)) return;
-        if (event.getPlayer().level.isClientSide()) return;
+        if (event.getEntity().level.isClientSide()) return;
 
         IRecipeHandler recipeHandler = null;
-        BlockEntity te = event.getWorld().getBlockEntity(event.getPos());
-        BlockState blockState = event.getWorld().getBlockState(event.getPos());
+        BlockEntity te = event.getLevel().getBlockEntity(event.getPos());
+        BlockState blockState = event.getLevel().getBlockState(event.getPos());
         if (te != null && te.getCapability(RecipeHandlerConfig.CAPABILITY, event.getFace()).isPresent()) {
             recipeHandler = te.getCapability(RecipeHandlerConfig.CAPABILITY, event.getFace()).orElse(null);
         } else if (BlockCapabilities.getInstance().getCapability(blockState, RecipeHandlerConfig.CAPABILITY,
-                event.getWorld(), event.getPos(), event.getFace()).isPresent()) {
+                event.getLevel(), event.getPos(), event.getFace()).isPresent()) {
             recipeHandler = BlockCapabilities.getInstance().getCapability(blockState, RecipeHandlerConfig.CAPABILITY,
-                    event.getWorld(), event.getPos(), event.getFace()).orElse(null);
+                    event.getLevel(), event.getPos(), event.getFace()).orElse(null);
         }
 
         if (recipeHandler != null) {

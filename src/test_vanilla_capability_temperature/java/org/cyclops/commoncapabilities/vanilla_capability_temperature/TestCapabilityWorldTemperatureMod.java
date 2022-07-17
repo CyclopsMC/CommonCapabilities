@@ -35,7 +35,7 @@ public class TestCapabilityWorldTemperatureMod {
         if (event.getItemStack().isEmpty()) return;
         if (event.getItemStack().getItem() != Items.BEETROOT) return;
 
-        BlockEntity te = event.getWorld().getBlockEntity(event.getPos());
+        BlockEntity te = event.getLevel().getBlockEntity(event.getPos());
         if (te != null && te.getCapability(TemperatureConfig.CAPABILITY, event.getFace()).isPresent()) {
             event.setCanceled(true);
             ITemperature temperature = te.getCapability(TemperatureConfig.CAPABILITY, event.getFace()).orElse(null);
@@ -45,9 +45,9 @@ public class TestCapabilityWorldTemperatureMod {
 
     @SubscribeEvent
     public void onEntityInteract(AttackEntityEvent event) {
-        if (event.getPlayer() == null) return;
-        if (event.getPlayer().getMainHandItem().isEmpty()) return;
-        if (event.getPlayer().getMainHandItem().getItem() != Items.BEETROOT) return;
+        if (event.getEntity() == null) return;
+        if (event.getEntity().getMainHandItem().isEmpty()) return;
+        if (event.getEntity().getMainHandItem().getItem() != Items.BEETROOT) return;
 
         Entity target = event.getTarget();
         if (target != null && target.getCapability(TemperatureConfig.CAPABILITY, null).isPresent()) {
@@ -60,7 +60,7 @@ public class TestCapabilityWorldTemperatureMod {
     @SubscribeEvent
     public void onItemInteract(PlayerInteractEvent.RightClickItem event) {
         if (event.getItemStack().isEmpty()) return;
-        if (!event.getPlayer().isCrouching()) return;
+        if (!event.getEntity().isCrouching()) return;
 
         ItemStack itemStack = event.getItemStack();
         if (itemStack.getCapability(TemperatureConfig.CAPABILITY, null).isPresent()) {

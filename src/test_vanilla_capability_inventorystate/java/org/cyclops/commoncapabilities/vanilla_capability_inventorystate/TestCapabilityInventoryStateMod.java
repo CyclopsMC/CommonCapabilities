@@ -29,7 +29,7 @@ public class TestCapabilityInventoryStateMod {
         if (event.getItemStack().getItem() != Items.ARROW) return;
 
 
-        BlockEntity te = event.getWorld().getBlockEntity(event.getPos());
+        BlockEntity te = event.getLevel().getBlockEntity(event.getPos());
         if (te != null && te.getCapability(InventoryStateConfig.CAPABILITY, event.getFace()).isPresent()) {
             event.setCanceled(true);
             IInventoryState inventoryState = te.getCapability(InventoryStateConfig.CAPABILITY, event.getFace()).orElse(null);
@@ -39,9 +39,9 @@ public class TestCapabilityInventoryStateMod {
 
     @SubscribeEvent
     public void onEntityInteract(AttackEntityEvent event) {
-        if (event.getPlayer() == null) return;
-        if (event.getPlayer().getMainHandItem().isEmpty()) return;
-        if (event.getPlayer().getMainHandItem().getItem() != Items.ARROW) return;
+        if (event.getEntity() == null) return;
+        if (event.getEntity().getMainHandItem().isEmpty()) return;
+        if (event.getEntity().getMainHandItem().getItem() != Items.ARROW) return;
 
         Entity target = event.getTarget();
         if (target != null && target.getCapability(InventoryStateConfig.CAPABILITY, null).isPresent()) {
