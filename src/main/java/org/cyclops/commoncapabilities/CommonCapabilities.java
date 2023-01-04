@@ -1,6 +1,5 @@
 package org.cyclops.commoncapabilities;
 
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -89,8 +88,8 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
     }
 
     @Override
-    protected CreativeModeTab constructDefaultCreativeModeTab() {
-        return null;
+    protected boolean hasDefaultCreativeModeTab() {
+        return false;
     }
 
     @Override

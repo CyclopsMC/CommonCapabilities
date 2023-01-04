@@ -877,6 +877,11 @@ public class TestNBTBaseComparator {
         }
 
         @Override
+        public int sizeInBytes() {
+            return 0;
+        }
+
+        @Override
         public void accept(TagVisitor p_178208_) {
 
         }
