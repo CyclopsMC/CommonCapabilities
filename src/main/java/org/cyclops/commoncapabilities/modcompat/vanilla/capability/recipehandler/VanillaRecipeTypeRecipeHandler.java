@@ -108,8 +108,8 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
     }
 
     @Nullable
-    public static <C extends Container, T extends Recipe<C>> IRecipeDefinition recipeToRecipeDefinition(T recipe) {
-        if (recipe.getResultItem().isEmpty()) {
+    public static <C extends Container, T extends Recipe<C>> IRecipeDefinition recipeToRecipeDefinition(T recipe, Level level) {
+        if (recipe.getResultItem(level.registryAccess()).isEmpty()) {
             return null;
         }
         int inputSize = recipe.getIngredients().size();
@@ -127,7 +127,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
             inputIngredients.add(i, prototypes);
         }
         return RecipeDefinition.ofIngredients(IngredientComponent.ITEMSTACK, inputIngredients,
-                MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem()));
+                MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem(level.registryAccess())));
     }
 
     @Override
@@ -137,7 +137,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
         if (cached == null) {
             cached = worldSupplier.get().getRecipeManager().getRecipes().stream()
                     .filter(recipe -> recipe.getType() == recipeType)
-                    .map(VanillaRecipeTypeRecipeHandler::recipeToRecipeDefinition)
+                    .map(recipe -> VanillaRecipeTypeRecipeHandler.recipeToRecipeDefinition(recipe, this.worldSupplier.get()))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
             CACHED_RECIPES.put(cacheKey, cached);
@@ -163,6 +163,6 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
             return null;
         }
 
-        return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem());
+        return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem(this.worldSupplier.get().registryAccess()));
     }
 }

@@ -4,7 +4,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntityItemCapabilityDelegator;
 
@@ -22,7 +22,7 @@ public class VanillaEntityItemItemHandler extends VanillaEntityItemCapabilityDel
 
     @Override
     protected Capability<IItemHandler> getCapabilityType() {
-        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+        return ForgeCapabilities.ITEM_HANDLER;
     }
 
     @Override

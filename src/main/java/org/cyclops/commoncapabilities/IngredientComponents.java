@@ -6,10 +6,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
@@ -65,12 +63,12 @@ public class IngredientComponents {
             )).setTranslationKey("recipecomponent.minecraft.energy");
 
     public static void registerStorageWrapperHandlers() {
-        ENERGY.setStorageWrapperHandler(CapabilityEnergy.ENERGY, new IngredientComponentStorageWrapperHandlerEnergyStorage(ENERGY));
-        ITEMSTACK.setStorageWrapperHandler(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, new IngredientComponentStorageWrapperHandlerItemStack(ITEMSTACK));
+        ENERGY.setStorageWrapperHandler(ForgeCapabilities.ENERGY, new IngredientComponentStorageWrapperHandlerEnergyStorage(ENERGY));
+        ITEMSTACK.setStorageWrapperHandler(ForgeCapabilities.ITEM_HANDLER, new IngredientComponentStorageWrapperHandlerItemStack(ITEMSTACK));
         ITEMSTACK.setStorageWrapperHandler(SlotlessItemHandlerConfig.CAPABILITY, new IngredientComponentStorageWrapperHandlerItemStackSlotless(ITEMSTACK));
         IngredientComponentStorageWrapperHandlerFluidStack fluidWrapper = new IngredientComponentStorageWrapperHandlerFluidStack(FLUIDSTACK);
-        FLUIDSTACK.setStorageWrapperHandler(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, fluidWrapper);
-        FLUIDSTACK.setStorageWrapperHandler(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, fluidWrapper);
+        FLUIDSTACK.setStorageWrapperHandler(ForgeCapabilities.FLUID_HANDLER, fluidWrapper);
+        FLUIDSTACK.setStorageWrapperHandler(ForgeCapabilities.FLUID_HANDLER_ITEM, fluidWrapper);
     }
 
 }

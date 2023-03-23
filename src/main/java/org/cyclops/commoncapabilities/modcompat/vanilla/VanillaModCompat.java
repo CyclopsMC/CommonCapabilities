@@ -21,13 +21,11 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.cyclops.commoncapabilities.CommonCapabilities;
 import org.cyclops.commoncapabilities.Reference;
@@ -228,7 +226,7 @@ public class VanillaModCompat implements IModCompat {
             ICapabilityConstructor<IItemHandler, Item, ItemStack> shulkerboxConstructor = new ICapabilityConstructor<IItemHandler, Item, ItemStack>() {
                 @Override
                 public Capability<IItemHandler> getCapability() {
-                    return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+                    return ForgeCapabilities.ITEM_HANDLER;
                 }
 
                 @Nullable
@@ -257,7 +255,7 @@ public class VanillaModCompat implements IModCompat {
             registry.registerItem(() -> RegistryEntries.ITEM_BUNDLE, new ICapabilityConstructor<IItemHandler, Item, ItemStack>() {
                 @Override
                 public Capability<IItemHandler> getCapability() {
-                    return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+                    return ForgeCapabilities.ITEM_HANDLER;
                 }
 
                 @Nullable
@@ -270,7 +268,7 @@ public class VanillaModCompat implements IModCompat {
                     new ICapabilityConstructor<IItemHandler, ItemEntity, ItemEntity>() {
                         @Override
                         public Capability<IItemHandler> getCapability() {
-                            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+                            return ForgeCapabilities.ITEM_HANDLER;
                         }
 
                         @Nullable
@@ -279,7 +277,7 @@ public class VanillaModCompat implements IModCompat {
                             return new ICapabilityProvider() {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-                                    return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
+                                    return capability == ForgeCapabilities.ITEM_HANDLER
                                             && host.getItem().getCapability(capability, facing).isPresent()
                                             ? LazyOptional.of(() -> new VanillaEntityItemItemHandler(host, facing)).cast()
                                             : LazyOptional.empty();
@@ -291,7 +289,7 @@ public class VanillaModCompat implements IModCompat {
                     new ICapabilityConstructor<IItemHandler, ItemFrame, ItemFrame>() {
                         @Override
                         public Capability<IItemHandler> getCapability() {
-                            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+                            return ForgeCapabilities.ITEM_HANDLER;
                         }
 
                         @Nullable
@@ -300,7 +298,7 @@ public class VanillaModCompat implements IModCompat {
                             return new ICapabilityProvider() {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-                                    return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY
+                                    return capability == ForgeCapabilities.ITEM_HANDLER
                                             && host.getItem().getCapability(capability, facing).isPresent()
                                             ? LazyOptional.of(() -> new VanillaEntityItemFrameItemHandler(host, facing)).cast()
                                             : LazyOptional.empty();
@@ -321,7 +319,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public <T> LazyOptional<T> getCapability(@Nonnull BlockState blockState, @Nonnull Capability<T> capability,
                                                                  @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nullable Direction facing) {
-                            if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+                            if (capability == ForgeCapabilities.ITEM_HANDLER) {
                                 return LazyOptional.of(() -> new VanillaBlockComposterItemHandler(blockState, (LevelAccessor) world, pos, facing)).cast();
                             }
                             return LazyOptional.empty();
@@ -335,7 +333,7 @@ public class VanillaModCompat implements IModCompat {
                     new ICapabilityConstructor<IFluidHandler, ItemEntity, ItemEntity>() {
                         @Override
                         public Capability<IFluidHandler> getCapability() {
-                            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+                            return ForgeCapabilities.FLUID_HANDLER;
                         }
 
                         @Nullable
@@ -344,8 +342,8 @@ public class VanillaModCompat implements IModCompat {
                             return new ICapabilityProvider() {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-                                    return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY
-                                            && host.getItem().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, facing).isPresent()
+                                    return capability == ForgeCapabilities.FLUID_HANDLER
+                                            && host.getItem().getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, facing).isPresent()
                                             ? LazyOptional.of(() -> new VanillaEntityItemFluidHandler(host, facing)).cast()
                                             : LazyOptional.empty();
                                 }
@@ -356,7 +354,7 @@ public class VanillaModCompat implements IModCompat {
                     new ICapabilityConstructor<IFluidHandler, ItemFrame, ItemFrame>() {
                         @Override
                         public Capability<IFluidHandler> getCapability() {
-                            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+                            return ForgeCapabilities.FLUID_HANDLER;
                         }
 
                         @Nullable
@@ -365,8 +363,8 @@ public class VanillaModCompat implements IModCompat {
                             return new ICapabilityProvider() {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-                                    return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY
-                                            && host.getItem().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, facing).isPresent()
+                                    return capability == ForgeCapabilities.FLUID_HANDLER
+                                            && host.getItem().getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM, facing).isPresent()
                                             ? LazyOptional.of(() -> new VanillaEntityItemFrameFluidHandler(host, facing)).cast()
                                             : LazyOptional.empty();
                                 }
@@ -379,7 +377,7 @@ public class VanillaModCompat implements IModCompat {
                     new ICapabilityConstructor<IEnergyStorage, ItemEntity, ItemEntity>() {
                         @Override
                         public Capability<IEnergyStorage> getCapability() {
-                            return CapabilityEnergy.ENERGY;
+                            return ForgeCapabilities.ENERGY;
                         }
 
                         @Nullable
@@ -388,7 +386,7 @@ public class VanillaModCompat implements IModCompat {
                             return new ICapabilityProvider() {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-                                    return capability == CapabilityEnergy.ENERGY
+                                    return capability == ForgeCapabilities.ENERGY
                                             && host.getItem().getCapability(capability, facing).isPresent()
                                             ? LazyOptional.of(() -> new VanillaEntityItemEnergyStorage(host, facing)).cast()
                                             : LazyOptional.empty();
@@ -400,7 +398,7 @@ public class VanillaModCompat implements IModCompat {
                     new ICapabilityConstructor<IEnergyStorage, ItemFrame, ItemFrame>() {
                         @Override
                         public Capability<IEnergyStorage> getCapability() {
-                            return CapabilityEnergy.ENERGY;
+                            return ForgeCapabilities.ENERGY;
                         }
 
                         @Nullable
@@ -409,7 +407,7 @@ public class VanillaModCompat implements IModCompat {
                             return new ICapabilityProvider() {
                                 @Override
                                 public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-                                    return capability == CapabilityEnergy.ENERGY
+                                    return capability == ForgeCapabilities.ENERGY
                                             && host.getItem().getCapability(capability, facing).isPresent()
                                             ? LazyOptional.of(() -> new VanillaEntityItemFrameEnergyStorage(host, facing)).cast()
                                             : LazyOptional.empty();

@@ -38,7 +38,7 @@ public class VanillaAbstractFurnaceWorker implements IWorker {
     public boolean hasWork() {
         ItemStack toMelt = furnace.getItem(0);
         Recipe<?> recipe = furnace.getLevel().getRecipeManager().getRecipeFor(((RecipeType<? extends AbstractCookingRecipe >) FIELD_RECIPE_TYPE.get(furnace)), furnace, furnace.getLevel()).orElse(null);
-        return !toMelt.isEmpty() && recipe != null && !((Recipe<WorldlyContainer>) recipe).assemble(furnace).isEmpty();
+        return !toMelt.isEmpty() && recipe != null && !((Recipe<WorldlyContainer>) recipe).assemble(furnace, furnace.getLevel().registryAccess()).isEmpty();
     }
 
     @Override

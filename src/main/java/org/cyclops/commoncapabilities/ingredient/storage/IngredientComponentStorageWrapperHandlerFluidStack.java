@@ -3,10 +3,10 @@ package org.cyclops.commoncapabilities.ingredient.storage;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import net.minecraft.core.Direction;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidHandlerFluidStackIterator;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
@@ -59,7 +59,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
 
     @Override
     public LazyOptional<IFluidHandler> getStorage(ICapabilityProvider capabilityProvider, @Nullable Direction facing) {
-        return capabilityProvider.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing);
+        return capabilityProvider.getCapability(ForgeCapabilities.FLUID_HANDLER, facing);
     }
 
     @Override

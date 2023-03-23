@@ -4,9 +4,9 @@ import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -66,7 +66,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack
 
     @Override
     public LazyOptional<IItemHandler> getStorage(ICapabilityProvider capabilityProvider, @Nullable Direction facing) {
-        return capabilityProvider.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing);
+        return capabilityProvider.getCapability(ForgeCapabilities.ITEM_HANDLER, facing);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class TileFluidDistributorWorker implements IWorker {
             return true;
         }
         for (EnumFacing facing : EnumFacing.VALUES) {
-            IFluidHandler fluidHandler = TileHelpers.getCapability(host.getWorld(), host.getPos().offset(facing), facing.getOpposite(), CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+            IFluidHandler fluidHandler = TileHelpers.getCapability(host.getWorld(), host.getPos().offset(facing), facing.getOpposite(), ForgeCapabilities.FLUID_HANDLER);
             FluidTank fluidTank = Helpers.getFieldValue(host, Ic2Helpers.FIELD_TILESFLUIDDISTRIBUTOR_FLUIDTANK);
             if (fluidHandler != null && fluidHandler.fill(fluidTank.getFluid(), false) > 0) {
                 return true;

@@ -1,10 +1,10 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntityItemFrameCapabilityDelegator;
 
@@ -22,7 +22,7 @@ public class VanillaEntityItemFrameItemHandler extends VanillaEntityItemFrameCap
 
     @Override
     protected Capability<IItemHandler> getCapabilityType() {
-        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+        return ForgeCapabilities.ITEM_HANDLER;
     }
 
     @Override

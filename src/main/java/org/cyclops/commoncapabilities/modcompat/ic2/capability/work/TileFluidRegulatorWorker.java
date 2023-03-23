@@ -31,7 +31,7 @@ public class TileFluidRegulatorWorker extends TileElectricMachineWorkerBase<Tile
         }
         TileEntityFluidRegulator host = getTile();
         for (EnumFacing facing : EnumFacing.VALUES) {
-            IFluidHandler fluidHandler = TileHelpers.getCapability(host.getWorld(), host.getPos().offset(facing), facing.getOpposite(), CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY);
+            IFluidHandler fluidHandler = TileHelpers.getCapability(host.getWorld(), host.getPos().offset(facing), facing.getOpposite(), ForgeCapabilities.FLUID_HANDLER);
             if (fluidHandler.fill(host.getFluidTank().getFluid(), false) > 0) {
                 return true;
             }

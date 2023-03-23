@@ -3,8 +3,8 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntityItemCapabilityDelegator;
@@ -25,7 +25,7 @@ public class VanillaEntityItemFluidHandler extends VanillaEntityItemCapabilityDe
 
     @Override
     protected Capability<IFluidHandlerItem> getCapabilityType() {
-        return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
+        return ForgeCapabilities.FLUID_HANDLER_ITEM;
     }
 
     @Override

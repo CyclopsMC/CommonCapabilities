@@ -84,7 +84,7 @@ public class ThermalExpansionModCompat implements IModCompat {
                     new ICapabilityConstructor<IItemHandler, ItemSatchel, ItemStack>() {
                         @Override
                         public Capability<IItemHandler> getCapability() {
-                            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+                            return ForgeCapabilities.ITEM_HANDLER;
                         }
 
                         @Nullable
@@ -97,7 +97,7 @@ public class ThermalExpansionModCompat implements IModCompat {
                     new ICapabilityConstructor<IItemHandler, ItemBlockCache, ItemStack>() {
                         @Override
                         public Capability<IItemHandler> getCapability() {
-                            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+                            return ForgeCapabilities.ITEM_HANDLER;
                         }
 
                         @Nullable
@@ -110,7 +110,7 @@ public class ThermalExpansionModCompat implements IModCompat {
                     new ICapabilityConstructor<IItemHandler, ItemBlockStrongbox, ItemStack>() {
                         @Override
                         public Capability<IItemHandler> getCapability() {
-                            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+                            return ForgeCapabilities.ITEM_HANDLER;
                         }
 
                         @Nullable
