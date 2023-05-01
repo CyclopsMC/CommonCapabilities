@@ -22,7 +22,7 @@ Forge Capabilities that can be shared by multiple mods.
 [[dependencies.commoncapabilities]]
     modId="forge"
     mandatory=true
-    versionRange="[45.0.20,)"
+    versionRange="[45.0.50,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.commoncapabilities]]
