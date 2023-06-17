@@ -394,6 +394,21 @@ spotless {
         removeUnusedImports()
     }
 }
+spotlessJava.mustRunAfter(compileTest_vanilla_capability_entityitemJava)
+spotlessJava.mustRunAfter(compileTest_vanilla_capability_inventorystateJava)
+spotlessJava.mustRunAfter(compileTest_vanilla_capability_itemitemhandlerJava)
+spotlessJava.mustRunAfter(compileTest_vanilla_capability_recipehandlerJava)
+spotlessJava.mustRunAfter(compileTest_vanilla_capability_temperatureJava)
+spotlessJava.mustRunAfter(compileTest_vanilla_capability_workerJava)
+spotlessJava.mustRunAfter(processTest_vanilla_capability_entityitemResources)
+spotlessJava.mustRunAfter(processTest_vanilla_capability_inventorystateResources)
+spotlessJava.mustRunAfter(processTest_vanilla_capability_itemitemhandlerResources)
+spotlessJava.mustRunAfter(processTest_vanilla_capability_recipehandlerResources)
+spotlessJava.mustRunAfter(processTest_vanilla_capability_temperatureResources)
+spotlessJava.mustRunAfter(processTest_vanilla_capability_workerResources)
+spotlessJava.mustRunAfter(javadoc)
+spotlessJava.mustRunAfter(compileTestJava)
+spotlessJava.mustRunAfter(test)
 
 tasks.register('updateGitHooks', Copy) {
     from './scripts/pre-commit'
