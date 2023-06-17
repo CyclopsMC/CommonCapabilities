@@ -61,7 +61,7 @@ public class TestIngredientSerializerItemStack {
 
         I_TAG_EMPTY = new CompoundTag();
         I_TAG_EMPTY.putString("id", "minecraft:air");
-        I_TAG_EMPTY.putByte("Count", (byte) 1);
+        I_TAG_EMPTY.putByte("Count", (byte) 0);
 
         I1 = new ItemStack(Items.APPLE);
         I2 = new ItemStack(Items.LEAD, 2);
@@ -86,14 +86,14 @@ public class TestIngredientSerializerItemStack {
 
     @Test
     public void deserializeInstance() {
-        assertThat(ItemStack.isSame(I1, S.deserializeInstance(I_TAG1)), is(true));
-        assertThat(ItemStack.isSame(I2, S.deserializeInstance(I_TAG2)), is(true));
+        assertThat(ItemStack.isSameItemSameTags(I1, S.deserializeInstance(I_TAG1)), is(true));
+        assertThat(ItemStack.isSameItemSameTags(I2, S.deserializeInstance(I_TAG2)), is(true));
     }
 
     @Test
     public void deserializeInstanceLarge() {
-        assertThat(ItemStack.isSame(I1L, S.deserializeInstance(I_TAG1L)), is(true));
-        assertThat(ItemStack.isSame(I2L, S.deserializeInstance(I_TAG2L)), is(true));
+        assertThat(ItemStack.isSameItemSameTags(I1L, S.deserializeInstance(I_TAG1L)), is(true));
+        assertThat(ItemStack.isSameItemSameTags(I2L, S.deserializeInstance(I_TAG2L)), is(true));
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -43,7 +43,7 @@ public class TestCapabilityEntityItemMod {
         if (event.getEntity() == null) return;
         if (event.getEntity().getMainHandItem().isEmpty()) return;
 
-        Entity target = Iterables.get(event.getEntity().level.getEntities(null,
+        Entity target = Iterables.get(event.getEntity().level().getEntities(null,
                 new AABB(event.getPos().relative(event.getFace()))), 0, null);
         if (target != null) {
             Item heldItem = event.getEntity().getMainHandItem().getItem();

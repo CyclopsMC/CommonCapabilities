@@ -30,7 +30,7 @@ public class TestCapabilityRecipeHandlerMod {
     public void onTileInteract(PlayerInteractEvent.LeftClickBlock event) {
         if (event.getItemStack().isEmpty()) return;
         if (event.getItemStack().getItem() != Item.byBlock(Blocks.CRAFTING_TABLE)) return;
-        if (event.getEntity().level.isClientSide()) return;
+        if (event.getEntity().level().isClientSide()) return;
 
         IRecipeHandler recipeHandler = null;
         BlockEntity te = event.getLevel().getBlockEntity(event.getPos());

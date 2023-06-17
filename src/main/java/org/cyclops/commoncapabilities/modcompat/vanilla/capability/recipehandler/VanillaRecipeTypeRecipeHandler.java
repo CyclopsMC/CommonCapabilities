@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -153,7 +154,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
             return null;
         }
 
-        CraftingContainer inventoryCrafting = new CraftingContainer(DUMMY_CONTAINTER, 3, 3);
+        CraftingContainer inventoryCrafting = new TransientCraftingContainer(DUMMY_CONTAINTER, 3, 3);
         for (int i = 0; i < recipeIngredients.size(); i++) {
             inventoryCrafting.setItem(i, recipeIngredients.get(i));
         }
