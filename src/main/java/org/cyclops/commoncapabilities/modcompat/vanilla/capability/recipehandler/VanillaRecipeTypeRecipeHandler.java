@@ -154,6 +154,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
             return null;
         }
 
+        // First try the recipe in a 3x3 grid
         CraftingContainer inventoryCrafting = new TransientCraftingContainer(DUMMY_CONTAINTER, 3, 3);
         for (int i = 0; i < recipeIngredients.size(); i++) {
             inventoryCrafting.setItem(i, recipeIngredients.get(i));
@@ -161,7 +162,19 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
 
         T recipe = CraftingHelpers.findRecipeCached(recipeType, (C) inventoryCrafting, worldSupplier.get(), true).orElse(null);
         if (recipe == null) {
-            return null;
+            // If that failed, try in a 2x2 grid
+            if (recipeIngredients.size() <= 4) {
+                CraftingContainer inventoryCraftingSmall = new TransientCraftingContainer(DUMMY_CONTAINTER, 2, 2);
+                for (int i = 0; i < recipeIngredients.size(); i++) {
+                    inventoryCraftingSmall.setItem(i, recipeIngredients.get(i));
+                }
+
+                recipe = CraftingHelpers.findRecipeCached(recipeType, (C) inventoryCraftingSmall, worldSupplier.get(), true).orElse(null);
+            }
+
+            if (recipe == null) {
+                return null;
+            }
         }
 
         return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem(this.worldSupplier.get().registryAccess()));
