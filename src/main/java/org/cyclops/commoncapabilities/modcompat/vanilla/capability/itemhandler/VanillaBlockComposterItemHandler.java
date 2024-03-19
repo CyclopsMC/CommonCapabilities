@@ -1,12 +1,12 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 
 /**
  * An item handler wrapper for the composter block.
@@ -14,7 +14,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
  */
 public class VanillaBlockComposterItemHandler extends SidedInvWrapper {
 
-    public VanillaBlockComposterItemHandler(BlockState blockState, LevelAccessor world, BlockPos blockPos, Direction facing) {
+    public VanillaBlockComposterItemHandler(BlockState blockState, Level world, BlockPos blockPos, Direction facing) {
         super(((ComposterBlock) Blocks.COMPOSTER).getContainer(blockState, world, blockPos), facing);
     }
 

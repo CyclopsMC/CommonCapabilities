@@ -1,9 +1,9 @@
 package org.cyclops.commoncapabilities.ingredient;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.cyclopscore.helper.Helpers;
@@ -124,7 +124,7 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
 
     @Override
     public String toString(FluidStack instance) {
-        return String.format("%s %s %s", ForgeRegistries.FLUIDS.getKey(instance.getFluid()), instance.getAmount(), instance.getTag());
+        return String.format("%s %s %s", BuiltInRegistries.FLUID.getKey(instance.getFluid()), instance.getAmount(), instance.getTag());
     }
 
     @Override
@@ -143,7 +143,7 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
             }
             return o1.getAmount() - o2.getAmount();
         }
-        return ForgeRegistries.FLUIDS.getKey(o1.getFluid()).compareTo(ForgeRegistries.FLUIDS.getKey(o2.getFluid()));
+        return BuiltInRegistries.FLUID.getKey(o1.getFluid()).compareTo(BuiltInRegistries.FLUID.getKey(o2.getFluid()));
     }
 
 }

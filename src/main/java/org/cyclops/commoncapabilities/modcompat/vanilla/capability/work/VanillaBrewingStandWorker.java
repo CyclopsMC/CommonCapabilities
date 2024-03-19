@@ -3,7 +3,7 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.work;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import net.minecraft.core.NonNullList;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
 /**

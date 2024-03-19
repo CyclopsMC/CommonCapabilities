@@ -3,14 +3,13 @@ package org.cyclops.commoncapabilities.vanilla_capability_inventorystate;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.cyclops.commoncapabilities.api.capability.Capabilities;
 import org.cyclops.commoncapabilities.api.capability.inventorystate.IInventoryState;
-import org.cyclops.commoncapabilities.capability.inventorystate.InventoryStateConfig;
 
 /**
  * A simple test mod which will print inventory states.
@@ -20,7 +19,7 @@ import org.cyclops.commoncapabilities.capability.inventorystate.InventoryStateCo
 public class TestCapabilityInventoryStateMod {
 
     public TestCapabilityInventoryStateMod() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
@@ -28,11 +27,9 @@ public class TestCapabilityInventoryStateMod {
         if (event.getItemStack().isEmpty()) return;
         if (event.getItemStack().getItem() != Items.ARROW) return;
 
-
-        BlockEntity te = event.getLevel().getBlockEntity(event.getPos());
-        if (te != null && te.getCapability(InventoryStateConfig.CAPABILITY, event.getFace()).isPresent()) {
+        IInventoryState inventoryState = event.getLevel().getCapability(Capabilities.InventoryState.BLOCK, event.getPos(), event.getFace());
+        if (inventoryState != null) {
             event.setCanceled(true);
-            IInventoryState inventoryState = te.getCapability(InventoryStateConfig.CAPABILITY, event.getFace()).orElse(null);
             System.out.println("Inventory state: " + inventoryState.getState());
         }
     }
@@ -44,9 +41,9 @@ public class TestCapabilityInventoryStateMod {
         if (event.getEntity().getMainHandItem().getItem() != Items.ARROW) return;
 
         Entity target = event.getTarget();
-        if (target != null && target.getCapability(InventoryStateConfig.CAPABILITY, null).isPresent()) {
+        if (target != null && target.getCapability(Capabilities.InventoryState.ENTITY, null) != null) {
             event.setCanceled(true);
-            IInventoryState inventoryState = target.getCapability(InventoryStateConfig.CAPABILITY, null).orElse(null);
+            IInventoryState inventoryState = target.getCapability(Capabilities.InventoryState.ENTITY, null);
             System.out.println("Inventory state: " + inventoryState.getState());
         }
     }
@@ -57,9 +54,9 @@ public class TestCapabilityInventoryStateMod {
         if (event.getItemStack().getItem() != Items.ARROW) return;
 
         ItemStack itemStack = event.getItemStack();
-        if (itemStack.getCapability(InventoryStateConfig.CAPABILITY, null).isPresent()) {
+        if (itemStack.getCapability(Capabilities.InventoryState.ITEM, null) != null) {
             event.setCanceled(true);
-            IInventoryState inventoryState = itemStack.getCapability(InventoryStateConfig.CAPABILITY, null).orElse(null);
+            IInventoryState inventoryState = itemStack.getCapability(Capabilities.InventoryState.ITEM, null);
             System.out.println("Inventory state: " + inventoryState.getState());
         }
     }

@@ -3,14 +3,13 @@ package org.cyclops.commoncapabilities.vanilla_capability_temperature;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.cyclops.commoncapabilities.api.capability.Capabilities;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
-import org.cyclops.commoncapabilities.capability.temperature.TemperatureConfig;
 
 /**
  * A simple test mod which will print the temperature capability for tiles, entities and items.
@@ -20,7 +19,7 @@ import org.cyclops.commoncapabilities.capability.temperature.TemperatureConfig;
 public class TestCapabilityWorldTemperatureMod {
 
     public TestCapabilityWorldTemperatureMod() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     protected void printTemperature(ITemperature temperature) {
@@ -35,10 +34,9 @@ public class TestCapabilityWorldTemperatureMod {
         if (event.getItemStack().isEmpty()) return;
         if (event.getItemStack().getItem() != Items.BEETROOT) return;
 
-        BlockEntity te = event.getLevel().getBlockEntity(event.getPos());
-        if (te != null && te.getCapability(TemperatureConfig.CAPABILITY, event.getFace()).isPresent()) {
+        ITemperature temperature = event.getLevel().getCapability(Capabilities.Temperature.BLOCK, event.getPos(), event.getFace());
+        if (temperature != null) {
             event.setCanceled(true);
-            ITemperature temperature = te.getCapability(TemperatureConfig.CAPABILITY, event.getFace()).orElse(null);
             printTemperature(temperature);
         }
     }
@@ -50,9 +48,9 @@ public class TestCapabilityWorldTemperatureMod {
         if (event.getEntity().getMainHandItem().getItem() != Items.BEETROOT) return;
 
         Entity target = event.getTarget();
-        if (target != null && target.getCapability(TemperatureConfig.CAPABILITY, null).isPresent()) {
+        if (target != null && target.getCapability(Capabilities.Temperature.ENTITY, event.getEntity().getDirection()) != null) {
             event.setCanceled(true);
-            ITemperature temperature = target.getCapability(TemperatureConfig.CAPABILITY, null).orElse(null);
+            ITemperature temperature = target.getCapability(Capabilities.Temperature.ENTITY, event.getEntity().getDirection());
             printTemperature(temperature);
         }
     }
@@ -63,9 +61,9 @@ public class TestCapabilityWorldTemperatureMod {
         if (!event.getEntity().isCrouching()) return;
 
         ItemStack itemStack = event.getItemStack();
-        if (itemStack.getCapability(TemperatureConfig.CAPABILITY, null).isPresent()) {
+        if (itemStack.getCapability(Capabilities.Temperature.ITEM, null) != null) {
             event.setCanceled(true);
-            ITemperature temperature = itemStack.getCapability(TemperatureConfig.CAPABILITY, null).orElse(null);
+            ITemperature temperature = itemStack.getCapability(Capabilities.Temperature.ITEM, null);
             printTemperature(temperature);
         }
     }

@@ -13,10 +13,10 @@ import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.crafting.PartialNBTIngredient;
-import net.minecraftforge.common.crafting.StrictNBTIngredient;
+import net.neoforged.neoforge.common.crafting.NBTIngredient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
@@ -94,7 +94,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
      * @return A list of prototyped ingredients.
      */
     public static List<IPrototypedIngredient<ItemStack, Integer>> getPrototypesFromIngredient(Ingredient ingredient) {
-        if (ingredient instanceof StrictNBTIngredient || ingredient instanceof PartialNBTIngredient) {
+        if (ingredient instanceof NBTIngredient) {
             return Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
                     ingredient.getItems()[0], ItemMatch.ITEM | ItemMatch.TAG));
 //        } else if (ingredient instanceof OreIngredient) { // TODO: somehow detect tags in the future, see ShapelessRecipeBuilder
@@ -137,8 +137,8 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
         Collection<IRecipeDefinition> cached = CACHED_RECIPES.get(cacheKey);
         if (cached == null) {
             cached = worldSupplier.get().getRecipeManager().getRecipes().stream()
-                    .filter(recipe -> recipe.getType() == recipeType)
-                    .map(recipe -> VanillaRecipeTypeRecipeHandler.recipeToRecipeDefinition(recipe, this.worldSupplier.get()))
+                    .filter(holder -> holder.value().getType() == recipeType)
+                    .map(recipe -> VanillaRecipeTypeRecipeHandler.recipeToRecipeDefinition(recipe.value(), this.worldSupplier.get()))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
             CACHED_RECIPES.put(cacheKey, cached);
@@ -160,7 +160,9 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
             inventoryCrafting.setItem(i, recipeIngredients.get(i));
         }
 
-        T recipe = CraftingHelpers.findRecipeCached(recipeType, (C) inventoryCrafting, worldSupplier.get(), true).orElse(null);
+        T recipe = CraftingHelpers.findRecipeCached(recipeType, (C) inventoryCrafting, worldSupplier.get(), true)
+                .map(RecipeHolder::value)
+                .orElse(null);
         if (recipe == null) {
             // If that failed, try in a 2x2 grid
             if (recipeIngredients.size() <= 4) {
@@ -169,7 +171,9 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
                     inventoryCraftingSmall.setItem(i, recipeIngredients.get(i));
                 }
 
-                recipe = CraftingHelpers.findRecipeCached(recipeType, (C) inventoryCraftingSmall, worldSupplier.get(), true).orElse(null);
+                recipe = CraftingHelpers.findRecipeCached(recipeType, (C) inventoryCraftingSmall, worldSupplier.get(), true)
+                        .map(RecipeHolder::value)
+                        .orElse(null);
             }
 
             if (recipe == null) {

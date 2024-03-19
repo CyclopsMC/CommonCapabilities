@@ -1,12 +1,10 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
 import com.google.common.collect.Iterators;
-import net.minecraft.core.Direction;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.BaseCapability;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
+import org.cyclops.commoncapabilities.api.ingredient.capability.ICapabilityGetter;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
 import org.cyclops.cyclopscore.helper.Helpers;
@@ -16,18 +14,24 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Energy storage wrapper handler for {@link IEnergyStorage}.
  * @author rubensworks
  */
-public class IngredientComponentStorageWrapperHandlerEnergyStorage implements
-        IIngredientComponentStorageWrapperHandler<Long, Boolean, IEnergyStorage> {
+public class IngredientComponentStorageWrapperHandlerEnergyStorage<C> implements
+        IIngredientComponentStorageWrapperHandler<Long, Boolean, IEnergyStorage, C> {
 
     private final IngredientComponent<Long, Boolean> ingredientComponent;
+    private final BaseCapability<IEnergyStorage, C> capability;
 
-    public IngredientComponentStorageWrapperHandlerEnergyStorage(IngredientComponent<Long, Boolean> ingredientComponent) {
+    public IngredientComponentStorageWrapperHandlerEnergyStorage(
+            IngredientComponent<Long, Boolean> ingredientComponent,
+            BaseCapability<IEnergyStorage, C> capability
+    ) {
         this.ingredientComponent = Objects.requireNonNull(ingredientComponent);
+        this.capability = capability;
     }
 
     @Override
@@ -40,10 +44,9 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage implements
         return new EnergyStorageWrapper(componentStorage);
     }
 
-    @Nullable
     @Override
-    public LazyOptional<IEnergyStorage> getStorage(ICapabilityProvider capabilityProvider, @Nullable Direction facing) {
-        return capabilityProvider.getCapability(ForgeCapabilities.ENERGY, facing);
+    public Optional<IEnergyStorage> getStorage(ICapabilityGetter<C> capabilityProvider, @Nullable C context) {
+        return Optional.ofNullable(capabilityProvider.getCapability(this.capability, context));
     }
 
     @Override

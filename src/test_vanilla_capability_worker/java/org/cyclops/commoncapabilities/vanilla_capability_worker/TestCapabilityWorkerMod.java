@@ -1,13 +1,12 @@
 package org.cyclops.commoncapabilities.vanilla_capability_worker;
 
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.cyclops.commoncapabilities.api.capability.Capabilities;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
-import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 
 /**
  * A simple test mod which will print the work status for worker tiles.
@@ -17,7 +16,7 @@ import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 public class TestCapabilityWorkerMod {
 
     public TestCapabilityWorkerMod() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
@@ -25,10 +24,9 @@ public class TestCapabilityWorkerMod {
         if (event.getItemStack().isEmpty()) return;
         if (event.getItemStack().getItem() != Items.BLAZE_ROD) return;
 
-        BlockEntity te = event.getLevel().getBlockEntity(event.getPos());
-        if (te != null && te.getCapability(WorkerConfig.CAPABILITY, event.getFace()).isPresent()) {
+        IWorker worker = event.getLevel().getCapability(Capabilities.Worker.BLOCK, event.getPos(), event.getFace());
+        if (worker != null) {
             event.setCanceled(true);
-            IWorker worker = te.getCapability(WorkerConfig.CAPABILITY, event.getFace()).orElse(null);
             System.out.println("Has work: " + worker.hasWork());
             System.out.println("Can work: " + worker.canWork());
         }

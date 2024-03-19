@@ -4,13 +4,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.items.IItemHandler;
 
 /**
  * A simple test mod which will print inventory states.
@@ -20,7 +20,7 @@ import net.minecraftforge.items.IItemHandler;
 public class TestCapabilityItemItemHandlerMod {
 
     public TestCapabilityItemItemHandlerMod() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     protected void printSlots(IItemHandler itemHandler) {
@@ -37,9 +37,9 @@ public class TestCapabilityItemItemHandlerMod {
         Block block = event.getLevel().getBlockState(event.getPos()).getBlock();
         if (block == Blocks.HAY_BLOCK) {
             ItemStack itemStack = event.getItemStack();
-            if (itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER, null).isPresent()) {
+            if (itemStack.getCapability(Capabilities.ItemHandler.ITEM) != null) {
                 event.setCanceled(true);
-                IItemHandler itemHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(null);
+                IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM, null);
                 printSlots(itemHandler);
 
                 System.out.println("Adding apple to random slot");
@@ -48,9 +48,9 @@ public class TestCapabilityItemItemHandlerMod {
             }
         } else if (block == Blocks.STONE) {
             ItemStack itemStack = event.getItemStack();
-            if (itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER, null).isPresent()) {
+            if (itemStack.getCapability(Capabilities.ItemHandler.ITEM, null) != null) {
                 event.setCanceled(true);
-                IItemHandler itemHandler = itemStack.getCapability(ForgeCapabilities.ITEM_HANDLER, null).orElse(null);
+                IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM, null);
                 printSlots(itemHandler);
 
                 int slot = (int) (Math.random() * itemHandler.getSlots());

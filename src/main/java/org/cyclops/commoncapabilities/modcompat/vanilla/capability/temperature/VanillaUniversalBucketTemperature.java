@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.temperature;
 
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
 
 /**

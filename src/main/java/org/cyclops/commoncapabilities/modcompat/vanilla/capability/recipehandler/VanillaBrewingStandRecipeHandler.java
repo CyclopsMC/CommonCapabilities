@@ -4,7 +4,7 @@ import com.google.common.collect.Sets;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.potion.PotionHelperCommonCapabilities;
 import net.minecraft.core.NonNullList;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
+import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;

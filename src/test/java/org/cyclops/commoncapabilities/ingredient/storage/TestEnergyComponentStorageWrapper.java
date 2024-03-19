@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
 import com.google.common.collect.Lists;
-import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.energy.EnergyStorage;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,17 +1,16 @@
 plugins {
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'net.neoforged.gradle.userdev' version '7.0.97'
+    id 'net.darkhax.curseforgegradle' version '1.0.8'
     id 'com.github.kt3k.coveralls' version '2.12.0'
     id 'com.diffplug.spotless' version '5.14.3'
 	id 'com.modrinth.minotaur' version '2.+'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 
-import net.minecraftforge.gradle.common.tasks.SignJar
+import net.neoforged.gradle.common.tasks.PotentiallySignJar
 
 // Determine build number
 String build_number = "DEV" // this will be referenced as simply build_number from now on.
@@ -28,7 +27,10 @@ logger.lifecycle "BUILDING VERSION: " + build_number
 // Set mod details
 version = project.mod_version
 group = "org.cyclops.commoncapabilities"
-archivesBaseName = "CommonCapabilities"
+archivesBaseName = "CommonCapabilities-${project.minecraft_version}-neoforge"
+base {
+    archivesName = archivesBaseName
+}
 
 // Set Java details
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -51,28 +53,35 @@ sourceSets {
     test_vanilla_capability_entityitem {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
+        resources { srcDir 'src/test_common/resources' }
     }
     test_vanilla_capability_inventorystate {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
+        resources { srcDir 'src/test_common/resources' }
     }
     test_vanilla_capability_itemitemhandler {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
+        resources { srcDir 'src/test_common/resources' }
     }
     test_vanilla_capability_recipehandler {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
+        resources { srcDir 'src/test_common/resources' }
     }
     test_vanilla_capability_temperature {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
+        resources { srcDir 'src/test_common/resources' }
     }
     test_vanilla_capability_worker {
         compileClasspath += sourceSets.main.output
         runtimeClasspath += sourceSets.main.output
+        resources { srcDir 'src/test_common/resources' }
     }
 }
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 configurations {
     test_vanilla_capability_entityitemImplementation.extendsFrom(implementation)
@@ -96,6 +105,13 @@ configurations {
     javadoc.classpath += sourceSets.test_vanilla_capability_worker.output
 }
 
+processTest_vanilla_capability_entityitemResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
+processTest_vanilla_capability_inventorystateResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
+processTest_vanilla_capability_itemitemhandlerResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
+processTest_vanilla_capability_recipehandlerResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
+processTest_vanilla_capability_temperatureResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
+processTest_vanilla_capability_workerResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
 repositories {
     mavenCentral()
 	mavenLocal()
@@ -110,13 +126,13 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${project.minecraft_version}-${project.forge_version}"
+    implementation "net.neoforged:neoforge:${project.neoforge_version}"
 
     // Add something like 'cyclopscore_version_local=0.1.0-DEV' to your secrets.properties if you want to use a custom local CyclopsCore version.
     if (secrets.cyclopscore_version_local) {
-        implementation "org.cyclops.cyclopscore:cyclopscore:${project.minecraft_version}-${secrets.cyclopscore_version_local}:deobf"
+        implementation "org.cyclops.cyclopscore:cyclopscore-${project.minecraft_version}-neoforge:${secrets.cyclopscore_version_local}:deobf"
     } else {
-        implementation "org.cyclops.cyclopscore:cyclopscore:${project.minecraft_version}-${project.cyclopscore_version}:deobf"
+        implementation "org.cyclops.cyclopscore:cyclopscore-${project.minecraft_version}-neoforge:${project.cyclopscore_version}:deobf"
     }
 	
 	// TODO: port mod dependencies once they update
@@ -131,67 +147,55 @@ dependencies {
 }
 
 minecraft {
-    mappings channel: "official", version: "${project.minecraft_version}"
+    accessTransformers {
+        file('src/main/resources/META-INF/accesstransformer.cfg')
+	}
+}
 
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+runs {
+    configureEach {
+		systemProperty 'forge.logging.markers', 'REGISTRIES'
+        systemProperty 'forge.logging.console.level', 'debug'
+        modSource project.sourceSets.main
+		modSource project.sourceSets.test_vanilla_capability_entityitem
+		modSource project.sourceSets.test_vanilla_capability_inventorystate
+		modSource project.sourceSets.test_vanilla_capability_itemitemhandler
+		modSource project.sourceSets.test_vanilla_capability_recipehandler
+		modSource project.sourceSets.test_vanilla_capability_temperature
+		modSource project.sourceSets.test_vanilla_capability_worker
+    }
+	
+    client {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
 
-    runs {
-        client {
-            workingDirectory project.file('run')
-            //property 'forge.logging.markers', 'REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                commoncapabilities {
-                    source sourceSets.main
-                }
-                test_commoncapabilities_vanilla_capability_entityitem {
-                    source sourceSets.test_vanilla_capability_entityitem
-                }
-                test_commoncapabilities_vanilla_capability_inventorystate {
-                    source sourceSets.test_vanilla_capability_inventorystate
-                }
-                test_commoncapabilities_vanilla_capability_itemitemhandler {
-                    source sourceSets.test_vanilla_capability_itemitemhandler
-                }
-                test_commoncapabilities_vanilla_capability_recipehandler {
-                    source sourceSets.test_vanilla_capability_recipehandler
-                }
-                test_commoncapabilities_vanilla_capability_temperature {
-                    source sourceSets.test_vanilla_capability_temperature
-                }
-                test_commoncapabilities_vanilla_capability_worker {
-                    source sourceSets.test_vanilla_capability_worker
-                }
-            }
-        }
+    server {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArgument '--nogui'
+    }
 
-        server {
-            workingDirectory project.file('run')
-            property 'forge.logging.console.level', 'debug'
-            mods {
-                commoncapabilities {
-                    source sourceSets.main
-                }
-            }
-        }
+    gameTestServer {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
 
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', 'commoncapabilities', '--all', '--output', file('src/generated/resources/')
-            mods {
-                commoncapabilities {
-                    source sourceSets.main
-                }
-            }
-        }
+    data {
+        programArguments.addAll '--all', '--validate',
+                '--mod', project.mod_id,
+                '--mod', 'test_vanilla_capability_entityitem',
+                '--mod', 'test_vanilla_capability_inventorystate',
+                '--mod', 'test_vanilla_capability_itemitemhandler',
+                '--mod', 'test_vanilla_capability_recipehandler',
+                '--mod', 'test_vanilla_capability_temperature',
+                '--mod', 'test_vanilla_capability_worker',
+                '--output', file('src/generated/resources/').getAbsolutePath(),
+                '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
 if (build_number.equals("RELEASE"))
-    version = "${project.minecraft_version}-${project.mod_version}"
+    version = "${project.mod_version}"
 else
-    version = "${project.minecraft_version}-${project.mod_version}-${build_number}"
+    version = "${project.mod_version}-${build_number}"
 
 jar {
     manifest {
@@ -207,9 +211,10 @@ jar {
         ])
     }
 }
-jar.finalizedBy('reobfJar')
 
-task signJar(type: SignJar, dependsOn: jar) {
+task signJar(type: PotentiallySignJar, dependsOn: jar) {
+	dependsOn(tasks.jar)
+
     onlyIf {
         System.getenv().SIGN_KEYSTORE
     }
@@ -218,10 +223,9 @@ task signJar(type: SignJar, dependsOn: jar) {
     alias = System.getenv().SIGN_ALIAS
     storePass = System.getenv().SIGN_STOREPASS
     keyPass = System.getenv().SIGN_KEYPASS
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
+    input = jar.archivePath
+    output = jar.archivePath
 }
-build.dependsOn signJar
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
@@ -266,32 +270,28 @@ artifacts {
     archives javadocJar
 }
 
-curseforge {
-    if(secrets.curseforge_key) {
-        apiKey = secrets.curseforge_key
+task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    dependsOn(tasks.jar)
+
+    if(secrets.hasProperty("curseforge_key") && secrets.hasProperty("changelog")) {
+        apiToken = secrets.curseforge_key
     } else if(System.getenv().GITHUB_ACTIONS && System.getenv().CURSEFORGE_KEY_SECRET) {
-        apiKey = System.getenv().CURSEFORGE_KEY_SECRET
+        apiToken = System.getenv().CURSEFORGE_KEY_SECRET
+    } else {
+        apiToken = "DUMMY"
     }
 
-    project {
-        id = "247007" // my project url is http://minecraft.curseforge.com/mc-mods/247007/
-        releaseType = project.project.release_type
-		addGameVersion project.minecraft_version
-        mainArtifact(jar) {
-            relations {
-                requiredDependency 'cyclops-core'
-            }
-        }
+    def projectId = "247007" // my project url is http://minecraft.curseforge.com/mc-mods/247007/
 
-        changelog = ""
-        if (new File("resources/changelog/${project.version}.txt").exists()) {
-            changelog = new File("resources/changelog/${project.version}.txt").text
-        }
-
-        addArtifact deobfJar
-        addArtifact sourcesJar
-        addArtifact javadocJar
+    def mainFile = upload(projectId, jar)
+	mainFile.changelogType = "text"
+    if (new File("resources/changelog/${project.version}.txt").exists()) {
+        mainFile.changelog = file("resources/changelog/${project.version}.txt")
     }
+	mainFile.addGameVersion(project.minecraft_version)
+	mainFile.addModLoader("NeoForge")
+
+	mainFile.addRequirement('cyclops-core')
 }
 
 modrinth {
@@ -358,19 +358,6 @@ idea {
     }
 }
 
-// TODO: temporarily disable some mod compats
-sourceSets {
-    main {
-        java {
-            exclude '**/modcompat/enderio/**'
-			exclude '**/modcompat/forestry/**'
-            exclude '**/modcompat/ic2/**'
-			exclude '**/modcompat/tconstruct/**'
-			exclude '**/modcompat/thermalexpansion/**'
-        }
-    }
-}
-
 jacocoTestReport {
     reports {
         xml.required = true
@@ -382,11 +369,6 @@ spotless {
     java {
         target project.fileTree(project.rootDir) {
             include '**/java/org/cyclops/**/*.java'
-            exclude '**/modcompat/enderio/**'
-            exclude '**/modcompat/forestry/**'
-            exclude '**/modcompat/ic2/**'
-            exclude '**/modcompat/tconstruct/**'
-            exclude '**/modcompat/thermalexpansion/**'
         }
 
         endWithNewline()
@@ -415,3 +397,7 @@ tasks.register('updateGitHooks', Copy) {
     into './.git/hooks'
 }
 compileJava.dependsOn updateGitHooks
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+}

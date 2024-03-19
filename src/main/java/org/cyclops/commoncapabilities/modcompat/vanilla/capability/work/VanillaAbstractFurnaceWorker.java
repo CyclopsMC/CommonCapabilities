@@ -5,6 +5,7 @@ import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
@@ -20,8 +21,8 @@ public class VanillaAbstractFurnaceWorker implements IWorker {
     private static Field FIELD_RECIPE_TYPE;
     static {
         try {
-            Field fieldRecipeType = AbstractFurnaceBlockEntity.class.getDeclaredField("recipeType");
-            fieldRecipeType.setAccessible(true);
+            FIELD_RECIPE_TYPE = AbstractFurnaceBlockEntity.class.getDeclaredField("recipeType");
+            FIELD_RECIPE_TYPE.setAccessible(true);
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
@@ -37,7 +38,9 @@ public class VanillaAbstractFurnaceWorker implements IWorker {
     @Override
     public boolean hasWork() {
         ItemStack toMelt = furnace.getItem(0);
-        Recipe<?> recipe = furnace.getLevel().getRecipeManager().getRecipeFor(((RecipeType<? extends AbstractCookingRecipe >) FIELD_RECIPE_TYPE.get(furnace)), furnace, furnace.getLevel()).orElse(null);
+        Recipe<?> recipe = furnace.getLevel().getRecipeManager().getRecipeFor(((RecipeType<? extends AbstractCookingRecipe >) FIELD_RECIPE_TYPE.get(furnace)), furnace, furnace.getLevel())
+                .map(RecipeHolder::value)
+                .orElse(null);
         return !toMelt.isEmpty() && recipe != null && !((Recipe<WorldlyContainer>) recipe).assemble(furnace, furnace.getLevel().registryAccess()).isEmpty();
     }
 

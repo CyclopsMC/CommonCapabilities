@@ -1,10 +1,9 @@
 package org.cyclops.commoncapabilities;
 
 import com.google.common.collect.Lists;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.ingredient.TagComparator;
@@ -48,7 +47,7 @@ public class GeneralConfig extends DummyConfig {
 
     public GeneralConfig() {
         super(CommonCapabilities._instance, "general");
-        FMLJavaModLoadingContext.get().getModEventBus().register(this);
+        CommonCapabilities._instance.getModEventBus().register(this);
     }
 
     @Override

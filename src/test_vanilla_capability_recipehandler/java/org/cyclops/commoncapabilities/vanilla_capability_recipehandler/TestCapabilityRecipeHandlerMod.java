@@ -2,18 +2,15 @@ package org.cyclops.commoncapabilities.vanilla_capability_recipehandler;
 
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import org.cyclops.commoncapabilities.api.capability.block.BlockCapabilities;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import org.cyclops.commoncapabilities.api.capability.Capabilities;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
-import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
 
 /**
  * A simple test mod which will test the recipe handler of a block.
@@ -23,7 +20,7 @@ import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConf
 public class TestCapabilityRecipeHandlerMod {
 
     public TestCapabilityRecipeHandlerMod() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
@@ -32,16 +29,7 @@ public class TestCapabilityRecipeHandlerMod {
         if (event.getItemStack().getItem() != Item.byBlock(Blocks.CRAFTING_TABLE)) return;
         if (event.getEntity().level().isClientSide()) return;
 
-        IRecipeHandler recipeHandler = null;
-        BlockEntity te = event.getLevel().getBlockEntity(event.getPos());
-        BlockState blockState = event.getLevel().getBlockState(event.getPos());
-        if (te != null && te.getCapability(RecipeHandlerConfig.CAPABILITY, event.getFace()).isPresent()) {
-            recipeHandler = te.getCapability(RecipeHandlerConfig.CAPABILITY, event.getFace()).orElse(null);
-        } else if (BlockCapabilities.getInstance().getCapability(blockState, RecipeHandlerConfig.CAPABILITY,
-                event.getLevel(), event.getPos(), event.getFace()).isPresent()) {
-            recipeHandler = BlockCapabilities.getInstance().getCapability(blockState, RecipeHandlerConfig.CAPABILITY,
-                    event.getLevel(), event.getPos(), event.getFace()).orElse(null);
-        }
+        IRecipeHandler recipeHandler = event.getLevel().getCapability(Capabilities.RecipeHandler.BLOCK, event.getPos(), event.getFace());
 
         if (recipeHandler != null) {
             event.setCanceled(true);

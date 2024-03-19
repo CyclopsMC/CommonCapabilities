@@ -2,15 +2,13 @@ package org.cyclops.commoncapabilities.ingredient.storage;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
-import net.minecraft.core.Direction;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.capabilities.BaseCapability;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidHandlerFluidStackIterator;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
+import org.cyclops.commoncapabilities.api.ingredient.capability.ICapabilityGetter;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageSlotted;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
@@ -22,18 +20,24 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Fluid storage wrapper handler for {@link IFluidHandler}.
  * @author rubensworks
  */
-public class IngredientComponentStorageWrapperHandlerFluidStack
-        implements IIngredientComponentStorageWrapperHandler<FluidStack, Integer, IFluidHandler> {
+public class IngredientComponentStorageWrapperHandlerFluidStack<C>
+        implements IIngredientComponentStorageWrapperHandler<FluidStack, Integer, IFluidHandler, C> {
 
     private final IngredientComponent<FluidStack, Integer> ingredientComponent;
+    private final BaseCapability<IFluidHandler, C> capability;
 
-    public IngredientComponentStorageWrapperHandlerFluidStack(IngredientComponent<FluidStack, Integer> ingredientComponent) {
+    public IngredientComponentStorageWrapperHandlerFluidStack(
+            IngredientComponent<FluidStack, Integer> ingredientComponent,
+            BaseCapability<IFluidHandler, C> capability
+    ) {
         this.ingredientComponent = Objects.requireNonNull(ingredientComponent);
+        this.capability = capability;
     }
 
     public static IFluidHandler.FluidAction simulateToFluidAction(boolean simulate) {
@@ -58,8 +62,8 @@ public class IngredientComponentStorageWrapperHandlerFluidStack
     }
 
     @Override
-    public LazyOptional<IFluidHandler> getStorage(ICapabilityProvider capabilityProvider, @Nullable Direction facing) {
-        return capabilityProvider.getCapability(ForgeCapabilities.FLUID_HANDLER, facing);
+    public Optional<IFluidHandler> getStorage(ICapabilityGetter<C> capabilityProvider, @Nullable C context) {
+        return Optional.ofNullable(capabilityProvider.getCapability(this.capability, context));
     }
 
     @Override

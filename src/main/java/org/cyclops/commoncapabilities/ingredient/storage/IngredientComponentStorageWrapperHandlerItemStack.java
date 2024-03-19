@@ -3,22 +3,19 @@ package org.cyclops.commoncapabilities.ingredient.storage;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Direction;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.capabilities.BaseCapability;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ISlotlessItemHandler;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemHandlerItemStackIterator;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
+import org.cyclops.commoncapabilities.api.ingredient.capability.ICapabilityGetter;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageSlotted;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IngredientComponentStorageEmpty;
-import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
 import org.cyclops.cyclopscore.datastructure.Wrapper;
 import org.cyclops.cyclopscore.helper.Helpers;
 import org.cyclops.cyclopscore.ingredient.collection.FilteredIngredientCollectionIterator;
@@ -31,18 +28,27 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Item storage wrapper handler for {@link IItemHandler}.
  * @author rubensworks
  */
-public class IngredientComponentStorageWrapperHandlerItemStack
-        implements IIngredientComponentStorageWrapperHandler<ItemStack, Integer, IItemHandler> {
+public class IngredientComponentStorageWrapperHandlerItemStack<C>
+        implements IIngredientComponentStorageWrapperHandler<ItemStack, Integer, IItemHandler, C> {
 
     private final IngredientComponent<ItemStack, Integer> ingredientComponent;
+    private final BaseCapability<IItemHandler, C> capability;
+    private final BaseCapability<ISlotlessItemHandler, C> capabilitySlotless;
 
-    public IngredientComponentStorageWrapperHandlerItemStack(IngredientComponent<ItemStack, Integer> ingredientComponent) {
+    public IngredientComponentStorageWrapperHandlerItemStack(
+            IngredientComponent<ItemStack, Integer> ingredientComponent,
+            BaseCapability<IItemHandler, C> capability,
+            BaseCapability<ISlotlessItemHandler, C> capabilitySlotless
+    ) {
         this.ingredientComponent = Objects.requireNonNull(ingredientComponent);
+        this.capability = capability;
+        this.capabilitySlotless = capabilitySlotless;
     }
 
     @Override
@@ -65,15 +71,15 @@ public class IngredientComponentStorageWrapperHandlerItemStack
     }
 
     @Override
-    public LazyOptional<IItemHandler> getStorage(ICapabilityProvider capabilityProvider, @Nullable Direction facing) {
-        return capabilityProvider.getCapability(ForgeCapabilities.ITEM_HANDLER, facing);
+    public Optional<IItemHandler> getStorage(ICapabilityGetter<C> capabilityProvider, @Nullable C context) {
+        return Optional.ofNullable(capabilityProvider.getCapability(this.capability, context));
     }
 
     @Override
-    public IIngredientComponentStorage<ItemStack, Integer> getComponentStorage(ICapabilityProvider capabilityProvider,
-                                                                               @Nullable Direction facing) {
-        LazyOptional<IItemHandler> storageSlotted = getStorage(capabilityProvider, facing);
-        LazyOptional<ISlotlessItemHandler> storageSlotless = capabilityProvider.getCapability(SlotlessItemHandlerConfig.CAPABILITY, facing);
+    public IIngredientComponentStorage<ItemStack, Integer> getComponentStorage(ICapabilityGetter<C> capabilityProvider,
+                                                                               @Nullable C context) {
+        Optional<IItemHandler> storageSlotted = getStorage(capabilityProvider, context);
+        Optional<ISlotlessItemHandler> storageSlotless = Optional.ofNullable(capabilityProvider.getCapability(this.capabilitySlotless, context));
         if (storageSlotted.isPresent()) {
             if (storageSlotless.isPresent()) {
                 return wrapComponentStorage(storageSlotted.orElse(null), storageSlotless.orElse(null));

@@ -9,15 +9,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.cyclops.cyclopscore.helper.FluidHelpers;
 
 /**
@@ -28,7 +28,7 @@ import org.cyclops.cyclopscore.helper.FluidHelpers;
 public class TestCapabilityEntityItemMod {
 
     public TestCapabilityEntityItemMod() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
     }
 
     protected void printSlots(IItemHandler itemHandler) {
@@ -48,9 +48,9 @@ public class TestCapabilityEntityItemMod {
         if (target != null) {
             Item heldItem = event.getEntity().getMainHandItem().getItem();
             if (!(target instanceof ItemEntity) && !(target instanceof ItemFrame)) return;
-            if (target.getCapability(ForgeCapabilities.ITEM_HANDLER, event.getFace()).isPresent()) {
+            if (target.getCapability(Capabilities.ItemHandler.ENTITY, null) != null) {
                 event.setCanceled(true);
-                IItemHandler itemHandler = target.getCapability(ForgeCapabilities.ITEM_HANDLER, event.getFace()).orElse(null);
+                IItemHandler itemHandler = target.getCapability(Capabilities.ItemHandler.ENTITY, null);
                 printSlots(itemHandler);
                 if (heldItem == Items.APPLE) {
                     System.out.println("Adding apple to random slot");
@@ -62,9 +62,9 @@ public class TestCapabilityEntityItemMod {
                     ItemStack extracted = itemHandler.extractItem(slot, 1, false);
                     System.out.println("Extracted: " + extracted);
                 }
-            } else if (target.getCapability(ForgeCapabilities.FLUID_HANDLER, event.getFace()).isPresent()) {
+            } else if (target.getCapability(Capabilities.FluidHandler.ENTITY, event.getFace()) != null) {
                 event.setCanceled(true);
-                IFluidHandler fluidHandler = target.getCapability(ForgeCapabilities.FLUID_HANDLER, event.getFace()).orElse(null);
+                IFluidHandler fluidHandler = target.getCapability(Capabilities.FluidHandler.ENTITY, event.getFace());
                 System.out.println(FluidHelpers.getAmount(FluidHelpers.getFluid(fluidHandler)));
                 if (heldItem == Items.APPLE) {
                     System.out.println("Adding water");
@@ -75,9 +75,9 @@ public class TestCapabilityEntityItemMod {
                     FluidStack drained = fluidHandler.drain(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
                     System.out.println("Drained: " + FluidHelpers.getAmount(drained));
                 }
-            } else if (target.getCapability(ForgeCapabilities.ENERGY, event.getFace()).isPresent()) {
+            } else if (target.getCapability(Capabilities.EnergyStorage.ENTITY, event.getFace()) != null) {
                 event.setCanceled(true);
-                IEnergyStorage energyStorage = target.getCapability(ForgeCapabilities.ENERGY, event.getFace()).orElse(null);
+                IEnergyStorage energyStorage = target.getCapability(Capabilities.EnergyStorage.ENTITY, event.getFace());
                 System.out.println(energyStorage.getEnergyStored() + " / " + energyStorage.getMaxEnergyStored());
                 if (heldItem == Items.APPLE) {
                     System.out.println("Adding energy");

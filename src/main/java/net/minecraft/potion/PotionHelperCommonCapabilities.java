@@ -1,6 +1,7 @@
 package net.minecraft.potion;
 
 import com.google.common.collect.Lists;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -8,7 +9,6 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
@@ -70,8 +70,8 @@ public class PotionHelperCommonCapabilities {
     protected static boolean isPotionOutputValid(ItemStack input, ItemStack output) {
         return !input.isEmpty() && !output.isEmpty() && (input.getItem() != output.getItem()
                 || (PotionUtils.getPotion(output) != Potions.WATER
-                && !Objects.equals(ForgeRegistries.POTIONS.getKey(PotionUtils.getPotion(output)),
-                ForgeRegistries.POTIONS.getKey(PotionUtils.getPotion(input)))));
+                && !Objects.equals(BuiltInRegistries.POTION.getKey(PotionUtils.getPotion(output)),
+                BuiltInRegistries.POTION.getKey(PotionUtils.getPotion(input)))));
     }
 
     protected static void addRecipeIfNew(IPrototypedIngredient<ItemStack, Integer> ingredient,

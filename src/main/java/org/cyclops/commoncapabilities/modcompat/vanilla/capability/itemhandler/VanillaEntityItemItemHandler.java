@@ -2,10 +2,9 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler;
 
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Direction;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.IItemHandler;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ItemCapability;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntityItemCapabilityDelegator;
 
 import javax.annotation.Nonnull;
@@ -16,13 +15,13 @@ import javax.annotation.Nonnull;
  */
 public class VanillaEntityItemItemHandler extends VanillaEntityItemCapabilityDelegator<IItemHandler> implements IItemHandler {
 
-    public VanillaEntityItemItemHandler(ItemEntity entity, Direction side) {
-        super(entity, side);
+    public VanillaEntityItemItemHandler(ItemEntity entity) {
+        super(entity);
     }
 
     @Override
-    protected Capability<IItemHandler> getCapabilityType() {
-        return ForgeCapabilities.ITEM_HANDLER;
+    protected ItemCapability<IItemHandler, Void> getCapabilityType() {
+        return Capabilities.ItemHandler.ITEM;
     }
 
     @Override

@@ -1,9 +1,9 @@
 package org.cyclops.commoncapabilities.ingredient;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.cyclopscore.helper.Helpers;
@@ -111,7 +111,7 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
 
     @Override
     public String toString(ItemStack instance) {
-        return String.format("%s %s %s", ForgeRegistries.ITEMS.getKey(instance.getItem()), instance.getCount(), instance.getTag());
+        return String.format("%s %s %s", BuiltInRegistries.ITEM.getKey(instance.getItem()), instance.getCount(), instance.getTag());
     }
 
     @Override

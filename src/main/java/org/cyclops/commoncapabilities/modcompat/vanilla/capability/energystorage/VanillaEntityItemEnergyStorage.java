@@ -2,10 +2,9 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorag
 
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Direction;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ItemCapability;
+import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntityItemCapabilityDelegator;
 
 /**
@@ -14,13 +13,13 @@ import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntity
  */
 public class VanillaEntityItemEnergyStorage extends VanillaEntityItemCapabilityDelegator<IEnergyStorage> implements IEnergyStorage {
 
-    public VanillaEntityItemEnergyStorage(ItemEntity entity, Direction side) {
-        super(entity, side);
+    public VanillaEntityItemEnergyStorage(ItemEntity entity) {
+        super(entity);
     }
 
     @Override
-    protected Capability<IEnergyStorage> getCapabilityType() {
-        return ForgeCapabilities.ENERGY;
+    protected ItemCapability<IEnergyStorage, Void> getCapabilityType() {
+        return Capabilities.EnergyStorage.ITEM;
     }
 
     @Override

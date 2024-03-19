@@ -1,25 +1,17 @@
 package org.cyclops.commoncapabilities;
 
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.NewRegistryEvent;
-import net.minecraftforge.registries.RegisterEvent;
+import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.event.lifecycle.InterModEnqueueEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IPrototypedIngredientAlternatives;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesItemStackTag;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesList;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
-import org.cyclops.commoncapabilities.capability.ingredient.storage.IngredientComponentStorageHandlerConfig;
-import org.cyclops.commoncapabilities.capability.inventorystate.InventoryStateConfig;
-import org.cyclops.commoncapabilities.capability.itemhandler.SlotlessItemHandlerConfig;
-import org.cyclops.commoncapabilities.capability.recipehandler.RecipeHandlerConfig;
-import org.cyclops.commoncapabilities.capability.temperature.TemperatureConfig;
-import org.cyclops.commoncapabilities.capability.worker.WorkerConfig;
 import org.cyclops.commoncapabilities.modcompat.vanilla.VanillaModCompat;
 import org.cyclops.commoncapabilities.proxy.ClientProxy;
 import org.cyclops.commoncapabilities.proxy.CommonProxy;
@@ -43,18 +35,13 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
      * The unique instance of this mod.
      */
     public static CommonCapabilities _instance;
-    private final IEventBus modEventBus;
 
-    public CommonCapabilities() {
-        super(Reference.MOD_ID, (instance) -> _instance = instance);
-        this.modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        this.modEventBus.addListener(EventPriority.LOW, this::onRegister);
-        this.modEventBus.addListener(EventPriority.LOW, this::onRegistriesLoad);
-        this.modEventBus.addListener(EventPriority.LOW, this::afterCapabilitiesLoaded);
-    }
-
-    public IEventBus getModEventBus() {
-        return modEventBus;
+    public CommonCapabilities(IEventBus modEventBus) {
+        super(Reference.MOD_ID, (instance) -> _instance = instance, modEventBus);
+        modEventBus.register(IngredientComponent.class);
+        modEventBus.addListener(EventPriority.LOW, this::onRegister);
+        modEventBus.addListener(EventPriority.LOW, this::onRegistriesLoad);
+        modEventBus.addListener(EventPriority.LOW, this::afterCapabilitiesLoaded);
     }
 
     @Override
@@ -97,13 +84,6 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
         super.onConfigsRegister(configHandler);
 
         configHandler.addConfigurable(new GeneralConfig());
-
-        configHandler.addConfigurable(new WorkerConfig());
-        configHandler.addConfigurable(new TemperatureConfig());
-        configHandler.addConfigurable(new InventoryStateConfig());
-        configHandler.addConfigurable(new SlotlessItemHandlerConfig());
-        configHandler.addConfigurable(new RecipeHandlerConfig());
-        configHandler.addConfigurable(new IngredientComponentStorageHandlerConfig());
     }
 
     public void onRegister(NewRegistryEvent event) {
@@ -116,11 +96,9 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
     }
 
     public void onRegistriesLoad(RegisterEvent event) {
-        if (event.getRegistryKey().equals(ForgeRegistries.BLOCKS.getRegistryKey())) {
-            IngredientComponent.REGISTRY.register(IngredientComponents.ITEMSTACK.getName(), IngredientComponents.ITEMSTACK);
-            IngredientComponent.REGISTRY.register(IngredientComponents.FLUIDSTACK.getName(), IngredientComponents.FLUIDSTACK);
-            IngredientComponent.REGISTRY.register(IngredientComponents.ENERGY.getName(), IngredientComponents.ENERGY);
-        }
+        event.register(IngredientComponent.REGISTRY.key(), IngredientComponents.ITEMSTACK.getName(), () -> IngredientComponents.ITEMSTACK);
+        event.register(IngredientComponent.REGISTRY.key(), IngredientComponents.FLUIDSTACK.getName(), () -> IngredientComponents.FLUIDSTACK);
+        event.register(IngredientComponent.REGISTRY.key(), IngredientComponents.ENERGY.getName(), () -> IngredientComponents.ENERGY);
     }
 
     public void afterCapabilitiesLoaded(InterModEnqueueEvent event) {

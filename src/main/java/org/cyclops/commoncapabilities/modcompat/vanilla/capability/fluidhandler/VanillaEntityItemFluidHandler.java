@@ -1,17 +1,14 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler;
 
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.core.Direction;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ItemCapability;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntityItemCapabilityDelegator;
 
 import javax.annotation.Nonnull;
-
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 /**
  * A fluid handler for entity items that have a fluid handler.
@@ -19,13 +16,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
  */
 public class VanillaEntityItemFluidHandler extends VanillaEntityItemCapabilityDelegator<IFluidHandlerItem> implements IFluidHandler {
 
-    public VanillaEntityItemFluidHandler(ItemEntity entity, Direction side) {
-        super(entity, side);
+    public VanillaEntityItemFluidHandler(ItemEntity entity) {
+        super(entity);
     }
 
     @Override
-    protected Capability<IFluidHandlerItem> getCapabilityType() {
-        return ForgeCapabilities.FLUID_HANDLER_ITEM;
+    protected ItemCapability<IFluidHandlerItem, Void> getCapabilityType() {
+        return Capabilities.FluidHandler.ITEM;
     }
 
     @Override

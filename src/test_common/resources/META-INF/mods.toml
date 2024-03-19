@@ -1,0 +1,17 @@
+modLoader="javafml"
+loaderVersion="*"
+license="MIT"
+[[mods]]
+	modId="commoncapabilities"
+[[mods]]
+	modId="test_commoncapabilities_vanilla_capability_entityitem"
+[[mods]]
+	modId="test_commoncapabilities_vanilla_capability_inventorystate"
+[[mods]]
+	modId="test_commoncapabilities_vanilla_capability_itemitemhandler"
+[[mods]]
+	modId="test_commoncapabilities_vanilla_capability_recipehandler"
+[[mods]]
+	modId="test_commoncapabilities_vanilla_capability_temperature"
+[[mods]]
+	modId="test_commoncapabilities_vanilla_capability_worker"
