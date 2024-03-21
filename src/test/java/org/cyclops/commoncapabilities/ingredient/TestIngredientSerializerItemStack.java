@@ -41,11 +41,11 @@ public class TestIngredientSerializerItemStack {
 
         I_TAG1 = new CompoundTag();
         I_TAG1.putString("id", "minecraft:apple");
-        I_TAG1.putByte("Count", (byte) 1);
+        I_TAG1.putInt("Count", 1);
 
         I_TAG2 = new CompoundTag();
         I_TAG2.putString("id", "minecraft:lead");
-        I_TAG2.putByte("Count", (byte) 2);
+        I_TAG2.putInt("Count", 2);
         I_TAG2.put("tag", TAG);
 
         I_TAG1L = new CompoundTag();
@@ -61,7 +61,7 @@ public class TestIngredientSerializerItemStack {
 
         I_TAG_EMPTY = new CompoundTag();
         I_TAG_EMPTY.putString("id", "minecraft:air");
-        I_TAG_EMPTY.putByte("Count", (byte) 0);
+        I_TAG_EMPTY.putInt("Count", 0);
 
         I1 = new ItemStack(Items.APPLE);
         I2 = new ItemStack(Items.LEAD, 2);
@@ -96,7 +96,7 @@ public class TestIngredientSerializerItemStack {
         assertThat(ItemStack.isSameItemSameTags(I2L, S.deserializeInstance(I_TAG2L)), is(true));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = RuntimeException.class)
     public void deserializeInstanceInvalid() {
         S.deserializeInstance(StringTag.valueOf("0"));
     }
