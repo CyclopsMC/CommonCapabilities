@@ -119,8 +119,8 @@ repositories {
         name "Cyclops Repo"
         url "https://maven.pkg.github.com/CyclopsMC/packages"
         credentials {
-            username = project.findProperty("gpr.user") ?: System.getenv("MAVEN_USERNAME")
-            password = project.findProperty("gpr.key") ?: System.getenv("MAVEN_KEY")
+            username = project.findProperty("gpr.user") ?: System.getenv("MAVEN_USERNAME") ?: System.getenv("GITHUB_USER")
+            password = project.findProperty("gpr.key") ?: System.getenv("MAVEN_KEY") ?: System.getenv("GITHUB_TOKEN")
         }
     }
 }
