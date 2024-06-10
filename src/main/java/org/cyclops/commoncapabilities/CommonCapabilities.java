@@ -50,6 +50,10 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
         Objects.requireNonNull(IngredientComponent.ITEMSTACK, "Item ingredient component is not initialized");
         Objects.requireNonNull(IngredientComponent.FLUIDSTACK, "Fluid ingredient component is not initialized");
         Objects.requireNonNull(IngredientComponent.ENERGY, "Energy ingredient component is not initialized");
+
+        IngredientComponent.REGISTRY.forEach(ingredientComponent -> {
+            getModEventBus().addListener(ingredientComponent::gatherCapabilities);
+        });
     }
 
     @Override
