@@ -75,6 +75,7 @@ public class IngredientComponents {
         ITEMSTACK.setStorageWrapperHandler(org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ENTITY, new IngredientComponentStorageWrapperHandlerItemStackSlotless(ITEMSTACK, org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ENTITY));
 
         FLUIDSTACK.setStorageWrapperHandler(Capabilities.FluidHandler.BLOCK, new IngredientComponentStorageWrapperHandlerFluidStack<>(FLUIDSTACK, Capabilities.FluidHandler.BLOCK));
+        FLUIDSTACK.setStorageWrapperHandler(Capabilities.FluidHandler.ITEM, new IngredientComponentStorageWrapperHandlerFluidStack<>(FLUIDSTACK, Capabilities.FluidHandler.ITEM));
         FLUIDSTACK.setStorageWrapperHandler(Capabilities.FluidHandler.ENTITY, new IngredientComponentStorageWrapperHandlerFluidStack<>(FLUIDSTACK, Capabilities.FluidHandler.ENTITY));
     }
 

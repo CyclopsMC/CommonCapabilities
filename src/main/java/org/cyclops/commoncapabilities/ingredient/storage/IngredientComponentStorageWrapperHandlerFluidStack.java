@@ -30,11 +30,11 @@ public class IngredientComponentStorageWrapperHandlerFluidStack<C>
         implements IIngredientComponentStorageWrapperHandler<FluidStack, Integer, IFluidHandler, C> {
 
     private final IngredientComponent<FluidStack, Integer> ingredientComponent;
-    private final BaseCapability<IFluidHandler, C> capability;
+    private final BaseCapability<? extends IFluidHandler, C> capability;
 
     public IngredientComponentStorageWrapperHandlerFluidStack(
             IngredientComponent<FluidStack, Integer> ingredientComponent,
-            BaseCapability<IFluidHandler, C> capability
+            BaseCapability<? extends IFluidHandler, C> capability
     ) {
         this.ingredientComponent = Objects.requireNonNull(ingredientComponent);
         this.capability = capability;
