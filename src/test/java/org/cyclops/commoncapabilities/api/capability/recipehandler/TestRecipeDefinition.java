@@ -13,6 +13,7 @@ import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
+import org.cyclops.commoncapabilities.ingredient.DataComparator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -86,6 +87,8 @@ public class TestRecipeDefinition {
                 new ItemStack(Items.SUGAR)
         ));
         D_1_bis = new RecipeDefinition(dInputMapBis, new MixedIngredients(dOutputMapBis));
+
+        ItemMatch.DATA_COMPARATOR = DataComparator.INSTANCE = new DataComparator(null);
     }
 
     @Test

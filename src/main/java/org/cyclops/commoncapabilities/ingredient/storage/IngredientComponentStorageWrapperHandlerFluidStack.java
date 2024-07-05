@@ -121,7 +121,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack<C>
                 return FluidStack.EMPTY;
             } else {
                 int remaining = totalAmount - filledAmount;
-                return new FluidStack(ingredient, remaining);
+                return new FluidStack(ingredient.getFluid(), remaining);
             }
         }
 
@@ -247,7 +247,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack<C>
                 return FluidStack.EMPTY;
             }
 
-            FluidStack extractSimulated = storage.extract(resource, FluidMatch.FLUID | FluidMatch.TAG, true);
+            FluidStack extractSimulated = storage.extract(resource, FluidMatch.FLUID | FluidMatch.DATA, true);
             if (extractSimulated != null) {
                 FluidStack prototype = resource;
                 if (prototype.getAmount() > extractSimulated.getAmount()) {

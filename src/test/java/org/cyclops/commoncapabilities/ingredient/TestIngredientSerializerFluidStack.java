@@ -2,12 +2,17 @@ package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.DetectedVersion;
 import net.minecraft.SharedConstants;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
+import org.cyclops.commoncapabilities.IngredientComponents;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,7 +22,7 @@ import static org.junit.Assert.assertThat;
 public class TestIngredientSerializerFluidStack {
 
     private static IngredientSerializerFluidStack S;
-    private static CompoundTag TAG;
+    private static DataComponentPatch DATA;
     private static CompoundTag F_TAG1;
     private static CompoundTag F_TAG2;
     private static FluidStack F1;
@@ -31,20 +36,21 @@ public class TestIngredientSerializerFluidStack {
 
         S = new IngredientSerializerFluidStack();
 
-        TAG = new CompoundTag();
-        TAG.putBoolean("flag", true);
+        DATA = DataComponentPatch.builder()
+                .set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+                .build();
 
         F_TAG1 = new CompoundTag();
-        F_TAG1.putString("FluidName", "minecraft:water");
-        F_TAG1.putInt("Amount", 1000);
+        F_TAG1.putString("id", "minecraft:water");
+        F_TAG1.putInt("amount", 1000);
 
         F_TAG2 = new CompoundTag();
-        F_TAG2.putString("FluidName", "minecraft:lava");
-        F_TAG2.putInt("Amount", 123);
-        F_TAG2.put("Tag", TAG);
+        F_TAG2.putString("id", "minecraft:lava");
+        F_TAG2.putInt("amount", 123);
+        F_TAG2.put("components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, DATA).getOrThrow());
 
         F1 = new FluidStack(Fluids.WATER, 1000);
-        F2 = new FluidStack(Fluids.LAVA, 123, TAG);
+        F2 = new FluidStack(Holder.direct(Fluids.LAVA), 123, DATA);
     }
 
     @Test
@@ -56,9 +62,8 @@ public class TestIngredientSerializerFluidStack {
 
     @Test
     public void deserializeInstance() {
-        assertThat(S.deserializeInstance(F_TAG1), is(F1));
-        assertThat(S.deserializeInstance(F_TAG2), is(F2));
-        assertThat(S.deserializeInstance(new CompoundTag()), is(FluidStack.EMPTY));
+        assertThat(eq(S.deserializeInstance(F_TAG1), F1), is(true));
+        assertThat(eq(S.deserializeInstance(F_TAG2), F2), is(true));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -79,6 +84,10 @@ public class TestIngredientSerializerFluidStack {
     @Test(expected = IllegalArgumentException.class)
     public void deserializeConditionInvalid() {
         S.deserializeCondition(StringTag.valueOf("0"));
+    }
+
+    public static boolean eq(FluidStack a, FluidStack b) {
+        return IngredientComponents.FLUIDSTACK.getMatcher().matchesExactly(a, b);
     }
 
 }

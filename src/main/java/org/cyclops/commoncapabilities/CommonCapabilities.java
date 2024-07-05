@@ -38,7 +38,6 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
 
     public CommonCapabilities(IEventBus modEventBus) {
         super(Reference.MOD_ID, (instance) -> _instance = instance, modEventBus);
-        modEventBus.register(IngredientComponent.class);
         modEventBus.addListener(EventPriority.LOW, this::onRegister);
         modEventBus.addListener(EventPriority.LOW, this::onRegistriesLoad);
         modEventBus.addListener(EventPriority.LOW, this::afterCapabilitiesLoaded);

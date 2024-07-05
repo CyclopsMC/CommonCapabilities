@@ -1,23 +1,20 @@
 package org.cyclops.commoncapabilities;
 
 import com.google.common.collect.Lists;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
-import org.apache.logging.log4j.Level;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
-import org.cyclops.commoncapabilities.ingredient.TagComparator;
+import org.cyclops.commoncapabilities.ingredient.DataComparator;
 import org.cyclops.cyclopscore.config.ConfigurableProperty;
 import org.cyclops.cyclopscore.config.extendedconfig.DummyConfig;
 import org.cyclops.cyclopscore.init.ModBase;
-import org.cyclops.cyclopscore.nbt.path.NbtParseException;
-import org.cyclops.cyclopscore.nbt.path.NbtPath;
-import org.cyclops.cyclopscore.nbt.path.navigate.INbtPathNavigation;
-import org.cyclops.cyclopscore.nbt.path.navigate.NbtPathNavigationList;
 import org.cyclops.cyclopscore.tracking.Analytics;
 import org.cyclops.cyclopscore.tracking.Versions;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * A config with general options for this mod.
@@ -38,11 +35,9 @@ public class GeneralConfig extends DummyConfig {
     @ConfigurableProperty(category = "core", comment = "If the version checker should be enabled.")
     public static boolean versionChecker = true;
 
-    @ConfigurableProperty(category = "machine", comment = "The NBT Paths that should be filtered away when checking equality.", configLocation = ModConfig.Type.SERVER)
-    public static List<String> ignoreNbtPathsForEqualityFilters = Lists.newArrayList(
-            "$.ForgeCaps[\"astralsorcery:cap_item_amulet_holder\"]", // Astral Sorcery
-            "$.binding", // Blood Magic Blood Orb player bindings
-            "$.energy" // Integrated Dynamics batteries
+    @ConfigurableProperty(category = "machine", comment = "The data component types that should be filtered away when checking equality.", configLocation = ModConfig.Type.SERVER)
+    public static List<String> ignoreDataComponentsForEqualityFilters = Lists.newArrayList(
+            "integrateddynamics:energy" // Integrated Dynamics batteries
     );
 
     public GeneralConfig() {
@@ -74,14 +69,6 @@ public class GeneralConfig extends DummyConfig {
     }
 
     protected void updateNbtComparator() {
-        List<INbtPathNavigation> navigations = Lists.newArrayList();
-        for (String path : ignoreNbtPathsForEqualityFilters) {
-            try {
-                navigations.add(NbtPath.parse(path).asNavigation());
-            } catch (NbtParseException e) {
-                CommonCapabilities.clog(Level.ERROR, String.format("Failed to parse NBT path to filter: %s", path));
-            }
-        }
-        ItemMatch.TAG_COMPARATOR = TagComparator.INSTANCE = new TagComparator(new NbtPathNavigationList(navigations));
+        ItemMatch.DATA_COMPARATOR = DataComparator.INSTANCE = new DataComparator(ignoreDataComponentsForEqualityFilters.stream().map(ResourceLocation::parse).collect(Collectors.toSet()));
     }
 }

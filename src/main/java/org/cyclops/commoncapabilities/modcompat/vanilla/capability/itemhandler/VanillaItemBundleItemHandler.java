@@ -1,11 +1,10 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.world.item.BundleItem;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BundleContents;
+import org.apache.commons.lang3.math.Fraction;
 import org.cyclops.commoncapabilities.capability.itemhandler.ItemItemHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,29 +22,19 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
 
     @Override
     protected NonNullList<ItemStack> getItemList() {
-        NonNullList<ItemStack> itemStacks;
-        CompoundTag entityTag = getItemStack().getTag();
-        if (entityTag != null && entityTag.contains("Items", Tag.TAG_LIST)) {
-            ListTag listTag = entityTag.getList("Items", Tag.TAG_COMPOUND);
-            itemStacks = NonNullList.withSize(listTag.size() + 1, ItemStack.EMPTY);
-            int slot = 0;
-            for (Tag itemTag : listTag) {
-                itemStacks.set(slot++, ItemStack.of((CompoundTag) itemTag));
-            }
-        } else {
-            itemStacks = NonNullList.withSize(1, ItemStack.EMPTY);
+        BundleContents container = getItemStack().get(DataComponents.BUNDLE_CONTENTS);
+        if (container != null) {
+            NonNullList<ItemStack> list = NonNullList.create();
+            container.itemCopyStream().forEach(list::add);
+            list.add(ItemStack.EMPTY);
+            return list;
         }
-        return itemStacks;
+        return NonNullList.withSize(1, ItemStack.EMPTY);
     }
 
     @Override
     protected void setItemList(NonNullList<ItemStack> itemStacks) {
-        CompoundTag rootTag = getItemStack().getOrCreateTag();
-        ListTag listTag = new ListTag();
-        for (ItemStack itemStack : itemStacks) {
-            listTag.add(itemStack.save(new CompoundTag()));
-        }
-        rootTag.put("Items", listTag);
+        getItemStack().set(DataComponents.BUNDLE_CONTENTS, new BundleContents(itemStacks));
     }
 
     @Override
@@ -61,7 +50,7 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return BundleItem.getContentWeight(getItemStack()) + BundleItem.getWeight(stack) <= 64;
+        return getMaxAmountToAdd(stack) > 0;
     }
 
     @Override
@@ -78,5 +67,13 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
             return stack;
         }
         return super.insertItem(slot, stack, simulate);
+    }
+
+    // Copied from BundleContents
+
+    private int getMaxAmountToAdd(ItemStack stackToAdd) {
+        BundleContents container = getItemStack().get(DataComponents.BUNDLE_CONTENTS);
+        Fraction fraction = Fraction.ONE.subtract(container.weight());
+        return Math.max(fraction.divideBy(BundleContents.getWeight(stackToAdd)).intValue(), 0);
     }
 }

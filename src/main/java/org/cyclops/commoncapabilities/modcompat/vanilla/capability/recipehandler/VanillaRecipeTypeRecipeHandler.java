@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -14,9 +13,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.crafting.NBTIngredient;
+import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
  * Recipe handler capability for recipe types.
  * @author rubensworks
  */
-public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recipe<C>> implements IRecipeHandler {
+public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Recipe<C>> implements IRecipeHandler {
 
     private static final Set<IngredientComponent<?, ?>> COMPONENTS_INPUT  = Sets.newHashSet(IngredientComponent.ITEMSTACK);
     private static final Set<IngredientComponent<?, ?>> COMPONENTS_OUTPUT = Sets.newHashSet(IngredientComponent.ITEMSTACK);
@@ -64,13 +65,15 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
     private final Supplier<Level> worldSupplier;
     private final RecipeType<T> recipeType;
     private final Predicate<Integer> inputSizePredicate;
+    private final Function<CraftingContainer, C> createRecipeInput;
 
     private static Map<Pair<RecipeType<?>, ResourceLocation>, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
 
-    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate) {
+    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate, Function<CraftingContainer, C> createRecipeInput) {
         this.worldSupplier = worldSupplier;
         this.recipeType = recipeType;
         this.inputSizePredicate = inputSizePredicate;
+        this.createRecipeInput = createRecipeInput;
     }
 
     @Override
@@ -94,9 +97,9 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
      * @return A list of prototyped ingredients.
      */
     public static List<IPrototypedIngredient<ItemStack, Integer>> getPrototypesFromIngredient(Ingredient ingredient) {
-        if (ingredient instanceof NBTIngredient) {
+        if (ingredient.isCustom() && ingredient.getCustomIngredient() instanceof CompoundIngredient compoundIngredient) {
             return Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
-                    ingredient.getItems()[0], ItemMatch.ITEM | ItemMatch.TAG));
+                    compoundIngredient.getItems().findFirst().get(), ItemMatch.ITEM | ItemMatch.DATA));
 //        } else if (ingredient instanceof OreIngredient) { // TODO: somehow detect tags in the future, see ShapelessRecipeBuilder
 //            return Arrays.stream(ingredient.getMatchingStacks())
 //                    .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.ITEM))
@@ -109,7 +112,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
     }
 
     @Nullable
-    public static <C extends Container, T extends Recipe<C>> IRecipeDefinition recipeToRecipeDefinition(T recipe, Level level) {
+    public static <C extends RecipeInput, T extends Recipe<C>> IRecipeDefinition recipeToRecipeDefinition(T recipe, Level level) {
         if (recipe.getResultItem(level.registryAccess()).isEmpty()) {
             return null;
         }
@@ -160,7 +163,8 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
             inventoryCrafting.setItem(i, recipeIngredients.get(i));
         }
 
-        T recipe = CraftingHelpers.findRecipeCached(recipeType, (C) inventoryCrafting, worldSupplier.get(), true)
+        C recipeInput = this.createRecipeInput.apply(inventoryCrafting);
+        T recipe = CraftingHelpers.findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
                 .map(RecipeHolder::value)
                 .orElse(null);
         if (recipe == null) {
@@ -171,7 +175,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
                     inventoryCraftingSmall.setItem(i, recipeIngredients.get(i));
                 }
 
-                recipe = CraftingHelpers.findRecipeCached(recipeType, (C) inventoryCraftingSmall, worldSupplier.get(), true)
+                recipe = CraftingHelpers.findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
                         .map(RecipeHolder::value)
                         .orElse(null);
             }

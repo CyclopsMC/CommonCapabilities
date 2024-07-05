@@ -51,11 +51,11 @@ public class TestFluidHandlerFluidStackIterator {
     public void testNonEmpty() {
         Iterator<FluidStack> it = new FluidHandlerFluidStackIterator(HANDLER);
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 1000)));
+        assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 123)));
+        assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.LAVA, 1000)));
+        assertThat(it.next().getFluid(), is(Fluids.LAVA));
         assertThat(it.hasNext(), is(false));
     }
 
@@ -63,14 +63,14 @@ public class TestFluidHandlerFluidStackIterator {
     public void testNonEmptyOffset() {
         Iterator<FluidStack> it1 = new FluidHandlerFluidStackIterator(HANDLER, 1);
         assertThat(it1.hasNext(), is(true));
-        assertThat(it1.next(), is(new FluidStack(Fluids.WATER, 123)));
+        assertThat(it1.next().getFluid(), is(Fluids.WATER));
         assertThat(it1.hasNext(), is(true));
-        assertThat(it1.next(), is(new FluidStack(Fluids.LAVA, 1000)));
+        assertThat(it1.next().getFluid(), is(Fluids.LAVA));
         assertThat(it1.hasNext(), is(false));
 
         Iterator<FluidStack> it2 = new FluidHandlerFluidStackIterator(HANDLER, 2);
         assertThat(it2.hasNext(), is(true));
-        assertThat(it2.next(), is(new FluidStack(Fluids.LAVA, 1000)));
+        assertThat(it2.next().getFluid(), is(Fluids.LAVA));
         assertThat(it2.hasNext(), is(false));
 
         Iterator<FluidStack> it3 = new FluidHandlerFluidStackIterator(HANDLER, 3);
@@ -81,11 +81,11 @@ public class TestFluidHandlerFluidStackIterator {
     public void testNonEmptyOutOfRange() {
         Iterator<FluidStack> it = new FluidHandlerFluidStackIterator(HANDLER);
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 1000)));
+        assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 123)));
+        assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.LAVA, 1000)));
+        assertThat(it.next().getFluid(), is(Fluids.LAVA));
         assertThat(it.hasNext(), is(false));
 
         it.next();

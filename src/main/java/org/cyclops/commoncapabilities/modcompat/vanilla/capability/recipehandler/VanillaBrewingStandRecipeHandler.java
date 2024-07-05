@@ -1,10 +1,11 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler;
 
 import com.google.common.collect.Sets;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.potion.PotionHelperCommonCapabilities;
 import net.minecraft.core.NonNullList;
-import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
+import net.minecraft.potion.PotionHelperCommonCapabilities;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
@@ -64,10 +65,10 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
         }
 
         NonNullList<ItemStack> brewingItemStacks = NonNullList.withSize(4, ItemStack.EMPTY);
+        PotionBrewing potionbrewing = ServerLifecycleHooks.getCurrentServer().potionBrewing();
         for (int i = 0; i < recipeIngredients.size(); i++) {
-            brewingItemStacks.set(i, recipeIngredients.get(i).copy());
+            brewingItemStacks.set(i, potionbrewing.mix(brewingItemStacks.get(0), recipeIngredients.get(i).copy()));
         }
-        BrewingRecipeRegistry.brewPotions(brewingItemStacks, brewingItemStacks.get(0), OUTPUT_SLOTS);
         brewingItemStacks.set(0, ItemStack.EMPTY);
 
         return MixedIngredients.ofInstances(IngredientComponent.ITEMSTACK, brewingItemStacks);

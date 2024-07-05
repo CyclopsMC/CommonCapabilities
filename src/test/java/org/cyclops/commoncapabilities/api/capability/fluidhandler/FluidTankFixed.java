@@ -1,5 +1,6 @@
 package org.cyclops.commoncapabilities.api.capability.fluidhandler;
 
+import net.minecraft.core.Holder;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
@@ -27,7 +28,7 @@ public class FluidTankFixed extends FluidTank { // TODO: rm when Forge fixes the
         {
             drained = fluid.getAmount();
         }
-        FluidStack stack = new FluidStack(fluid, drained);
+        FluidStack stack = new FluidStack(Holder.direct(fluid.getFluid()), drained, fluid.getComponentsPatch());
         if (action.execute() && drained > 0)
         {
             fluid.shrink(drained);

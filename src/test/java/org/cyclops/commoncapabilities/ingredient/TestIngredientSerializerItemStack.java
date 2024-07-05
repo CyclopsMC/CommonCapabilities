@@ -2,8 +2,11 @@ package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.DetectedVersion;
 import net.minecraft.SharedConstants;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +20,7 @@ import static org.junit.Assert.assertThat;
 public class TestIngredientSerializerItemStack {
 
     private static IngredientSerializerItemStack S;
-    private static CompoundTag TAG;
+    private static DataComponentPatch DATA;
     private static CompoundTag I_TAG1;
     private static CompoundTag I_TAG2;
     private static CompoundTag I_TAG1L;
@@ -36,39 +39,38 @@ public class TestIngredientSerializerItemStack {
 
         S = new IngredientSerializerItemStack();
 
-        TAG = new CompoundTag();
-        TAG.putBoolean("flag", true);
+        DATA = DataComponentPatch.builder()
+                .set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+                .build();
 
         I_TAG1 = new CompoundTag();
         I_TAG1.putString("id", "minecraft:apple");
-        I_TAG1.putInt("Count", 1);
+        I_TAG1.putInt("count", 1);
 
         I_TAG2 = new CompoundTag();
         I_TAG2.putString("id", "minecraft:lead");
-        I_TAG2.putInt("Count", 2);
-        I_TAG2.put("tag", TAG);
+        I_TAG2.putInt("count", 2);
+        I_TAG2.put("components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, DATA).getOrThrow());
 
         I_TAG1L = new CompoundTag();
         I_TAG1L.putString("id", "minecraft:apple");
-        I_TAG1L.putByte("Count", (byte) 1);
+        I_TAG1L.putInt("count", 99);
         I_TAG1L.putInt("ExtendedCount", 128);
 
         I_TAG2L = new CompoundTag();
         I_TAG2L.putString("id", "minecraft:lead");
-        I_TAG2L.putByte("Count", (byte) 1);
-        I_TAG2L.put("tag", TAG);
+        I_TAG2L.putInt("count", 99);
+        I_TAG2L.put("components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, DATA).getOrThrow());
         I_TAG2L.putInt("ExtendedCount", 2000);
 
         I_TAG_EMPTY = new CompoundTag();
-        I_TAG_EMPTY.putString("id", "minecraft:air");
-        I_TAG_EMPTY.putInt("Count", 0);
 
         I1 = new ItemStack(Items.APPLE);
         I2 = new ItemStack(Items.LEAD, 2);
-        I2.setTag(TAG);
+        I2.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         I1L = new ItemStack(Items.APPLE, 128);
         I2L = new ItemStack(Items.LEAD, 2000);
-        I2L.setTag(TAG);
+        I2L.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
     }
 
     @Test
@@ -86,14 +88,14 @@ public class TestIngredientSerializerItemStack {
 
     @Test
     public void deserializeInstance() {
-        assertThat(ItemStack.isSameItemSameTags(I1, S.deserializeInstance(I_TAG1)), is(true));
-        assertThat(ItemStack.isSameItemSameTags(I2, S.deserializeInstance(I_TAG2)), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(I1, S.deserializeInstance(I_TAG1)), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(I2, S.deserializeInstance(I_TAG2)), is(true));
     }
 
     @Test
     public void deserializeInstanceLarge() {
-        assertThat(ItemStack.isSameItemSameTags(I1L, S.deserializeInstance(I_TAG1L)), is(true));
-        assertThat(ItemStack.isSameItemSameTags(I2L, S.deserializeInstance(I_TAG2L)), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(I1L, S.deserializeInstance(I_TAG1L)), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(I2L, S.deserializeInstance(I_TAG2L)), is(true));
     }
 
     @Test(expected = RuntimeException.class)

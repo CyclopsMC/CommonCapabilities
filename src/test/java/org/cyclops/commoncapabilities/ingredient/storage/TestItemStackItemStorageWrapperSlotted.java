@@ -106,9 +106,9 @@ public class TestItemStackItemStorageWrapperSlotted {
 
     @Test
     public void testGetSlotLimit() {
-        assertThat(wrapper.getSlotLimit(0), is(64));
-        assertThat(wrapper.getSlotLimit(1), is(64));
-        assertThat(wrapper.getSlotLimit(2), is(64));
+        assertThat(wrapper.getSlotLimit(0), is(99));
+        assertThat(wrapper.getSlotLimit(1), is(99));
+        assertThat(wrapper.getSlotLimit(2), is(99));
     }
 
 }

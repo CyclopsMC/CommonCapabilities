@@ -3,7 +3,6 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.work;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import net.minecraft.core.NonNullList;
-import net.neoforged.neoforge.common.brewing.BrewingRecipeRegistry;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
 /**
@@ -25,7 +24,7 @@ public class VanillaBrewingStandWorker implements IWorker {
         for (int i = 0; i < inputs.size(); i++) {
             inputs.set(i, brewingStand.getItem(outputSlots[i]));
         }
-        return BrewingRecipeRegistry.canBrew(inputs, brewingStand.getItem(outputSlots.length), outputSlots);
+        return BrewingStandBlockEntity.isBrewable(brewingStand.getLevel().potionBrewing(), inputs);
     }
 
     @Override

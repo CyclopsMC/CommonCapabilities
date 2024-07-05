@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.cyclops.commoncapabilities.ingredient.DataComparator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,6 +49,8 @@ public class TestSlotlessItemHandlerWrapper {
         it0 = () -> IntStream.of(0).iterator();
         it9 = () -> IntStream.of(1, 2, 3, 4, 5, 6, 7, 8, 9).iterator();
         itAll = () -> IntStream.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9).iterator();
+
+        ItemMatch.DATA_COMPARATOR = DataComparator.INSTANCE = new DataComparator(null);
     }
 
     @Test

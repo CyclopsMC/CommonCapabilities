@@ -7,6 +7,7 @@ import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.cyclops.commoncapabilities.ingredient.DataComparator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -34,6 +35,8 @@ public class TestFilteredItemHandlerItemStackIterator {
                 new ItemStack(Items.LEAD, 10),
                 new ItemStack(Items.BOWL)
         ));
+
+        ItemMatch.DATA_COMPARATOR = DataComparator.INSTANCE = new DataComparator(null);
     }
 
     @Test

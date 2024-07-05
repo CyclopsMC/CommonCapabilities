@@ -31,7 +31,7 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
 
     @Override
     public Integer getExactMatchNoQuantityCondition() {
-        return FluidMatch.FLUID | FluidMatch.TAG;
+        return FluidMatch.FLUID | FluidMatch.DATA;
     }
 
     @Override
@@ -68,8 +68,8 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
         int code = 1;
         code = 31 * code + instance.getFluid().hashCode();
         code = 31 * code + instance.getAmount();
-        if (instance.getTag() != null)
-            code = 31 * code + instance.getTag().hashCode();
+        if (!instance.getComponents().isEmpty())
+            code = 31 * code + instance.getComponents().hashCode();
         return code;
     }
 
@@ -114,17 +114,17 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
 
     @Override
     public String localize(FluidStack instance) {
-        return instance.getDisplayName().getString();
+        return instance.getHoverName().getString();
     }
 
     @Override
     public MutableComponent getDisplayName(FluidStack instance) {
-        return (MutableComponent) instance.getDisplayName();
+        return (MutableComponent) instance.getHoverName();
     }
 
     @Override
     public String toString(FluidStack instance) {
-        return String.format("%s %s %s", BuiltInRegistries.FLUID.getKey(instance.getFluid()), instance.getAmount(), instance.getTag());
+        return String.format("%s %s %s", BuiltInRegistries.FLUID.getKey(instance.getFluid()), instance.getAmount(), instance.getComponents());
     }
 
     @Override
@@ -139,7 +139,7 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
             return 1;
         } else if (o1.getFluid() == o2.getFluid()) {
             if (o1.getAmount() == o2.getAmount()) {
-                return IngredientHelpers.compareTags(o1.getTag(), o2.getTag());
+                return IngredientHelpers.compareData(o1.getComponents(), o2.getComponents());
             }
             return o1.getAmount() - o2.getAmount();
         }

@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities;
 
 import com.google.common.collect.Lists;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -35,29 +35,29 @@ public class IngredientComponents {
     public static final IngredientComponent<ItemStack, Integer> ITEMSTACK =
             new IngredientComponent<>("minecraft:itemstack", new IngredientMatcherItemStack(),
                     new IngredientSerializerItemStack(), Lists.newArrayList(
-                    new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/item"),
+                    new IngredientComponentCategoryType<>(ResourceLocation.parse("itemstack/item"),
                             Item.class, true,ItemStack::getItem, ItemMatch.ITEM, false),
-                    new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/count"),
+                    new IngredientComponentCategoryType<>(ResourceLocation.parse("itemstack/count"),
                             Integer.class, false, ItemStack::getCount, ItemMatch.STACKSIZE, true),
-                    new IngredientComponentCategoryType<>(new ResourceLocation("itemstack/tag"),
-                            CompoundTag.class, false, ItemStack::getTag, ItemMatch.TAG, false)
+                    new IngredientComponentCategoryType<>(ResourceLocation.parse("itemstack/data"),
+                            DataComponentMap.class, false, ItemStack::getComponents, ItemMatch.DATA, false)
             )).setTranslationKey("recipecomponent.minecraft.itemstack");
 
     public static final IngredientComponent<FluidStack, Integer> FLUIDSTACK =
             new IngredientComponent<>("minecraft:fluidstack", new IngredientMatcherFluidStack(),
                     new IngredientSerializerFluidStack(), Lists.newArrayList(
-                    new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/fluid"),
+                    new IngredientComponentCategoryType<>(ResourceLocation.parse("fluidstack/fluid"),
                             Fluid.class, true, FluidStack::getFluid, FluidMatch.FLUID, false),
-                    new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/amount"),
+                    new IngredientComponentCategoryType<>(ResourceLocation.parse("fluidstack/amount"),
                             Integer.class, false, FluidStack::getAmount, FluidMatch.AMOUNT, true),
-                    new IngredientComponentCategoryType<>(new ResourceLocation("fluidstack/tag"),
-                            CompoundTag.class, false, FluidStack::getTag, FluidMatch.TAG, false)
+                    new IngredientComponentCategoryType<>(ResourceLocation.parse("fluidstack/data"),
+                            DataComponentMap.class, false, FluidStack::getComponents, FluidMatch.DATA, false)
             )).setTranslationKey("recipecomponent.minecraft.fluidstack");
 
     public static final IngredientComponent<Long, Boolean> ENERGY =
             new IngredientComponent<>("minecraft:energy", new IngredientMatcherEnergy(),
                     new IngredientSerializerEnergy(), Lists.newArrayList(
-                    new IngredientComponentCategoryType<>(new ResourceLocation("energy/amount"),
+                    new IngredientComponentCategoryType<>(ResourceLocation.parse("energy/amount"),
                             Long.class, false, amount -> amount, true, true)
             )).setTranslationKey("recipecomponent.minecraft.energy");
 
@@ -72,7 +72,7 @@ public class IngredientComponents {
 
         ITEMSTACK.setStorageWrapperHandler(org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.BLOCK, new IngredientComponentStorageWrapperHandlerItemStackSlotless<>(ITEMSTACK, org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.BLOCK));
         ITEMSTACK.setStorageWrapperHandler(org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ITEM, new IngredientComponentStorageWrapperHandlerItemStackSlotless<>(ITEMSTACK, org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ITEM));
-        ITEMSTACK.setStorageWrapperHandler(org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ENTITY, new IngredientComponentStorageWrapperHandlerItemStackSlotless(ITEMSTACK, org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ENTITY));
+        ITEMSTACK.setStorageWrapperHandler(org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ENTITY, new IngredientComponentStorageWrapperHandlerItemStackSlotless<>(ITEMSTACK, org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ENTITY));
 
         FLUIDSTACK.setStorageWrapperHandler(Capabilities.FluidHandler.BLOCK, new IngredientComponentStorageWrapperHandlerFluidStack<>(FLUIDSTACK, Capabilities.FluidHandler.BLOCK));
         FLUIDSTACK.setStorageWrapperHandler(Capabilities.FluidHandler.ITEM, new IngredientComponentStorageWrapperHandlerFluidStack<>(FLUIDSTACK, Capabilities.FluidHandler.ITEM));

@@ -15,11 +15,14 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 public class IngredientSerializerItemStack implements IIngredientSerializer<ItemStack, Integer> {
     @Override
     public Tag serializeInstance(ItemStack instance) {
-        Tag tag = ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, instance)
-                .getOrThrow(false, JsonParseException::new);
-        if (instance.getCount() > 127) {
-            ((CompoundTag) tag).putInt("ExtendedCount", instance.getCount());
-            ((CompoundTag) tag).putByte("Count", (byte)1);
+        int count = instance.getCount();
+        if (instance.getCount() > 99) {
+            instance.setCount(99);
+        }
+        Tag tag = ItemStack.OPTIONAL_CODEC.encodeStart(NbtOps.INSTANCE, instance)
+                .getOrThrow(JsonParseException::new);
+        if (count > 127) {
+            ((CompoundTag) tag).putInt("ExtendedCount", count);
         }
         return tag;
     }
@@ -27,7 +30,7 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
     @Override
     public ItemStack deserializeInstance(Tag tag) throws IllegalArgumentException {
         ItemStack itemStack = ItemStack.CODEC.parse(NbtOps.INSTANCE, tag)
-                .getOrThrow(false, JsonParseException::new);
+                .getOrThrow(JsonParseException::new);
 
 
         if (!(tag instanceof CompoundTag stackTag)) {

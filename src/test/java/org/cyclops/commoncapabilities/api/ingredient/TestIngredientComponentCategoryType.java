@@ -2,7 +2,9 @@ package org.cyclops.commoncapabilities.api.ingredient;
 
 import net.minecraft.DetectedVersion;
 import net.minecraft.SharedConstants;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -50,16 +52,14 @@ public class TestIngredientComponentCategoryType {
         assertThat(classifier2.apply(new ItemStack(Items.APPLE, 1)), is(1));
         assertThat(classifier2.apply(new ItemStack(Items.APPLE, 2)), is(2));
 
-        assertThat(IngredientComponents.ITEMSTACK.getCategoryTypes().get(2).getCategoryType(), equalTo(CompoundTag.class));
+        assertThat(IngredientComponents.ITEMSTACK.getCategoryTypes().get(2).getCategoryType(), equalTo(DataComponentMap.class));
         assertThat(IngredientComponents.ITEMSTACK.getCategoryTypes().get(2).isReferenceEqual(), is(false));
         assertThat(IngredientComponents.ITEMSTACK.getCategoryTypes().get(2).isPrimaryQuantifier(), is(false));
-        Function<ItemStack, ?> classifier3 = IngredientComponents.ITEMSTACK.getCategoryTypes().get(2).getClassifier();
-        assertThat(classifier3.apply(new ItemStack(Items.APPLE)), nullValue());
+        Function<ItemStack, DataComponentMap> classifier3 = (Function<ItemStack, DataComponentMap>) IngredientComponents.ITEMSTACK.getCategoryTypes().get(2).getClassifier();
+        assertThat(classifier3.apply(new ItemStack(Items.APPLE)).get(DataComponents.ENCHANTMENT_GLINT_OVERRIDE), nullValue());
         ItemStack itemStack = new ItemStack(Items.APPLE);
-        CompoundTag tag = new CompoundTag();
-        tag.putBoolean("a", true);
-        itemStack.setTag(tag);
-        assertThat(classifier3.apply(itemStack), is(tag));
+        itemStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+        assertThat(classifier3.apply(itemStack).get(DataComponents.ENCHANTMENT_GLINT_OVERRIDE), is(true));
     }
 
     @Test
@@ -81,16 +81,14 @@ public class TestIngredientComponentCategoryType {
         assertThat(classifier1.apply(new FluidStack(Fluids.WATER, 1)), is(1));
         assertThat(classifier1.apply(new FluidStack(Fluids.WATER, 2)), is(2));
 
-        assertThat(IngredientComponents.FLUIDSTACK.getCategoryTypes().get(2).getCategoryType(), equalTo(CompoundTag.class));
+        assertThat(IngredientComponents.FLUIDSTACK.getCategoryTypes().get(2).getCategoryType(), equalTo(DataComponentMap.class));
         assertThat(IngredientComponents.FLUIDSTACK.getCategoryTypes().get(2).isReferenceEqual(), is(false));
         assertThat(IngredientComponents.FLUIDSTACK.getCategoryTypes().get(2).isPrimaryQuantifier(), is(false));
-        Function<FluidStack, ?> classifier2 = IngredientComponents.FLUIDSTACK.getCategoryTypes().get(2).getClassifier();
-        assertThat(classifier2.apply(new FluidStack(Fluids.WATER, 1)), nullValue());
+        Function<FluidStack, PatchedDataComponentMap> classifier2 = (Function<FluidStack, PatchedDataComponentMap>) IngredientComponents.FLUIDSTACK.getCategoryTypes().get(2).getClassifier();
+        assertThat(classifier2.apply(new FluidStack(Fluids.WATER, 1)).get(DataComponents.ENCHANTMENT_GLINT_OVERRIDE), nullValue());
         FluidStack fluidStack = new FluidStack(Fluids.WATER, 1);
-        CompoundTag tag = new CompoundTag();
-        tag.putBoolean("a", true);
-        fluidStack.setTag(tag);
-        assertThat(classifier2.apply(fluidStack), is(tag));
+        fluidStack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+        assertThat(classifier2.apply(fluidStack).get(DataComponents.ENCHANTMENT_GLINT_OVERRIDE), is(true));
     }
 
     @Test

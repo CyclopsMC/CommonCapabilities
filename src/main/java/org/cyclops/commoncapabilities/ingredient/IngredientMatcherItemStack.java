@@ -31,7 +31,7 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
 
     @Override
     public Integer getExactMatchNoQuantityCondition() {
-        return ItemMatch.ITEM | ItemMatch.TAG;
+        return ItemMatch.ITEM | ItemMatch.DATA;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
 
     @Override
     public String toString(ItemStack instance) {
-        return String.format("%s %s %s", BuiltInRegistries.ITEM.getKey(instance.getItem()), instance.getCount(), instance.getTag());
+        return String.format("%s %s %s", BuiltInRegistries.ITEM.getKey(instance.getItem()), instance.getCount(), instance.getComponents());
     }
 
     @Override
@@ -128,7 +128,7 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
             int c1 = o1.getCount();
             int c2 = o2.getCount();
             if (c1 == c2) {
-                return IngredientHelpers.compareTags(o1.getTag(), o2.getTag());
+                return IngredientHelpers.compareData(o1.getComponents(), o2.getComponents());
             }
             return c1 - c2;
         }

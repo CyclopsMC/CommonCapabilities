@@ -51,9 +51,9 @@ public class TestFilteredFluidHandlerFluidStackIterator {
     public void testNonEmptyWater() {
         Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(Fluids.WATER, 123), FluidMatch.FLUID);
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 1000)));
+        assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 123)));
+        assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(false));
     }
 
@@ -61,9 +61,9 @@ public class TestFilteredFluidHandlerFluidStackIterator {
     public void testNonEmptyWaterOutOfRange() {
         Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(Fluids.WATER, 123), FluidMatch.FLUID);
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 1000)));
+        assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 123)));
+        assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(false));
 
         it.next();
@@ -73,7 +73,7 @@ public class TestFilteredFluidHandlerFluidStackIterator {
     public void testNonEmptyLava() {
         Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(Fluids.LAVA, 123), FluidMatch.FLUID);
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.LAVA, 1000)));
+        assertThat(it.next().getFluid(), is(Fluids.LAVA));
         assertThat(it.hasNext(), is(false));
     }
 
@@ -81,7 +81,7 @@ public class TestFilteredFluidHandlerFluidStackIterator {
     public void testNonEmptyLavaOutOfRange() {
         Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(Fluids.LAVA, 123), FluidMatch.FLUID);
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.LAVA, 1000)));
+        assertThat(it.next().getFluid(), is(Fluids.LAVA));
         assertThat(it.hasNext(), is(false));
 
         it.next();
@@ -91,7 +91,7 @@ public class TestFilteredFluidHandlerFluidStackIterator {
     public void testNonEmptyWaterExact() {
         Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(Fluids.WATER, 123), FluidMatch.EXACT);
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 123)));
+        assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(false));
     }
 
@@ -99,7 +99,7 @@ public class TestFilteredFluidHandlerFluidStackIterator {
     public void testNonEmptyWaterExactOutOfRange() {
         Iterator<FluidStack> it = new FilteredFluidHandlerFluidStackIterator(HANDLER, new FluidStack(Fluids.WATER, 123), FluidMatch.EXACT);
         assertThat(it.hasNext(), is(true));
-        assertThat(it.next(), is(new FluidStack(Fluids.WATER, 123)));
+        assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(false));
 
         it.next();

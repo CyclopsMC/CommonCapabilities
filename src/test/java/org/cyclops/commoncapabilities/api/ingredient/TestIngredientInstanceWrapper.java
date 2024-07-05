@@ -21,7 +21,7 @@ public class TestIngredientInstanceWrapper {
         C = IngredientComponents.ENERGY;
         C_OTHER = new IngredientComponent<>("minecraft:energyother", new IngredientMatcherEnergy(),
                 new IngredientSerializerEnergy(), Lists.newArrayList(
-                new IngredientComponentCategoryType<>(new ResourceLocation("energy/amount"),
+                new IngredientComponentCategoryType<>(ResourceLocation.parse("energy/amount"),
                         Long.class, false, amount -> amount, true, true)
         ));
     }

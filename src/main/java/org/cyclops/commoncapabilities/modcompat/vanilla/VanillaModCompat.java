@@ -5,14 +5,18 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.GlowItemFrame;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.CraftingTableBlock;
+import net.minecraft.world.level.block.SmithingTableBlock;
 import net.minecraft.world.level.block.StonecutterBlock;
 import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -438,7 +442,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public ICapabilityProvider<FurnaceBlockEntity, Direction, IRecipeHandler> createProvider(BlockEntityType<FurnaceBlockEntity> capabilityKey) {
                             return (blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(blockEntity::getLevel,
-                                    RecipeType.SMELTING, (size) -> size == 1);
+                                    RecipeType.SMELTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)));
                         }
                     });
             registry.registerBlockEntity(() -> BlockEntityType.BLAST_FURNACE,
@@ -451,7 +455,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public ICapabilityProvider<BlastFurnaceBlockEntity, Direction, IRecipeHandler> createProvider(BlockEntityType<BlastFurnaceBlockEntity> capabilityKey) {
                             return (blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(blockEntity::getLevel,
-                                    RecipeType.BLASTING, (size) -> size == 1);
+                                    RecipeType.BLASTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)));
                         }
                     });
             registry.registerBlockEntity(() -> BlockEntityType.SMOKER,
@@ -464,7 +468,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public ICapabilityProvider<SmokerBlockEntity, Direction, IRecipeHandler> createProvider(BlockEntityType<SmokerBlockEntity> capabilityKey) {
                             return (blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(blockEntity::getLevel,
-                                    RecipeType.SMOKING, (size) -> size == 1);
+                                    RecipeType.SMOKING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)));
                         }
                     });
             registry.registerBlockEntity(() -> BlockEntityType.CAMPFIRE,
@@ -477,7 +481,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public ICapabilityProvider<CampfireBlockEntity, Direction, IRecipeHandler> createProvider(BlockEntityType<CampfireBlockEntity> capabilityKey) {
                             return (blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(blockEntity::getLevel,
-                                    RecipeType.CAMPFIRE_COOKING, (size) -> size == 1);
+                                    RecipeType.CAMPFIRE_COOKING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)));
                         }
                     });
             registry.registerInheritableBlock(CraftingTableBlock.class,
@@ -489,7 +493,8 @@ public class VanillaModCompat implements IModCompat {
 
                         @Override
                         public IBlockCapabilityProvider<IRecipeHandler, Direction> createProvider(Block capabilityKey) {
-                            return (level, pos, state, blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(() -> level, RecipeType.CRAFTING, (size) -> size > 0);
+                            return (level, pos, state, blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(() -> level,
+                                    RecipeType.CRAFTING, (size) -> size > 0, CraftingContainer::asCraftInput);
                         }
                     });
             registry.registerBlock(() -> (StonecutterBlock) Blocks.STONECUTTER,
@@ -501,7 +506,21 @@ public class VanillaModCompat implements IModCompat {
 
                         @Override
                         public IBlockCapabilityProvider<IRecipeHandler, Direction> createProvider(StonecutterBlock capabilityKey) {
-                            return (level, pos, state, blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(() -> level, RecipeType.STONECUTTING, (size) -> size == 1);
+                            return (level, pos, state, blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(() -> level,
+                                    RecipeType.STONECUTTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)));
+                        }
+                    });
+            registry.registerBlock(() -> (SmithingTableBlock) Blocks.SMITHING_TABLE,
+                    new IBlockCapabilityConstructor<StonecutterBlock, Direction, IRecipeHandler, SmithingTableBlock>() {
+                        @Override
+                        public BaseCapability<IRecipeHandler, Direction> getCapability() {
+                            return org.cyclops.commoncapabilities.api.capability.Capabilities.RecipeHandler.BLOCK;
+                        }
+
+                        @Override
+                        public IBlockCapabilityProvider<IRecipeHandler, Direction> createProvider(SmithingTableBlock capabilityKey) {
+                            return (level, pos, state, blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(() -> level,
+                                    RecipeType.SMITHING, (size) -> size == 1, (c) -> new SmithingRecipeInput(c.getItem(0), c.getItem(1), c.getItem(2)));
                         }
                     });
         };

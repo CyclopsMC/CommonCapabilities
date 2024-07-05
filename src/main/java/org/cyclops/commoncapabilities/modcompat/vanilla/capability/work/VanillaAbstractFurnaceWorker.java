@@ -1,12 +1,12 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.work;
 
 import lombok.SneakyThrows;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
@@ -38,10 +38,10 @@ public class VanillaAbstractFurnaceWorker implements IWorker {
     @Override
     public boolean hasWork() {
         ItemStack toMelt = furnace.getItem(0);
-        Recipe<?> recipe = furnace.getLevel().getRecipeManager().getRecipeFor(((RecipeType<? extends AbstractCookingRecipe >) FIELD_RECIPE_TYPE.get(furnace)), furnace, furnace.getLevel())
+        Recipe<?> recipe = furnace.getLevel().getRecipeManager().getRecipeFor(((RecipeType<? extends AbstractCookingRecipe>) FIELD_RECIPE_TYPE.get(furnace)), new SingleRecipeInput(furnace.getItem(0)), furnace.getLevel())
                 .map(RecipeHolder::value)
                 .orElse(null);
-        return !toMelt.isEmpty() && recipe != null && !((Recipe<WorldlyContainer>) recipe).assemble(furnace, furnace.getLevel().registryAccess()).isEmpty();
+        return !toMelt.isEmpty() && recipe != null && !((Recipe<SingleRecipeInput>) recipe).assemble(new SingleRecipeInput(furnace.getItem(0)), furnace.getLevel().registryAccess()).isEmpty();
     }
 
     @Override

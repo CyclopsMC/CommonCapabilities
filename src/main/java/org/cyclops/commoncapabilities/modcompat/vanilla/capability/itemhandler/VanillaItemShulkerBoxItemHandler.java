@@ -1,10 +1,9 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.world.ContainerHelper;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import org.cyclops.commoncapabilities.capability.itemhandler.ItemItemHandler;
 
 import javax.annotation.Nonnull;
@@ -21,29 +20,24 @@ public class VanillaItemShulkerBoxItemHandler extends ItemItemHandler {
 
     @Override
     protected NonNullList<ItemStack> getItemList() {
-        NonNullList<ItemStack> itemStacks = NonNullList.withSize(getSlots(), ItemStack.EMPTY);
-        CompoundTag rootTag = getItemStack().getTag();
-        if (rootTag != null && rootTag.contains("BlockEntityTag", Tag.TAG_COMPOUND)) {
-            CompoundTag entityTag = rootTag.getCompound("BlockEntityTag");
-            if (entityTag.contains("Items", Tag.TAG_LIST)) {
-                ContainerHelper.loadAllItems(entityTag, itemStacks);
-            }
+        ItemContainerContents container = getItemStack().get(DataComponents.CONTAINER);
+        if (container != null) {
+            NonNullList<ItemStack> list = NonNullList.create();
+            container.stream().forEach(list::add);
+            list.add(ItemStack.EMPTY);
+            return list;
         }
-        return itemStacks;
+        return NonNullList.withSize(1, ItemStack.EMPTY);
     }
 
     @Override
     protected void setItemList(NonNullList<ItemStack> itemStacks) {
-        CompoundTag rootTag = getItemStack().getOrCreateTag();
-        if (!rootTag.contains("BlockEntityTag", Tag.TAG_COMPOUND)) {
-            rootTag.put("BlockEntityTag", new CompoundTag());
-        }
-        ContainerHelper.saveAllItems(rootTag.getCompound("BlockEntityTag"), itemStacks);
+        getItemStack().set(DataComponents.CONTAINER, ItemContainerContents.fromItems(itemStacks));
     }
 
     @Override
     public int getSlots() {
-        return 27;
+        return getItemList().size();
     }
 
 

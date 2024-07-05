@@ -3,7 +3,6 @@ package org.cyclops.commoncapabilities.capability.itemhandler;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nonnull;
 
@@ -52,7 +51,7 @@ public abstract class ItemItemHandler implements IItemHandlerModifiable {
 
         int maxStackSize;
         if (!existingStack.isEmpty()) {
-            if (!ItemHandlerHelper.canItemStacksStack(stack, existingStack))
+            if (!ItemStack.isSameItemSameComponents(stack, existingStack))
                 return stack;
 
             maxStackSize = Math.min(stack.getMaxStackSize(), getSlotLimit(slot)) - existingStack.getCount();

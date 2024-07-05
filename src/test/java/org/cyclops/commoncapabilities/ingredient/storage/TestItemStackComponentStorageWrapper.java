@@ -71,7 +71,7 @@ public class TestItemStackComponentStorageWrapper {
 
     @Test
     public void testGetMaxQuantity() {
-        assertThat(wrapper.getMaxQuantity(), is(640L));
+        assertThat(wrapper.getMaxQuantity(), is(990L));
     }
 
     @Test

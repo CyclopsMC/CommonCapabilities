@@ -1,10 +1,10 @@
 package org.cyclops.commoncapabilities.vanilla_capability_itemitemhandler;
 
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -68,7 +68,7 @@ public class TestCapabilityItemItemHandlerMod {
         Block block = event.getLevel().getBlockState(event.getEntity().getOnPos()).getBlock();
         if (block == Blocks.HAY_BLOCK || block == Blocks.STONE) {
             event.setCanceled(true);
-            event.setResult(Event.Result.DENY);
+            event.setCancellationResult(InteractionResult.FAIL);
         }
     }
 }
