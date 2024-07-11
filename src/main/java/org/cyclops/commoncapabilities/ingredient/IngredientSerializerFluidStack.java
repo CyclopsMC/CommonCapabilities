@@ -14,13 +14,13 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 public class IngredientSerializerFluidStack implements IIngredientSerializer<FluidStack, Integer> {
     @Override
     public Tag serializeInstance(FluidStack instance) {
-        return instance.isEmpty() ? new CompoundTag() : FluidStack.CODEC.encodeStart(NbtOps.INSTANCE, instance).getOrThrow();
+        return instance.isEmpty() ? new CompoundTag() : FluidStack.OPTIONAL_CODEC.encodeStart(NbtOps.INSTANCE, instance).getOrThrow();
     }
 
     @Override
     public FluidStack deserializeInstance(Tag tag) throws IllegalArgumentException {
         try {
-            return FluidStack.CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
+            return FluidStack.OPTIONAL_CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
         } catch (IllegalStateException e) {
             throw new IllegalArgumentException(e);
         }

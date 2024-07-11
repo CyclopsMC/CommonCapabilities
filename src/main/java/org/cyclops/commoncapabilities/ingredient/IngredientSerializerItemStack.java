@@ -29,7 +29,7 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
 
     @Override
     public ItemStack deserializeInstance(Tag tag) throws IllegalArgumentException {
-        ItemStack itemStack = ItemStack.CODEC.parse(NbtOps.INSTANCE, tag)
+        ItemStack itemStack = ItemStack.OPTIONAL_CODEC.parse(NbtOps.INSTANCE, tag)
                 .getOrThrow(JsonParseException::new);
 
 
