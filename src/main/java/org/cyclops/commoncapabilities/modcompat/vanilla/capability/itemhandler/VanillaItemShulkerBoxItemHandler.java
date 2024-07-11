@@ -21,13 +21,11 @@ public class VanillaItemShulkerBoxItemHandler extends ItemItemHandler {
     @Override
     protected NonNullList<ItemStack> getItemList() {
         ItemContainerContents container = getItemStack().get(DataComponents.CONTAINER);
+        NonNullList<ItemStack> list = NonNullList.withSize(27, ItemStack.EMPTY);
         if (container != null) {
-            NonNullList<ItemStack> list = NonNullList.create();
-            container.stream().forEach(list::add);
-            list.add(ItemStack.EMPTY);
-            return list;
+            container.copyInto(list);
         }
-        return NonNullList.withSize(1, ItemStack.EMPTY);
+        return list;
     }
 
     @Override
