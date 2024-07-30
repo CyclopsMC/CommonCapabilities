@@ -1,0 +1,9 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.18.4 or higher.
+
+Fixes:
+* Correctly extract from slots with limit > 64
+  This fixes issues with Integrated Tunnels and Crafting when interacting
+  with mods such as Sophisticated Barrels.
+  Closes CyclopsMC/IntegratedCrafting#106
+
