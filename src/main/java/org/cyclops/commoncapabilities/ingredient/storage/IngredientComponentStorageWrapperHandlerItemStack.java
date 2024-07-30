@@ -2,8 +2,8 @@ package org.cyclops.commoncapabilities.ingredient.storage;
 
 import com.google.common.collect.Iterators;
 import com.google.common.collect.Lists;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -146,7 +146,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack
             int subMatchFlags = matchFlags & ~ItemMatch.STACKSIZE;
 
             for (int slot = 0; slot < slots; slot++) {
-                ItemStack extractedSimulated = storage.extractItem(slot, requiredStackSize, true);
+                ItemStack extractedSimulated = storageExtractItem(slot, requiredStackSize, true);
                 if (!extractedSimulated.isEmpty()
                         && getComponent().getMatcher().matches(prototype, extractedSimulated, subMatchFlags)) {
                     ItemStack storagePrototype = getComponent().getMatcher().withQuantity(extractedSimulated, 1);
@@ -199,7 +199,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack
             if (!simulate && extractedCount > 0) {
                 int toExtract = requiredQuantity;
                 for (Integer finalSlot : value.getRight()) {
-                    ItemStack extractedActual = storage.extractItem(finalSlot, toExtract, false);
+                    ItemStack extractedActual = storageExtractItem(finalSlot, toExtract, false);
                     toExtract -= extractedActual.getCount();
                 }
                 // Quick heuristic check to see if 'storage' did not lie during its simulation
@@ -215,9 +215,9 @@ public class IngredientComponentStorageWrapperHandlerItemStack
             int slots = storage.getSlots();
             int amount = Helpers.castSafe(maxQuantity);
             for (int slot = 0; slot < slots; slot++) {
-                ItemStack extractedSimulated = storage.extractItem(slot, amount, true);
+                ItemStack extractedSimulated = storageExtractItem(slot, amount, true);
                 if (!extractedSimulated.isEmpty()) {
-                    return simulate ? extractedSimulated : storage.extractItem(slot, amount, false);
+                    return simulate ? extractedSimulated : storageExtractItem(slot, amount, false);
                 }
             }
             return ItemStack.EMPTY;
@@ -245,7 +245,51 @@ public class IngredientComponentStorageWrapperHandlerItemStack
 
         @Override
         public ItemStack extract(int slot, long maxQuantity, boolean simulate) {
-            return storage.extractItem(slot, Helpers.castSafe(maxQuantity), simulate);
+            return storageExtractItem(slot, Helpers.castSafe(maxQuantity), simulate);
+        }
+
+        protected ItemStack storageExtractItem(int slot, int amount, boolean simulate) {
+            // Special handling for inventories that have larger slot sizes, such as Sophisticated Barrels.
+            // See https://github.com/CyclopsMC/IntegratedCrafting/issues/106
+            int maxStackSize = ItemStack.EMPTY.getMaxStackSize();
+            if (amount > maxStackSize && storage.getSlotLimit(slot) > maxStackSize) {
+                if (simulate) {
+                    // In simulate-mode, extract up to max stack size.
+                    // If the returned stack less than max stack size, return it.
+                    // Otherwise, return the full stack in the slot up to the requested amount.
+                    ItemStack extractedUntilMaxStackSize = storage.extractItem(slot, maxStackSize, true);
+                    if (extractedUntilMaxStackSize.getCount() < maxStackSize) {
+                        return extractedUntilMaxStackSize;
+                    } else {
+                        ItemStack stackInSlot = storage.getStackInSlot(slot).copy();
+                        if (stackInSlot.getCount() > amount) {
+                            stackInSlot.setCount(amount);
+                        }
+                        return stackInSlot;
+                    }
+                } else {
+                    // Iterate extraction until requested amount is reached.
+                    ItemStack bufferExtracted = ItemStack.EMPTY;
+                    while (bufferExtracted.getCount() < amount) {
+                        ItemStack extractedPartial = storage.extractItem(slot, Math.min(amount - bufferExtracted.getCount(), maxStackSize), false);
+
+                        // Stop loop if empty
+                        if (extractedPartial.isEmpty()) {
+                            break;
+                        }
+
+                        // Add to buffer
+                        if (bufferExtracted.isEmpty()) {
+                            bufferExtracted = extractedPartial;
+                        } else {
+                            bufferExtracted.setCount(bufferExtracted.getCount() + extractedPartial.getCount());
+                        }
+                    }
+                    return bufferExtracted;
+                }
+            }
+
+            return storage.extractItem(slot, amount, simulate);
         }
     }
 
