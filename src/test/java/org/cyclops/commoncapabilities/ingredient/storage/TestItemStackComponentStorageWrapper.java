@@ -1,7 +1,10 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
+import com.google.common.collect.Sets;
 import net.minecraft.DetectedVersion;
 import net.minecraft.SharedConstants;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -9,6 +12,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
+import org.cyclops.commoncapabilities.ingredient.DataComparator;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientArrayList;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientLinkedList;
 import org.junit.Before;
@@ -31,15 +35,25 @@ public class TestItemStackComponentStorageWrapper {
     private static ItemStack APPLE_8;
     private static ItemStack APPLE_9;
     private static ItemStack APPLE_11;
+    private static ItemStack APPLE_130;
+    private static ItemStack APPLE_70;
+    private static ItemStack APPLE_60;
 
     private IItemHandler storage;
     private IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapper;
+
+    private IItemHandler storageLarge;
+    private IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapperLarge;
 
     @BeforeClass
     public static void init() {
         // We need the Minecraft registries to be filled
         SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
+
+        ItemMatch.DATA_COMPARATOR = DataComparator.INSTANCE = new DataComparator(Sets.newHashSet(
+                BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.DAMAGE)
+        ));
     }
 
     public static boolean eq(ItemStack a, ItemStack b) {
@@ -57,21 +71,35 @@ public class TestItemStackComponentStorageWrapper {
         APPLE_9 = new ItemStack(Items.APPLE, 9);
         APPLE_3 = new ItemStack(Items.APPLE, 3);
         APPLE_11 = new ItemStack(Items.APPLE, 11);
+        APPLE_130 = new ItemStack(Items.APPLE, 130);
+        APPLE_70 = new ItemStack(Items.APPLE, 70);
+        APPLE_60 = new ItemStack(Items.APPLE, 60);
 
         storage = new ItemStackHandler(10);
         ((ItemStackHandler) storage).setStackInSlot(2, APPLE_1.copy());
         ((ItemStackHandler) storage).setStackInSlot(6, APPLE_10.copy());
         wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, storage);
+
+        storageLarge = new ItemStackHandler(1) {
+            @Override
+            public int getSlotLimit(int slot) {
+                return 130;
+            }
+        };
+        ((ItemStackHandler) storageLarge).setStackInSlot(0, APPLE_130.copy());
+        wrapperLarge = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, storageLarge);
     }
 
     @Test
     public void testGetComponent() {
         assertThat(wrapper.getComponent(), is(IngredientComponents.ITEMSTACK));
+        assertThat(wrapperLarge.getComponent(), is(IngredientComponents.ITEMSTACK));
     }
 
     @Test
     public void testGetMaxQuantity() {
         assertThat(wrapper.getMaxQuantity(), is(990L));
+        assertThat(wrapperLarge.getMaxQuantity(), is(130L));
     }
 
     @Test
@@ -80,6 +108,10 @@ public class TestItemStackComponentStorageWrapper {
                 is(new IngredientLinkedList<>(IngredientComponents.ITEMSTACK,
                         new IngredientArrayList<>(IngredientComponents.ITEMSTACK, ItemStack.EMPTY, ItemStack.EMPTY, APPLE_1, ItemStack.EMPTY, ItemStack.EMPTY,
                                 ItemStack.EMPTY, APPLE_10, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY))));
+
+        assertThat(new IngredientLinkedList<>(IngredientComponents.ITEMSTACK, wrapperLarge.iterator()),
+                is(new IngredientLinkedList<>(IngredientComponents.ITEMSTACK,
+                        new IngredientArrayList<>(IngredientComponents.ITEMSTACK, APPLE_130))));
     }
 
     @Test
@@ -95,6 +127,9 @@ public class TestItemStackComponentStorageWrapper {
         assertThat(new IngredientArrayList<>(IngredientComponents.ITEMSTACK, wrapper.iterator(APPLE_10, ItemMatch.ANY)), is(
                 new IngredientArrayList<>(IngredientComponents.ITEMSTACK, ItemStack.EMPTY, ItemStack.EMPTY, APPLE_1, ItemStack.EMPTY, ItemStack.EMPTY,
                         ItemStack.EMPTY, APPLE_10, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY)));
+
+        assertThat(new IngredientArrayList<>(IngredientComponents.ITEMSTACK, wrapperLarge.iterator(ItemStack.EMPTY, ItemMatch.EXACT)), is(new IngredientArrayList<>(IngredientComponents.ITEMSTACK)));
+        assertThat(new IngredientArrayList<>(IngredientComponents.ITEMSTACK, wrapperLarge.iterator(APPLE_130, ItemMatch.EXACT)), is(new IngredientArrayList<>(IngredientComponents.ITEMSTACK, APPLE_130)));
     }
 
     @Test
@@ -158,6 +193,9 @@ public class TestItemStackComponentStorageWrapper {
         ItemStackHandler storage = new ItemStackHandler(0);
         IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, storage);
         assertThat(eq(wrapper.insert(APPLE_64, true), APPLE_64), is(true));
+
+        assertThat(wrapperLarge.insert(APPLE_130, true), is(APPLE_130));
+        assertThat(eq(storageLarge.getStackInSlot(0), APPLE_130), is(true));
     }
 
     @Test
@@ -281,6 +319,24 @@ public class TestItemStackComponentStorageWrapper {
         assertThat(eq(wrapper.extract(10, false), APPLE_10), is(true));
         assertThat(eq(storage.getStackInSlot(2), ItemStack.EMPTY), is(true));
         assertThat(eq(storage.getStackInSlot(6), ItemStack.EMPTY), is(true));
+    }
+
+    @Test
+    public void testExtractLarge() {
+        assertThat(eq(wrapperLarge.extract(APPLE_130, ItemMatch.ITEM, true), APPLE_130), is(true));
+        assertThat(eq(storageLarge.getStackInSlot(0), APPLE_130), is(true));
+
+        assertThat(eq(wrapperLarge.extract(APPLE_130, ItemMatch.ITEM, false), APPLE_130), is(true));
+        assertThat(eq(storageLarge.getStackInSlot(0), ItemStack.EMPTY), is(true));
+    }
+
+    @Test
+    public void testExtractLargePartial() {
+        assertThat(eq(wrapperLarge.extract(APPLE_70, ItemMatch.ITEM, true), APPLE_70), is(true));
+        assertThat(eq(storageLarge.getStackInSlot(0), APPLE_130), is(true));
+
+        assertThat(eq(wrapperLarge.extract(APPLE_70, ItemMatch.ITEM, false), APPLE_70), is(true));
+        assertThat(eq(storageLarge.getStackInSlot(0), APPLE_60), is(true));
     }
 
 }
