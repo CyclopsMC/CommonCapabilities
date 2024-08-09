@@ -1,0 +1,13 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.19.10 or higher.
+
+Added:
+* Add missing serialization context when decoding ingredients
+  This fixes a problem in Integrated Terminals where terminals break if
+  they contain enchanted items.
+  Closes CyclopsMC/IntegratedDynamics#1375
+
+Fixes:
+* Fix capability getter failing with void context capabilities
+  This fixes crashes with the Integrated Dynamics world item importer,
+  Closes CyclopsMC/IntegratedDynamics#1376
