@@ -3,6 +3,7 @@ package org.cyclops.commoncapabilities.ingredient;
 import net.minecraft.DetectedVersion;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -20,6 +21,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientSerializerFluidStack {
+
+    private static final HolderLookup.Provider HL = TestHolderLookupProvider.get();
 
     private static IngredientSerializerFluidStack S;
     private static DataComponentPatch DATA;
@@ -55,20 +58,20 @@ public class TestIngredientSerializerFluidStack {
 
     @Test
     public void serializeInstance() {
-        assertThat(S.serializeInstance(F1), is(F_TAG1));
-        assertThat(S.serializeInstance(F2), is(F_TAG2));
-        assertThat(S.serializeInstance(FluidStack.EMPTY), is(new CompoundTag()));
+        assertThat(S.serializeInstance(HL, F1), is(F_TAG1));
+        assertThat(S.serializeInstance(HL, F2), is(F_TAG2));
+        assertThat(S.serializeInstance(HL, FluidStack.EMPTY), is(new CompoundTag()));
     }
 
     @Test
     public void deserializeInstance() {
-        assertThat(eq(S.deserializeInstance(F_TAG1), F1), is(true));
-        assertThat(eq(S.deserializeInstance(F_TAG2), F2), is(true));
+        assertThat(eq(S.deserializeInstance(HL, F_TAG1), F1), is(true));
+        assertThat(eq(S.deserializeInstance(HL, F_TAG2), F2), is(true));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void deserializeInstanceInvalid() {
-        S.deserializeInstance(StringTag.valueOf("0"));
+        S.deserializeInstance(HL, StringTag.valueOf("0"));
     }
 
     @Test

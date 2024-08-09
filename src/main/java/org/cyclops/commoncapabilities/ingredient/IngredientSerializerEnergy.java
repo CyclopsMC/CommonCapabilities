@@ -1,5 +1,6 @@
 package org.cyclops.commoncapabilities.ingredient;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.IntTag;
@@ -12,12 +13,12 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
  */
 public class IngredientSerializerEnergy implements IIngredientSerializer<Long, Boolean> {
     @Override
-    public Tag serializeInstance(Long instance) {
+    public Tag serializeInstance(HolderLookup.Provider lookupProvider, Long instance) {
         return LongTag.valueOf(instance);
     }
 
     @Override
-    public Long deserializeInstance(Tag tag) throws IllegalArgumentException {
+    public Long deserializeInstance(HolderLookup.Provider lookupProvider, Tag tag) throws IllegalArgumentException {
         if (tag instanceof IntTag) {
             // TODO: needed for backwards-compatibility, remove in next major version
             return Long.valueOf(((IntTag) tag).getAsInt());

@@ -1,6 +1,7 @@
 package org.cyclops.commoncapabilities.ingredient;
 
 import com.google.gson.JsonParseException;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.NbtOps;
@@ -14,12 +15,12 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
  */
 public class IngredientSerializerItemStack implements IIngredientSerializer<ItemStack, Integer> {
     @Override
-    public Tag serializeInstance(ItemStack instance) {
+    public Tag serializeInstance(HolderLookup.Provider lookupProvider, ItemStack instance) {
         int count = instance.getCount();
         if (instance.getCount() > 99) {
             instance.setCount(99);
         }
-        Tag tag = ItemStack.OPTIONAL_CODEC.encodeStart(NbtOps.INSTANCE, instance)
+        Tag tag = ItemStack.OPTIONAL_CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), instance)
                 .getOrThrow(JsonParseException::new);
         if (count > 127) {
             ((CompoundTag) tag).putInt("ExtendedCount", count);
@@ -28,8 +29,8 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
     }
 
     @Override
-    public ItemStack deserializeInstance(Tag tag) throws IllegalArgumentException {
-        ItemStack itemStack = ItemStack.OPTIONAL_CODEC.parse(NbtOps.INSTANCE, tag)
+    public ItemStack deserializeInstance(HolderLookup.Provider lookupProvider, Tag tag) throws IllegalArgumentException {
+        ItemStack itemStack = ItemStack.OPTIONAL_CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
                 .getOrThrow(JsonParseException::new);
 
 

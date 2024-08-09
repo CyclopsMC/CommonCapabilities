@@ -2,6 +2,7 @@ package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.DetectedVersion;
 import net.minecraft.SharedConstants;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +19,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientSerializerItemStack {
+
+    private static final HolderLookup.Provider HL = TestHolderLookupProvider.get();
 
     private static IngredientSerializerItemStack S;
     private static DataComponentPatch DATA;
@@ -75,32 +78,32 @@ public class TestIngredientSerializerItemStack {
 
     @Test
     public void serializeInstance() {
-        assertThat(S.serializeInstance(I1), is(I_TAG1));
-        assertThat(S.serializeInstance(I2), is(I_TAG2));
-        assertThat(S.serializeInstance(ItemStack.EMPTY), is(I_TAG_EMPTY));
+        assertThat(S.serializeInstance(HL, I1), is(I_TAG1));
+        assertThat(S.serializeInstance(HL, I2), is(I_TAG2));
+        assertThat(S.serializeInstance(HL, ItemStack.EMPTY), is(I_TAG_EMPTY));
     }
 
     @Test
     public void serializeInstanceLarge() {
-        assertThat(S.serializeInstance(I1L), is(I_TAG1L));
-        assertThat(S.serializeInstance(I2L), is(I_TAG2L));
+        assertThat(S.serializeInstance(HL, I1L), is(I_TAG1L));
+        assertThat(S.serializeInstance(HL, I2L), is(I_TAG2L));
     }
 
     @Test
     public void deserializeInstance() {
-        assertThat(ItemStack.isSameItemSameComponents(I1, S.deserializeInstance(I_TAG1)), is(true));
-        assertThat(ItemStack.isSameItemSameComponents(I2, S.deserializeInstance(I_TAG2)), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(I1, S.deserializeInstance(HL, I_TAG1)), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(I2, S.deserializeInstance(HL, I_TAG2)), is(true));
     }
 
     @Test
     public void deserializeInstanceLarge() {
-        assertThat(ItemStack.isSameItemSameComponents(I1L, S.deserializeInstance(I_TAG1L)), is(true));
-        assertThat(ItemStack.isSameItemSameComponents(I2L, S.deserializeInstance(I_TAG2L)), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(I1L, S.deserializeInstance(HL, I_TAG1L)), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(I2L, S.deserializeInstance(HL, I_TAG2L)), is(true));
     }
 
     @Test(expected = RuntimeException.class)
     public void deserializeInstanceInvalid() {
-        S.deserializeInstance(StringTag.valueOf("0"));
+        S.deserializeInstance(HL, StringTag.valueOf("0"));
     }
 
     @Test
