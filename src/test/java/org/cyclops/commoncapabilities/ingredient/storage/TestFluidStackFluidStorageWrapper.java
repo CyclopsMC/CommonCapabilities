@@ -11,8 +11,10 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import org.cyclops.commoncapabilities.IngredientComponents;
+import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidHandlerConcatenate;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidTankFixed;
+import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -48,6 +50,7 @@ public class TestFluidStackFluidStorageWrapper {
         // We need the Minecraft registries to be filled
         SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
+        CyclopsCoreInstance.MOD = new ModBaseMocked();
     }
 
     public static boolean eq(FluidStack a, FluidStack b) {

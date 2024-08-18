@@ -9,11 +9,13 @@ import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.cyclops.commoncapabilities.IngredientComponents;
+import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
 import org.cyclops.commoncapabilities.ingredient.DataComparator;
+import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -41,6 +43,7 @@ public class TestRecipeDefinition {
         SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
         setStatic(IngredientComponent.class.getField("ITEMSTACK"), IngredientComponents.ITEMSTACK);
+        CyclopsCoreInstance.MOD = new ModBaseMocked();
 
         Map<IngredientComponent<?, ?>, List<IPrototypedIngredientAlternatives<?, ?>>> dInputMap = Maps.newIdentityHashMap();
         dInputMap.put(IngredientComponents.ITEMSTACK, Lists.newArrayList(

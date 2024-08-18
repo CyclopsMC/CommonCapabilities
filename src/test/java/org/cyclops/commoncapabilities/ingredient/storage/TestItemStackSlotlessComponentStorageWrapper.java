@@ -8,8 +8,10 @@ import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.cyclops.commoncapabilities.IngredientComponents;
+import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.DefaultSlotlessItemHandlerWrapper;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
+import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientArrayList;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientLinkedList;
 import org.junit.Before;
@@ -41,6 +43,7 @@ public class TestItemStackSlotlessComponentStorageWrapper {
         // We need the Minecraft registries to be filled
         SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
+        CyclopsCoreInstance.MOD = new ModBaseMocked();
     }
 
     public static boolean eq(ItemStack a, ItemStack b) {

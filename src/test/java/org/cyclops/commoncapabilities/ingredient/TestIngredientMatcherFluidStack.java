@@ -8,7 +8,9 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
+import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
+import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -36,6 +38,7 @@ public class TestIngredientMatcherFluidStack {
         // We need the Minecraft registries to be filled
         SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
+        CyclopsCoreInstance.MOD = new ModBaseMocked();
 
         M = new IngredientMatcherFluidStack();
 

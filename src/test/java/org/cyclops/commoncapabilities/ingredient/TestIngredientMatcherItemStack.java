@@ -9,7 +9,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
+import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
 import org.cyclops.cyclopscore.nbt.path.NbtParseException;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,6 +44,7 @@ public class TestIngredientMatcherItemStack {
         // We need the Minecraft registries to be filled
         SharedConstants.setVersion(DetectedVersion.BUILT_IN);
         Bootstrap.bootStrap();
+        CyclopsCoreInstance.MOD = new ModBaseMocked();
 
         M = new IngredientMatcherItemStack();
 
