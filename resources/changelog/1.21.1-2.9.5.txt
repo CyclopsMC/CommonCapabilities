@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.25.1 or higher.
+
+Fixes:
+* Fix mutation when serializing items with count > 99
+  This caused desync issues in mods such as Integrated Terminals.
+  Closes CyclopsMC/IntegratedTerminals#126
