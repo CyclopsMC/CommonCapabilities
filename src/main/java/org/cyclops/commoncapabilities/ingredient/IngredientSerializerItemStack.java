@@ -18,6 +18,7 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
     public Tag serializeInstance(HolderLookup.Provider lookupProvider, ItemStack instance) {
         int count = instance.getCount();
         if (instance.getCount() > 99) {
+            instance = instance.copy();
             instance.setCount(99);
         }
         Tag tag = ItemStack.OPTIONAL_CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), instance)
