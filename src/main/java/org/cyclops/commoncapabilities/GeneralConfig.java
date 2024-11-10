@@ -37,7 +37,7 @@ public class GeneralConfig extends DummyConfig {
 
     @ConfigurableProperty(category = "machine", comment = "The data component types that should be filtered away when checking equality.", configLocation = ModConfig.Type.SERVER)
     public static List<String> ignoreDataComponentsForEqualityFilters = Lists.newArrayList(
-            "integrateddynamics:energy" // Integrated Dynamics batteries
+            "cyclopscore:energy_storage" // Integrated Dynamics batteries
     );
 
     public GeneralConfig() {
