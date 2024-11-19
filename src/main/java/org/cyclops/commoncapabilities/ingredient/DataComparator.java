@@ -23,6 +23,7 @@ public class DataComparator implements Comparator<DataComponentMap> {
     public static Comparator<DataComponentMap> INSTANCE = new DataComparator(null);
 
     private final Set<ResourceLocation> ignoreDataComponentTypes;
+    private Set<DataComponentType<?>> ignoreDataComponentTypeInstances;
 
     public DataComparator(@Nullable Set<ResourceLocation> ignoreDataComponentTypes) {
         this.ignoreDataComponentTypes = ignoreDataComponentTypes;
@@ -35,16 +36,38 @@ public class DataComparator implements Comparator<DataComponentMap> {
 
     protected int compare(DataComponentMap o1, DataComponentMap o2, @Nullable Set<ResourceLocation> ignoreDataComponentTypes) {
         // Return immediately if identical
-        if (o1 == o2) {
+        if (o1 == o2 || o1.equals(o2)) {
             return 0;
         }
 
         // Determine keys to compare
         Set<DataComponentType<?>> k1 = o1.keySet();
         Set<DataComponentType<?>> k2 = o2.keySet();
+
+        // If relevant, ignore data components
         if (ignoreDataComponentTypes != null) {
-            k1 = k1.stream().filter(k -> !ignoreDataComponentTypes.contains(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(k))).collect(Collectors.toSet());
-            k2 = k2.stream().filter(k -> !ignoreDataComponentTypes.contains(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(k))).collect(Collectors.toSet());
+            if (ignoreDataComponentTypeInstances == null) {
+                ignoreDataComponentTypeInstances = ignoreDataComponentTypes.stream().map(BuiltInRegistries.DATA_COMPONENT_TYPE::get).collect(Collectors.toSet());
+            }
+            boolean filterK1 = false;
+            boolean filterK2 = false;
+            for (DataComponentType<?> dataComponentType : ignoreDataComponentTypeInstances) {
+                if (!filterK1 && k1.contains(dataComponentType)) {
+                    filterK1 = true;
+                }
+                if (!filterK2 && k2.contains(dataComponentType)) {
+                    filterK2 = true;
+                }
+                if (filterK1 && filterK2) {
+                    break;
+                }
+            }
+            if (filterK1) {
+                k1 = k1.stream().filter(k -> !ignoreDataComponentTypeInstances.contains(k)).collect(Collectors.toSet());
+            }
+            if (filterK2) {
+                k2 = k2.stream().filter(k -> !ignoreDataComponentTypeInstances.contains(k)).collect(Collectors.toSet());
+            }
         }
 
         // Check if keys are equal
