@@ -1,13 +1,8 @@
 {
-    "_comment": "Configuration",
     "config.commoncapabilities": "%s yapılandırması",
-
-    "_comment": "# Recipe components",
     "recipecomponent.minecraft.itemstack": "Eşya",
     "recipecomponent.minecraft.fluidstack": "Sıvı",
     "recipecomponent.minecraft.energy": "Enerji",
-
-    "_comment": "# Capability settings",
     "capability.commoncapabilities.inventoryState": "Envanter durumu",
     "capability.commoncapabilities.temperature": "Sıcaklık",
     "capability.commoncapabilities.worker": "Çalışan",
