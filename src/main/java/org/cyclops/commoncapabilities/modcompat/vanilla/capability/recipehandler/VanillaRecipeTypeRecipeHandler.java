@@ -64,13 +64,15 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
     private final Supplier<Level> worldSupplier;
     private final RecipeType<T> recipeType;
     private final Predicate<Integer> inputSizePredicate;
+    private final boolean ignoreEmptySlots;
 
     private static Map<Pair<RecipeType<?>, ResourceLocation>, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
 
-    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate) {
+    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate, boolean ignoreEmptySlots) {
         this.worldSupplier = worldSupplier;
         this.recipeType = recipeType;
         this.inputSizePredicate = inputSizePredicate;
+        this.ignoreEmptySlots = ignoreEmptySlots;
     }
 
     @Override
@@ -150,7 +152,10 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
     @Override
     public IMixedIngredients simulate(IMixedIngredients input) {
         List<ItemStack> recipeIngredients = input.getInstances(IngredientComponent.ITEMSTACK);
-        if (input.getComponents().size() != 1 || recipeIngredients.size() < 1) {
+        if (this.ignoreEmptySlots) {
+            recipeIngredients = recipeIngredients.stream().filter(itemStack -> !itemStack.isEmpty()).toList();
+        }
+        if (input.getComponents().size() != 1 || recipeIngredients.isEmpty()) {
             return null;
         }
 

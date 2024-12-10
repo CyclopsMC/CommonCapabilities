@@ -439,7 +439,7 @@ public class VanillaModCompat implements IModCompat {
                 @Override
                 public ICapabilityProvider createProvider(FurnaceBlockEntity hostType, FurnaceBlockEntity host) {
                     return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
-                            RecipeType.SMELTING, (size) -> size == 1));
+                            RecipeType.SMELTING, (size) -> size == 1, true));
                 }
             });
             registry.registerTile(BlastFurnaceBlockEntity.class, new ICapabilityConstructor<IRecipeHandler, BlastFurnaceBlockEntity, BlastFurnaceBlockEntity>() {
@@ -452,7 +452,7 @@ public class VanillaModCompat implements IModCompat {
                 @Override
                 public ICapabilityProvider createProvider(BlastFurnaceBlockEntity hostType, BlastFurnaceBlockEntity host) {
                     return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
-                            RecipeType.BLASTING, (size) -> size == 1));
+                            RecipeType.BLASTING, (size) -> size == 1, true));
                 }
             });
             registry.registerTile(SmokerBlockEntity.class, new ICapabilityConstructor<IRecipeHandler, SmokerBlockEntity, SmokerBlockEntity>() {
@@ -465,7 +465,7 @@ public class VanillaModCompat implements IModCompat {
                 @Override
                 public ICapabilityProvider createProvider(SmokerBlockEntity hostType, SmokerBlockEntity host) {
                     return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
-                            RecipeType.SMOKING, (size) -> size == 1));
+                            RecipeType.SMOKING, (size) -> size == 1, true));
                 }
             });
             registry.registerTile(CampfireBlockEntity.class, new ICapabilityConstructor<IRecipeHandler, CampfireBlockEntity, CampfireBlockEntity>() {
@@ -478,7 +478,7 @@ public class VanillaModCompat implements IModCompat {
                 @Override
                 public ICapabilityProvider createProvider(CampfireBlockEntity hostType, CampfireBlockEntity host) {
                     return new DefaultCapabilityProvider<>(this::getCapability, new VanillaRecipeTypeRecipeHandler<>(host::getLevel,
-                            RecipeType.CAMPFIRE_COOKING, (size) -> size == 1));
+                            RecipeType.CAMPFIRE_COOKING, (size) -> size == 1, true));
                 }
             });
             BlockCapabilities.getInstance().register(new IBlockCapabilityConstructor() {
@@ -496,7 +496,7 @@ public class VanillaModCompat implements IModCompat {
                                                                  @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nullable Direction facing) {
                             if (blockState.getBlock() instanceof CraftingTableBlock && capability == RecipeHandlerConfig.CAPABILITY) {
                                 return LazyOptional.of(() -> new VanillaRecipeTypeRecipeHandler<>(() -> (Level) world,
-                                        RecipeType.CRAFTING, (size) -> size > 0)).cast();
+                                        RecipeType.CRAFTING, (size) -> size > 0, false)).cast();
                             }
                             return LazyOptional.empty();
                         }
@@ -518,7 +518,7 @@ public class VanillaModCompat implements IModCompat {
                                                                  @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nullable Direction facing) {
                             if (capability == RecipeHandlerConfig.CAPABILITY) {
                                 return LazyOptional.of(() -> new VanillaRecipeTypeRecipeHandler<>(() -> (Level) world,
-                                        RecipeType.STONECUTTING, (size) -> size == 1)).cast();
+                                        RecipeType.STONECUTTING, (size) -> size == 1, true)).cast();
                             }
                             return LazyOptional.empty();
                         }
