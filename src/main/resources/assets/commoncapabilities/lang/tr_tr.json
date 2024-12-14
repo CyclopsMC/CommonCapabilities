@@ -1,4 +1,5 @@
 {
+    "_comment": "# Kabiliyet ayarları",
     "config.commoncapabilities": "%s yapılandırması",
     "recipecomponent.minecraft.itemstack": "Eşya",
     "recipecomponent.minecraft.fluidstack": "Sıvı",
