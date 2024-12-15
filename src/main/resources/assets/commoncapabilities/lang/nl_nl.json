@@ -1,1 +1,11 @@
-{}
+{
+    "config.commoncapabilities": "%s configuratie",
+    "recipecomponent.minecraft.itemstack": "Voorwerp",
+    "recipecomponent.minecraft.fluidstack": "Vloeistof",
+    "recipecomponent.minecraft.energy": "Energie",
+    "capability.commoncapabilities.inventoryState": "Inventarisstatus",
+    "capability.commoncapabilities.temperature": "Temperatuur",
+    "capability.commoncapabilities.worker": "Arbeidsmachine",
+    "capability.commoncapabilities.worldNameable": "Hernoembare wereld",
+    "capability.commoncapabilities.wrench": "Moersleutel"
+}
