@@ -1,12 +1,10 @@
 package org.cyclops.commoncapabilities.api.capability.itemhandler;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.NonNullList;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.items.IItemHandler;
+import org.cyclops.commoncapabilities.TestInitHelpers;
 import org.cyclops.commoncapabilities.ingredient.DataComparator;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,9 +22,7 @@ public class TestFilteredItemHandlerItemStackIterator {
 
     @BeforeClass
     public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
+        TestInitHelpers.initMinecraft();
 
         HANDLER_EMPTY = new ImmutableListItemHandler(NonNullList.withSize(0, ItemStack.EMPTY));
         HANDLER = new ImmutableListItemHandler(NonNullList.of(ItemStack.EMPTY,

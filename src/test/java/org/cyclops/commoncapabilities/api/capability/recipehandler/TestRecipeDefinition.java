@@ -3,13 +3,11 @@ package org.cyclops.commoncapabilities.api.capability.recipehandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.ModBaseMocked;
+import org.cyclops.commoncapabilities.TestInitHelpers;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
@@ -40,8 +38,8 @@ public class TestRecipeDefinition {
 
     @BeforeClass
     public static void init() throws NoSuchFieldException, IllegalAccessException {
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
+        TestInitHelpers.initMinecraft();
+
         setStatic(IngredientComponent.class.getField("ITEMSTACK"), IngredientComponents.ITEMSTACK);
         CyclopsCoreInstance.MOD = new ModBaseMocked();
 

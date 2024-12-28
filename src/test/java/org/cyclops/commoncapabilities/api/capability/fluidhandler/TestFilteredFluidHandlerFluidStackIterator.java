@@ -1,12 +1,10 @@
 package org.cyclops.commoncapabilities.api.capability.fluidhandler;
 
 import com.google.common.collect.Lists;
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import org.cyclops.commoncapabilities.TestInitHelpers;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -23,9 +21,7 @@ public class TestFilteredFluidHandlerFluidStackIterator {
 
     @BeforeClass
     public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
+        TestInitHelpers.initMinecraft();
 
         HANDLER_EMPTY = new ImmutableListFluidHandler(Lists.newArrayList());
         HANDLER = new ImmutableListFluidHandler(Lists.newArrayList(

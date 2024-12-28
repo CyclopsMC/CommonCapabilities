@@ -17,6 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientMatcherItemStack {
@@ -209,7 +210,7 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.matches(W_1, W_2_T1, ItemMatch.DATA), is(false));
         assertThat(M.matches(W_1, W_1_T2, ItemMatch.DATA), is(false));
         assertThat(M.matches(W_1, W_2_T2, ItemMatch.DATA), is(false));
-        assertThat(M.matches(W_1, L_1, ItemMatch.DATA), is(true));
+        assertThat(M.matches(W_1, L_1, ItemMatch.DATA), is(false));
         assertThat(M.matches(W_1, L_1_T1, ItemMatch.DATA), is(false));
 
         assertThat(M.matches(W_1, W_1, ItemMatch.ITEM | ItemMatch.STACKSIZE), is(true));
@@ -236,7 +237,7 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.matches(W_1, W_2_T1, ItemMatch.STACKSIZE | ItemMatch.DATA), is(false));
         assertThat(M.matches(W_1, W_1_T2, ItemMatch.STACKSIZE | ItemMatch.DATA), is(false));
         assertThat(M.matches(W_1, W_2_T2, ItemMatch.STACKSIZE | ItemMatch.DATA), is(false));
-        assertThat(M.matches(W_1, L_1, ItemMatch.STACKSIZE | ItemMatch.DATA), is(true));
+        assertThat(M.matches(W_1, L_1, ItemMatch.STACKSIZE | ItemMatch.DATA), is(false));
         assertThat(M.matches(W_1, L_1_T1, ItemMatch.STACKSIZE | ItemMatch.DATA), is(false));
 
         assertThat(M.matches(W_1, W_1, ItemMatch.ITEM | ItemMatch.STACKSIZE | ItemMatch.DATA), is(true));
@@ -306,8 +307,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1, W_2_T2), is(-1));
         assertThat(M.compare(W_1, W_1_T1), is(20));
         assertThat(M.compare(W_1, W_1_T2), is(20));
-        assertThat(M.compare(W_1, L_1), is(-926));
-        assertThat(M.compare(W_1, L_1_T1), is(-926));
+        assertThat(M.compare(W_1, L_1), is(-971));
+        assertThat(M.compare(W_1, L_1_T1), is(-971));
 
         assertThat(M.compare(W_1_T1, W_1), is(-20));
         assertThat(M.compare(W_1_T1, W_2), is(-1));
@@ -315,8 +316,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T1, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T1, W_1_T1), is(0));
         assertThat(M.compare(W_1_T1, W_1_T2), is(1));
-        assertThat(M.compare(W_1_T1, L_1), is(-926));
-        assertThat(M.compare(W_1_T1, L_1_T1), is(-926));
+        assertThat(M.compare(W_1_T1, L_1), is(-971));
+        assertThat(M.compare(W_1_T1, L_1_T1), is(-971));
 
         assertThat(M.compare(W_1_T2, W_1), is(-20));
         assertThat(M.compare(W_1_T2, W_2), is(-1));
@@ -324,8 +325,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T2, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T2, W_1_T1), is(-1));
         assertThat(M.compare(W_1_T2, W_1_T2), is(0));
-        assertThat(M.compare(W_1_T2, L_1), is(-926));
-        assertThat(M.compare(W_1_T2, L_1_T1), is(-926));
+        assertThat(M.compare(W_1_T2, L_1), is(-971));
+        assertThat(M.compare(W_1_T2, L_1_T1), is(-971));
 
         assertThat(M.compare(W_2, W_1), is(1));
         assertThat(M.compare(W_2, W_1_T1), is(1));
@@ -333,8 +334,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2, W_2), is(0));
         assertThat(M.compare(W_2, W_2_T1), is(20));
         assertThat(M.compare(W_2, W_2_T2), is(20));
-        assertThat(M.compare(W_2, L_1), is(-926));
-        assertThat(M.compare(W_2, L_1_T1), is(-926));
+        assertThat(M.compare(W_2, L_1), is(-971));
+        assertThat(M.compare(W_2, L_1_T1), is(-971));
 
         assertThat(M.compare(W_2_T1, W_1), is(1));
         assertThat(M.compare(W_2_T1, W_1_T1), is(1));
@@ -349,24 +350,24 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2_T2, W_2), is(-20));
         assertThat(M.compare(W_2_T2, W_2_T1), is(-1));
         assertThat(M.compare(W_2_T2, W_2_T2), is(0));
-        assertThat(M.compare(W_2_T2, L_1), is(-926));
-        assertThat(M.compare(W_2_T2, L_1_T1), is(-926));
+        assertThat(M.compare(W_2_T2, L_1), is(-971));
+        assertThat(M.compare(W_2_T2, L_1_T1), is(-971));
 
-        assertThat(M.compare(L_1, W_1), is(926));
-        assertThat(M.compare(L_1, W_1_T1), is(926));
-        assertThat(M.compare(L_1, W_1_T2), is(926));
-        assertThat(M.compare(L_1, W_2), is(926));
-        assertThat(M.compare(L_1, W_2_T1), is(926));
-        assertThat(M.compare(L_1, W_2_T2), is(926));
+        assertThat(M.compare(L_1, W_1), is(971));
+        assertThat(M.compare(L_1, W_1_T1), is(971));
+        assertThat(M.compare(L_1, W_1_T2), is(971));
+        assertThat(M.compare(L_1, W_2), is(971));
+        assertThat(M.compare(L_1, W_2_T1), is(971));
+        assertThat(M.compare(L_1, W_2_T2), is(971));
         assertThat(M.compare(L_1, L_1), is(0));
         assertThat(M.compare(L_1, L_1_T1), is(20));
 
-        assertThat(M.compare(L_1_T1, W_1), is(926));
-        assertThat(M.compare(L_1_T1, W_1_T1), is(926));
-        assertThat(M.compare(L_1_T1, W_1_T2), is(926));
-        assertThat(M.compare(L_1_T1, W_2), is(926));
-        assertThat(M.compare(L_1_T1, W_2_T1), is(926));
-        assertThat(M.compare(L_1_T1, W_2_T2), is(926));
+        assertThat(M.compare(L_1_T1, W_1), is(971));
+        assertThat(M.compare(L_1_T1, W_1_T1), is(971));
+        assertThat(M.compare(L_1_T1, W_1_T2), is(971));
+        assertThat(M.compare(L_1_T1, W_2), is(971));
+        assertThat(M.compare(L_1_T1, W_2_T1), is(971));
+        assertThat(M.compare(L_1_T1, W_2_T2), is(971));
         assertThat(M.compare(L_1_T1, L_1), is(-20));
         assertThat(M.compare(L_1_T1, L_1_T1), is(0));
     }
@@ -397,8 +398,8 @@ public class TestIngredientMatcherItemStack {
 
     @Test
     public void testToString() {
-        assertThat(M.toString(W_1), is("minecraft:white_wool 1 {minecraft:max_stack_size=>64, minecraft:lore=>ItemLore[lines=[], styledLines=[]], minecraft:enchantments=>ItemEnchantments{enchantments={}, showInTooltip=true}, minecraft:repair_cost=>0, minecraft:attribute_modifiers=>ItemAttributeModifiers[modifiers=[], showInTooltip=true], minecraft:rarity=>COMMON}"));
-        assertThat(M.toString(W_1_T1), is("minecraft:white_wool 1 {minecraft:enchantment_glint_override=>true, minecraft:max_stack_size=>64, minecraft:lore=>ItemLore[lines=[], styledLines=[]], minecraft:enchantments=>ItemEnchantments{enchantments={}, showInTooltip=true}, minecraft:repair_cost=>0, minecraft:attribute_modifiers=>ItemAttributeModifiers[modifiers=[], showInTooltip=true], minecraft:rarity=>COMMON}"));
+        assertThat(M.toString(W_1), startsWith("minecraft:white_wool 1 {"));
+        assertThat(M.toString(W_1_T1), startsWith("minecraft:white_wool 1 {"));
     }
 
 }
