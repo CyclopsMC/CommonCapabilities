@@ -6,7 +6,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
-import org.cyclops.cyclopscore.helper.Helpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 
 /**
  * Matcher for FluidStacks.
@@ -92,13 +92,13 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
             return getEmptyInstance();
         }
         if (instance.isEmpty()) {
-            return new FluidStack(Fluids.WATER, Helpers.castSafe(quantity));
+            return new FluidStack(Fluids.WATER, IModHelpers.get().getBaseHelpers().castSafe(quantity));
         }
         if (instance.getAmount() == quantity) {
             return instance;
         }
         FluidStack copy = instance.copy();
-        copy.setAmount(Helpers.castSafe(quantity));
+        copy.setAmount(IModHelpers.get().getBaseHelpers().castSafe(quantity));
         return copy;
     }
 

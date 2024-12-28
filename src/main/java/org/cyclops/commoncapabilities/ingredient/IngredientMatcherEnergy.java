@@ -3,7 +3,7 @@ package org.cyclops.commoncapabilities.ingredient;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
-import org.cyclops.cyclopscore.helper.L10NHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 
 /**
  * Exact matcher for a void match condition.
@@ -92,7 +92,7 @@ public class IngredientMatcherEnergy implements IIngredientMatcher<Long, Boolean
 
     @Override
     public String localize(Long instance) {
-        return L10NHelpers.localize("recipecomponent.minecraft.energy");
+        return IModHelpers.get().getL10NHelpers().localize("recipecomponent.minecraft.energy");
     }
 
     @Override

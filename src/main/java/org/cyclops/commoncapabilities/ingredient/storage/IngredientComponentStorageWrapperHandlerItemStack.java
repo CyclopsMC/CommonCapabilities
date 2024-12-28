@@ -17,18 +17,14 @@ import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponen
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IngredientComponentStorageEmpty;
 import org.cyclops.cyclopscore.datastructure.Wrapper;
-import org.cyclops.cyclopscore.helper.Helpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.cyclopscore.ingredient.collection.FilteredIngredientCollectionIterator;
 import org.cyclops.cyclopscore.ingredient.collection.IIngredientMapMutable;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Item storage wrapper handler for {@link IItemHandler}.
@@ -219,7 +215,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack<C>
         @Override
         public ItemStack extract(long maxQuantity, boolean simulate) {
             int slots = storage.getSlots();
-            int amount = Helpers.castSafe(maxQuantity);
+            int amount = IModHelpers.get().getBaseHelpers().castSafe(maxQuantity);
             for (int slot = 0; slot < slots; slot++) {
                 ItemStack extractedSimulated = storageExtractItem(slot, amount, true);
                 if (!extractedSimulated.isEmpty()) {
@@ -251,7 +247,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack<C>
 
         @Override
         public ItemStack extract(int slot, long maxQuantity, boolean simulate) {
-            return storageExtractItem(slot, Helpers.castSafe(maxQuantity), simulate);
+            return storageExtractItem(slot, IModHelpers.get().getBaseHelpers().castSafe(maxQuantity), simulate);
         }
 
         protected ItemStack storageExtractItem(int slot, int amount, boolean simulate) {
@@ -331,7 +327,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack<C>
 
         @Override
         public ItemStack extract(long maxQuantity, boolean simulate) {
-            return storageSlotless.extractItem(Helpers.castSafe(maxQuantity), simulate);
+            return storageSlotless.extractItem(IModHelpers.get().getBaseHelpers().castSafe(maxQuantity), simulate);
         }
 
         @Override
@@ -386,7 +382,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack<C>
 
         @Override
         public int getSlotLimit(int slot) {
-            return Helpers.castSafe(ingredientComponent.getMatcher().getMaximumQuantity());
+            return IModHelpers.get().getBaseHelpers().castSafe(ingredientComponent.getMatcher().getMaximumQuantity());
         }
 
         @Override
@@ -431,7 +427,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack<C>
 
         @Override
         public int getSlotLimit(int slot) {
-            return Helpers.castSafe(storage.getMaxQuantity(slot));
+            return IModHelpers.get().getBaseHelpers().castSafe(storage.getMaxQuantity(slot));
         }
 
         @Override

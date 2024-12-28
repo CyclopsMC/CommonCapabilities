@@ -6,8 +6,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
-import org.cyclops.cyclopscore.helper.Helpers;
-import org.cyclops.cyclopscore.helper.ItemStackHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 
 /**
  * Matcher for ItemStacks.
@@ -66,7 +65,7 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
 
     @Override
     public int hash(ItemStack instance) {
-        return ItemStackHelpers.getItemStackHashCode(instance);
+        return IModHelpers.get().getItemStackHelpers().getItemStackHashCode(instance);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
             return instance;
         }
         ItemStack copy = instance.copy();
-        copy.setCount(Helpers.castSafe(quantity));
+        copy.setCount(IModHelpers.get().getBaseHelpers().castSafe(quantity));
         return copy;
     }
 

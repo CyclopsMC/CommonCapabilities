@@ -10,32 +10,18 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
-import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
-import org.cyclops.commoncapabilities.api.ingredient.IPrototypedIngredient;
-import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
-import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
-import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
-import org.cyclops.cyclopscore.helper.CraftingHelpers;
+import org.cyclops.commoncapabilities.api.ingredient.*;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -99,33 +85,35 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
      * @return A list of prototyped ingredients.
      */
     public static List<IPrototypedIngredient<ItemStack, Integer>> getPrototypesFromIngredient(Ingredient ingredient) {
-        if (ingredient.isCustom() && ingredient.getCustomIngredient() instanceof CompoundIngredient compoundIngredient) {
+        if (ingredient.isCustom()) {
             return Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
-                    compoundIngredient.getItems().findFirst().get(), ItemMatch.ITEM | ItemMatch.DATA));
+                    new ItemStack(ingredient.getCustomIngredient().items().findFirst().get().value()), ItemMatch.ITEM | ItemMatch.DATA));
 //        } else if (ingredient instanceof OreIngredient) { // TODO: somehow detect tags in the future, see ShapelessRecipeBuilder
 //            return Arrays.stream(ingredient.getMatchingStacks())
 //                    .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.ITEM))
 //                    .collect(Collectors.toList());
         } else {
-            return Arrays.stream(ingredient.getItems())
-                    .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.ITEM))
+            return ingredient.getValues().stream()
+                    .map(item -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, new ItemStack(item), ItemMatch.ITEM))
                     .collect(Collectors.toList());
         }
     }
 
     @Nullable
     public static <C extends RecipeInput, T extends Recipe<C>> IRecipeDefinition recipeToRecipeDefinition(T recipe, Level level) {
-        if (recipe.getResultItem(level.registryAccess()).isEmpty()) {
+        ItemStack recipeOutput = IModHelpers.get().getMinecraftHelpers().getRecipeOutput(recipe, level);
+        if (recipeOutput.isEmpty()) {
             return null;
         }
-        int inputSize = recipe.getIngredients().size();
+        List<Ingredient> ingredients = recipe.placementInfo().ingredients();
+        int inputSize = ingredients.size();
         List<List<IPrototypedIngredient<ItemStack, Integer>>> inputIngredients = Lists.newArrayListWithCapacity(inputSize);
         if (inputSize == 0) {
             return null;
         }
 
-        for (int i = 0; i < recipe.getIngredients().size(); i++) {
-            Ingredient ingredient = recipe.getIngredients().get(i);
+        for (int i = 0; i < ingredients.size(); i++) {
+            Ingredient ingredient = ingredients.get(i);
             List<IPrototypedIngredient<ItemStack, Integer>> prototypes = getPrototypesFromIngredient(ingredient);
             if (prototypes.isEmpty()) {
                 prototypes.add(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, ItemStack.EMPTY, ItemMatch.ITEM));
@@ -133,7 +121,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
             inputIngredients.add(i, prototypes);
         }
         return RecipeDefinition.ofIngredients(IngredientComponent.ITEMSTACK, inputIngredients,
-                MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem(level.registryAccess())));
+                MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipeOutput));
     }
 
     @Override
@@ -141,11 +129,15 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
         Pair<RecipeType<?>, ResourceLocation> cacheKey = Pair.of(recipeType, worldSupplier.get().dimension().location());
         Collection<IRecipeDefinition> cached = CACHED_RECIPES.get(cacheKey);
         if (cached == null) {
-            cached = worldSupplier.get().getRecipeManager().getRecipes().stream()
-                    .filter(holder -> holder.value().getType() == recipeType)
-                    .map(recipe -> VanillaRecipeTypeRecipeHandler.recipeToRecipeDefinition(recipe.value(), this.worldSupplier.get()))
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+            if (worldSupplier.get().recipeAccess() instanceof RecipeManager recipeManager) {
+                cached = recipeManager.getRecipes().stream()
+                        .filter(holder -> holder.value().getType() == recipeType)
+                        .map(recipe -> VanillaRecipeTypeRecipeHandler.recipeToRecipeDefinition(recipe.value(), this.worldSupplier.get()))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            } else {
+                cached = Collections.emptyList();
+            }
             CACHED_RECIPES.put(cacheKey, cached);
         }
         return cached;
@@ -169,7 +161,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
         }
 
         C recipeInput = this.createRecipeInput.apply(inventoryCrafting);
-        T recipe = CraftingHelpers.findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
+        T recipe = IModHelpers.get().getCraftingHelpers().findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
                 .map(RecipeHolder::value)
                 .orElse(null);
         if (recipe == null) {
@@ -180,7 +172,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
                     inventoryCraftingSmall.setItem(i, recipeIngredients.get(i));
                 }
 
-                recipe = CraftingHelpers.findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
+                recipe = IModHelpers.get().getCraftingHelpers().findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
                         .map(RecipeHolder::value)
                         .orElse(null);
             }
@@ -190,6 +182,6 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
             }
         }
 
-        return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem(this.worldSupplier.get().registryAccess()));
+        return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, IModHelpers.get().getMinecraftHelpers().getRecipeOutput(recipe, this.worldSupplier.get()));
     }
 }

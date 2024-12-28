@@ -34,7 +34,7 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
 
     @Override
     protected void setItemList(NonNullList<ItemStack> itemStacks) {
-        getItemStack().set(DataComponents.BUNDLE_CONTENTS, new BundleContents(itemStacks));
+        getItemStack().set(DataComponents.BUNDLE_CONTENTS, new BundleContents(itemStacks.stream().filter(stack -> !stack.isEmpty()).toList()));
     }
 
     @Override
@@ -50,7 +50,7 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return getMaxAmountToAdd(stack) > 0;
+        return getMaxAmountToAdd(stack) > 0 && stack.getItem().canFitInsideContainerItems();
     }
 
     @Override

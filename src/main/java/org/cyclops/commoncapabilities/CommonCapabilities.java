@@ -15,8 +15,8 @@ import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.modcompat.vanilla.VanillaModCompat;
 import org.cyclops.commoncapabilities.proxy.ClientProxy;
 import org.cyclops.commoncapabilities.proxy.CommonProxy;
-import org.cyclops.cyclopscore.config.ConfigHandler;
-import org.cyclops.cyclopscore.init.ModBaseVersionable;
+import org.cyclops.cyclopscore.config.ConfigHandlerCommon;
+import org.cyclops.cyclopscore.init.ModBaseNeoForge;
 import org.cyclops.cyclopscore.modcompat.ModCompatLoader;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
@@ -29,7 +29,7 @@ import java.util.Objects;
  *
  */
 @Mod(Reference.MOD_ID)
-public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
+public class CommonCapabilities extends ModBaseNeoForge<CommonCapabilities> {
 
     /**
      * The unique instance of this mod.
@@ -83,7 +83,7 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
     }
 
     @Override
-    protected void onConfigsRegister(ConfigHandler configHandler) {
+    protected void onConfigsRegister(ConfigHandlerCommon configHandler) {
         super.onConfigsRegister(configHandler);
 
         configHandler.addConfigurable(new GeneralConfig());

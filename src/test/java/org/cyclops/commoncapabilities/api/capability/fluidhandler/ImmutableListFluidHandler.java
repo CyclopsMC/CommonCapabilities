@@ -2,7 +2,7 @@ package org.cyclops.commoncapabilities.api.capability.fluidhandler;
 
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import org.cyclops.cyclopscore.helper.FluidHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpersNeoForge;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -33,7 +33,7 @@ public class ImmutableListFluidHandler implements IFluidHandler {
 
     @Override
     public int getTankCapacity(int tank) {
-        return FluidHelpers.BUCKET_VOLUME;
+        return IModHelpersNeoForge.get().getFluidHelpers().getBucketVolume();
     }
 
     @Override

@@ -12,8 +12,8 @@ import org.cyclops.commoncapabilities.api.ingredient.capability.ICapabilityGette
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageSlotted;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
-import org.cyclops.cyclopscore.helper.FluidHelpers;
-import org.cyclops.cyclopscore.helper.Helpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpersNeoForge;
 import org.cyclops.cyclopscore.ingredient.collection.FilteredIngredientCollectionIterator;
 
 import javax.annotation.Nonnull;
@@ -135,7 +135,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack<C>
             // Optimize if ANY condition
             if (matchFlags == FluidMatch.ANY) {
                 // Drain as much as possible
-                return storage.drain(FluidHelpers.getAmount(prototype), simulateToFluidAction(simulate));
+                return storage.drain(IModHelpersNeoForge.get().getFluidHelpers().getAmount(prototype), simulateToFluidAction(simulate));
             }
 
             // Optimize if AMOUNT condition
@@ -168,7 +168,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack<C>
 
         @Override
         public FluidStack extract(long maxQuantity, boolean simulate) {
-            return storage.drain(Helpers.castSafe(maxQuantity), simulateToFluidAction(simulate));
+            return storage.drain(IModHelpers.get().getBaseHelpers().castSafe(maxQuantity), simulateToFluidAction(simulate));
         }
 
         @Override
@@ -222,7 +222,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack<C>
         @Override
         public int getTankCapacity(int tank) {
             // Yes, this is an overestimate, as this is the total across ALL tanks
-            return Helpers.castSafe(this.storage.getMaxQuantity());
+            return IModHelpers.get().getBaseHelpers().castSafe(this.storage.getMaxQuantity());
         }
 
         @Override
@@ -291,7 +291,7 @@ public class IngredientComponentStorageWrapperHandlerFluidStack<C>
 
         @Override
         public int getTankCapacity(int tank) {
-            return Helpers.castSafe(this.storage.getMaxQuantity(tank));
+            return IModHelpers.get().getBaseHelpers().castSafe(this.storage.getMaxQuantity(tank));
         }
     }
 

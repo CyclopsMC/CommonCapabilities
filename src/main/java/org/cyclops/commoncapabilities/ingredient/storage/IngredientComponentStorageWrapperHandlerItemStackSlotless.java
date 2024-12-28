@@ -7,7 +7,7 @@ import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.capability.ICapabilityGetter;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
-import org.cyclops.cyclopscore.helper.Helpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -96,7 +96,7 @@ public class IngredientComponentStorageWrapperHandlerItemStackSlotless<C>
 
         @Override
         public ItemStack extract(long maxQuantity, boolean simulate) {
-            return storage.extractItem(Helpers.castSafe(maxQuantity), simulate);
+            return storage.extractItem(IModHelpers.get().getBaseHelpers().castSafe(maxQuantity), simulate);
         }
     }
 
@@ -141,7 +141,7 @@ public class IngredientComponentStorageWrapperHandlerItemStackSlotless<C>
 
         @Override
         public int getLimit() {
-            return Helpers.castSafe(storage.getMaxQuantity());
+            return IModHelpers.get().getBaseHelpers().castSafe(storage.getMaxQuantity());
         }
     }
 }

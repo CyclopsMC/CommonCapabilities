@@ -7,7 +7,7 @@ import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.capability.ICapabilityGetter;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorageWrapperHandler;
-import org.cyclops.cyclopscore.helper.Helpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 import org.cyclops.cyclopscore.ingredient.collection.FilteredIngredientCollectionIterator;
 
 import javax.annotation.Nonnull;
@@ -86,23 +86,23 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage<C> implements
 
         @Override
         public Long insert(@Nonnull Long ingredient, boolean simulate) {
-            return ingredient - storage.receiveEnergy(Helpers.castSafe(ingredient), simulate);
+            return ingredient - storage.receiveEnergy(IModHelpers.get().getBaseHelpers().castSafe(ingredient), simulate);
         }
 
         @Override
         public Long extract(@Nonnull Long prototype, Boolean matchFlags, boolean simulate) {
             if (matchFlags) {
-                int extractable = storage.extractEnergy(Helpers.castSafe(prototype), true);
+                int extractable = storage.extractEnergy(IModHelpers.get().getBaseHelpers().castSafe(prototype), true);
                 if (extractable != prototype) {
                     return 0L;
                 }
             }
-            return (long) storage.extractEnergy(Helpers.castSafe(prototype), simulate);
+            return (long) storage.extractEnergy(IModHelpers.get().getBaseHelpers().castSafe(prototype), simulate);
         }
 
         @Override
         public Long extract(long maxQuantity, boolean simulate) {
-            return (long) storage.extractEnergy(Helpers.castSafe(maxQuantity), simulate);
+            return (long) storage.extractEnergy(IModHelpers.get().getBaseHelpers().castSafe(maxQuantity), simulate);
         }
     }
 
@@ -116,12 +116,12 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage<C> implements
 
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
-            return maxReceive - Helpers.castSafe(storage.insert((long) maxReceive, simulate));
+            return maxReceive - IModHelpers.get().getBaseHelpers().castSafe(storage.insert((long) maxReceive, simulate));
         }
 
         @Override
         public int extractEnergy(int maxExtract, boolean simulate) {
-            return Helpers.castSafe(storage.extract(maxExtract, simulate));
+            return IModHelpers.get().getBaseHelpers().castSafe(storage.extract(maxExtract, simulate));
         }
 
         @Override
@@ -130,12 +130,12 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage<C> implements
             for (Long stored : storage) {
                 total = Math.addExact(total, stored);
             }
-            return Helpers.castSafe(total);
+            return IModHelpers.get().getBaseHelpers().castSafe(total);
         }
 
         @Override
         public int getMaxEnergyStored() {
-            return Helpers.castSafe(storage.getMaxQuantity());
+            return IModHelpers.get().getBaseHelpers().castSafe(storage.getMaxQuantity());
         }
 
         @Override

@@ -18,7 +18,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
-import org.cyclops.cyclopscore.helper.FluidHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpersNeoForge;
 
 /**
  * A simple test mod which tests entity item (frame) capabilities.
@@ -65,7 +65,7 @@ public class TestCapabilityEntityItemMod {
             } else if (target.getCapability(Capabilities.FluidHandler.ENTITY, event.getFace()) != null) {
                 event.setCanceled(true);
                 IFluidHandler fluidHandler = target.getCapability(Capabilities.FluidHandler.ENTITY, event.getFace());
-                System.out.println(FluidHelpers.getAmount(FluidHelpers.getFluid(fluidHandler)));
+                System.out.println(IModHelpersNeoForge.get().getFluidHelpers().getAmount(IModHelpersNeoForge.get().getFluidHelpers().getFluid(fluidHandler)));
                 if (heldItem == Items.APPLE) {
                     System.out.println("Adding water");
                     int filled = fluidHandler.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
@@ -73,7 +73,7 @@ public class TestCapabilityEntityItemMod {
                 } else if (heldItem == Items.BOWL) {
                     System.out.println("Removing water");
                     FluidStack drained = fluidHandler.drain(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
-                    System.out.println("Drained: " + FluidHelpers.getAmount(drained));
+                    System.out.println("Drained: " + IModHelpersNeoForge.get().getFluidHelpers().getAmount(drained));
                 }
             } else if (target.getCapability(Capabilities.EnergyStorage.ENTITY, event.getFace()) != null) {
                 event.setCanceled(true);

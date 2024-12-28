@@ -1,8 +1,8 @@
 package org.cyclops.commoncapabilities.proxy;
 
-import org.cyclops.cyclopscore.init.ModBase;
-import org.cyclops.cyclopscore.proxy.CommonProxyComponent;
 import org.cyclops.commoncapabilities.CommonCapabilities;
+import org.cyclops.cyclopscore.init.ModBaseNeoForge;
+import org.cyclops.cyclopscore.proxy.CommonProxyComponent;
 
 /**
  * Proxy for server and client side.
@@ -12,7 +12,7 @@ import org.cyclops.commoncapabilities.CommonCapabilities;
 public class CommonProxy extends CommonProxyComponent {
 
     @Override
-    public ModBase getMod() {
+    public ModBaseNeoForge<?> getMod() {
         return CommonCapabilities._instance;
     }
 

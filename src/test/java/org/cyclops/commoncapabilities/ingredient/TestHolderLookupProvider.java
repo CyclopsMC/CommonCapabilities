@@ -18,7 +18,7 @@ public class TestHolderLookupProvider {
         return new HolderLookup.Provider() {
 
             @Override
-            public Stream<ResourceKey<? extends Registry<?>>> listRegistries() {
+            public Stream<ResourceKey<? extends Registry<?>>> listRegistryKeys() {
                 return Stream.empty();
             }
 

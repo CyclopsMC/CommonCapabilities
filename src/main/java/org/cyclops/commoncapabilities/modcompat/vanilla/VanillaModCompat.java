@@ -12,18 +12,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.world.level.block.CraftingTableBlock;
-import net.minecraft.world.level.block.SmithingTableBlock;
-import net.minecraft.world.level.block.StonecutterBlock;
-import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
-import net.minecraft.world.level.block.entity.CampfireBlockEntity;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
-import net.minecraft.world.level.block.entity.SmokerBlockEntity;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.*;
 import net.neoforged.neoforge.capabilities.BaseCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.IBlockCapabilityProvider;
@@ -41,11 +31,7 @@ import org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage.VanillaEntityItemFrameEnergyStorage;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler.VanillaEntityItemFluidHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler.VanillaEntityItemFrameFluidHandler;
-import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaBlockComposterItemHandler;
-import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaEntityItemFrameItemHandler;
-import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaEntityItemItemHandler;
-import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaItemBundleItemHandler;
-import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaItemShulkerBoxItemHandler;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.*;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler.VanillaBrewingStandRecipeHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler.VanillaRecipeTypeRecipeHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.temperature.VanillaAbstractFurnaceTemperature;
@@ -83,7 +69,7 @@ public class VanillaModCompat implements IModCompat {
 
     @Override
     public ICompatInitializer createInitializer() {
-        return () -> {
+        return (mod) -> {
             CapabilityConstructorRegistry registry = CommonCapabilities._instance.getCapabilityConstructorRegistry();
             // Worker
             registry.registerBlockEntity(() -> BlockEntityType.FURNACE,

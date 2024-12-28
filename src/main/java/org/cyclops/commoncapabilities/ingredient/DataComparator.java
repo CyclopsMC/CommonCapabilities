@@ -47,7 +47,7 @@ public class DataComparator implements Comparator<DataComponentMap> {
         // If relevant, ignore data components
         if (ignoreDataComponentTypes != null) {
             if (ignoreDataComponentTypeInstances == null) {
-                ignoreDataComponentTypeInstances = ignoreDataComponentTypes.stream().map(BuiltInRegistries.DATA_COMPONENT_TYPE::get).collect(Collectors.toSet());
+                ignoreDataComponentTypeInstances = ignoreDataComponentTypes.stream().map(BuiltInRegistries.DATA_COMPONENT_TYPE::getValue).collect(Collectors.toSet());
             }
             boolean filterK1 = false;
             boolean filterK2 = false;
