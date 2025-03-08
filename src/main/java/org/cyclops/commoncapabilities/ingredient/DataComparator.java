@@ -4,6 +4,8 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import org.cyclops.commoncapabilities.CommonCapabilities;
+import org.cyclops.commoncapabilities.GeneralConfig;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -90,6 +92,9 @@ public class DataComparator implements Comparator<DataComponentMap> {
         for (DataComponentType<?> key : k1) {
             int comp = this.compareRaw(o1.get(key), o2.get(key));
             if (comp != 0) {
+                if (GeneralConfig.debugLogUnequalItemDataComponents) {
+                    CommonCapabilities.clog(String.format("Data component mismatch on key '%s' for values '%s' and '%s'.", key, o1.get(key), o2.get(key)));
+                }
                 return comp;
             }
         }

@@ -1,4 +1,5 @@
 {
+    "_comment": "# Instellingen voor mogelijkheden",
     "config.commoncapabilities": "%s configuratie",
     "recipecomponent.minecraft.itemstack": "Voorwerp",
     "recipecomponent.minecraft.fluidstack": "Vloeistof",

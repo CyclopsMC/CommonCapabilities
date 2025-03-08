@@ -25,6 +25,9 @@ public class GeneralConfig extends DummyConfigCommon<CommonCapabilities> {
             "cyclopscore:energy_storage" // Integrated Dynamics batteries
     );
 
+    @ConfigurablePropertyCommon(category = "core", comment = "Only enable this if you know what you are doing, as this will cause lag! This will log checks to the DataComparator where equal items have unequal data components.")
+    public static boolean debugLogUnequalItemDataComponents = false;
+
     public GeneralConfig() {
         super(CommonCapabilities._instance, "general");
         CommonCapabilities._instance.getModEventBus().register(this);
