@@ -50,7 +50,7 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
 
     @Override
     public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return getMaxAmountToAdd(stack) > 0;
+        return stack.isEmpty() || getMaxAmountToAdd(stack) > 0;
     }
 
     @Override
