@@ -13,6 +13,7 @@ org.cyclops.commoncapabilities.api.ingredient.storage
 org.cyclops.commoncapabilities.capability.itemhandler
 org.cyclops.commoncapabilities.capability.recipehandler
 org.cyclops.commoncapabilities.core
+org.cyclops.commoncapabilities.gametest
 org.cyclops.commoncapabilities.ingredient
 org.cyclops.commoncapabilities.ingredient.storage
 org.cyclops.commoncapabilities.modcompat.vanilla
