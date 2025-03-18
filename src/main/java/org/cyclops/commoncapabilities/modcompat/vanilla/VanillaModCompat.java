@@ -325,7 +325,7 @@ public class VanillaModCompat implements IModCompat {
                         public ICapabilityProvider<ItemEntity, Direction, IFluidHandler> createProvider(EntityType<ItemEntity> capabilityKey) {
                             return (entity, context) -> {
                                 if (entity.getItem().getCapability(Capabilities.FluidHandler.ITEM) != null) {
-                                    new VanillaEntityItemFluidHandler(entity);
+                                    return new VanillaEntityItemFluidHandler(entity);
                                 }
                                 return null;
                             };
@@ -342,7 +342,7 @@ public class VanillaModCompat implements IModCompat {
                         public ICapabilityProvider<ItemFrame, Direction, IFluidHandler> createProvider(EntityType<ItemFrame> capabilityKey) {
                             return (entity, context) -> {
                                 if (entity.getItem().getCapability(Capabilities.FluidHandler.ITEM) != null) {
-                                    new VanillaEntityItemFrameFluidHandler(entity);
+                                    return new VanillaEntityItemFrameFluidHandler(entity);
                                 }
                                 return null;
                             };
@@ -359,7 +359,7 @@ public class VanillaModCompat implements IModCompat {
                         public ICapabilityProvider<GlowItemFrame, Direction, IFluidHandler> createProvider(EntityType<GlowItemFrame> capabilityKey) {
                             return (entity, context) -> {
                                 if (entity.getItem().getCapability(Capabilities.FluidHandler.ITEM) != null) {
-                                    new VanillaEntityItemFrameFluidHandler(entity);
+                                    return new VanillaEntityItemFrameFluidHandler(entity);
                                 }
                                 return null;
                             };
@@ -378,7 +378,7 @@ public class VanillaModCompat implements IModCompat {
                         public ICapabilityProvider<ItemEntity, Direction, IEnergyStorage> createProvider(EntityType<ItemEntity> capabilityKey) {
                             return (entity, context) -> {
                                 if (entity.getItem().getCapability(Capabilities.EnergyStorage.ITEM) != null) {
-                                    new VanillaEntityItemEnergyStorage(entity);
+                                    return new VanillaEntityItemEnergyStorage(entity);
                                 }
                                 return null;
                             };
@@ -395,7 +395,7 @@ public class VanillaModCompat implements IModCompat {
                         public ICapabilityProvider<ItemFrame, Direction, IEnergyStorage> createProvider(EntityType<ItemFrame> capabilityKey) {
                             return (entity, context) -> {
                                 if (entity.getItem().getCapability(Capabilities.EnergyStorage.ITEM) != null) {
-                                    new VanillaEntityItemFrameEnergyStorage(entity);
+                                    return new VanillaEntityItemFrameEnergyStorage(entity);
                                 }
                                 return null;
                             };
@@ -412,7 +412,7 @@ public class VanillaModCompat implements IModCompat {
                         public ICapabilityProvider<GlowItemFrame, Direction, IEnergyStorage> createProvider(EntityType<GlowItemFrame> capabilityKey) {
                             return (entity, context) -> {
                                 if (entity.getItem().getCapability(Capabilities.EnergyStorage.ITEM) != null) {
-                                    new VanillaEntityItemFrameEnergyStorage(entity);
+                                    return new VanillaEntityItemFrameEnergyStorage(entity);
                                 }
                                 return null;
                             };
