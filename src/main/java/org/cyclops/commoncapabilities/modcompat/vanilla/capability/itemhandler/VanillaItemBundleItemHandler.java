@@ -34,7 +34,7 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
 
     @Override
     protected void setItemList(NonNullList<ItemStack> itemStacks) {
-        getItemStack().set(DataComponents.BUNDLE_CONTENTS, new BundleContents(itemStacks));
+        getItemStack().set(DataComponents.BUNDLE_CONTENTS, new BundleContents(itemStacks.stream().filter(s -> !s.isEmpty()).toList()));
     }
 
     @Override
