@@ -10,11 +10,7 @@ import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,20 +18,11 @@ import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
-import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
-import org.cyclops.commoncapabilities.api.ingredient.IPrototypedIngredient;
-import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
-import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
-import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
+import org.cyclops.commoncapabilities.api.ingredient.*;
 import org.cyclops.cyclopscore.helper.CraftingHelpers;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -119,21 +106,41 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
             return null;
         }
         int inputSize = recipe.getIngredients().size();
-        List<List<IPrototypedIngredient<ItemStack, Integer>>> inputIngredients = Lists.newArrayListWithCapacity(inputSize);
+        List<List<IPrototypedIngredient<ItemStack, Integer>>> inputIngredients;
         if (inputSize == 0) {
             return null;
         }
 
-        for (int i = 0; i < recipe.getIngredients().size(); i++) {
-            Ingredient ingredient = recipe.getIngredients().get(i);
-            List<IPrototypedIngredient<ItemStack, Integer>> prototypes = getPrototypesFromIngredient(ingredient);
-            if (prototypes.isEmpty()) {
-                prototypes.add(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, ItemStack.EMPTY, ItemMatch.ITEM));
+        if (recipe instanceof ShapedRecipe shapedRecipe) {
+            inputIngredients = Lists.newArrayListWithCapacity(9);
+            // We keep the grid shape for shaped recipes
+            for (int h = 0; h < 3; h++) {
+                for (int w = 0; w < 3; w++) {
+                    if (h < shapedRecipe.getHeight() && w < shapedRecipe.getWidth()) {
+                        inputIngredients.add(getRecipeInputPrototypes(recipe, w + h * shapedRecipe.getWidth()));
+                    } else {
+                        inputIngredients.add(Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, ItemStack.EMPTY, ItemMatch.ITEM)));
+                    }
+                }
             }
-            inputIngredients.add(i, prototypes);
+        } else {
+            // Shapeless
+            inputIngredients = Lists.newArrayListWithCapacity(inputSize);
+            for (int i = 0; i < recipe.getIngredients().size(); i++) {
+                inputIngredients.add(i, getRecipeInputPrototypes(recipe, i));
+            }
         }
         return RecipeDefinition.ofIngredients(IngredientComponent.ITEMSTACK, inputIngredients,
                 MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem(level.registryAccess())));
+    }
+
+    protected static <C extends RecipeInput, T extends Recipe<C>> List<IPrototypedIngredient<ItemStack, Integer>> getRecipeInputPrototypes(T recipe, int index) {
+        Ingredient ingredient = recipe.getIngredients().get(index);
+        List<IPrototypedIngredient<ItemStack, Integer>> prototypes = getPrototypesFromIngredient(ingredient);
+        if (prototypes.isEmpty()) {
+            prototypes.add(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, ItemStack.EMPTY, ItemMatch.ITEM));
+        }
+        return prototypes;
     }
 
     @Override
@@ -142,7 +149,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
         Collection<IRecipeDefinition> cached = CACHED_RECIPES.get(cacheKey);
         if (cached == null) {
             cached = worldSupplier.get().getRecipeManager().getRecipes().stream()
-                    .filter(holder -> holder.value().getType() == recipeType)
+                    .filter(holder -> holder.value().getType() == recipeType && !holder.value().isSpecial())
                     .map(recipe -> VanillaRecipeTypeRecipeHandler.recipeToRecipeDefinition(recipe.value(), this.worldSupplier.get()))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
