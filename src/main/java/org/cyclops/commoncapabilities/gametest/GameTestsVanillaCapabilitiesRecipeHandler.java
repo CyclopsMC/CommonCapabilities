@@ -20,7 +20,7 @@ import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
  */
 @GameTestHolder(Reference.MOD_ID)
 @PrefixGameTestTemplate(false)
-public class GameTestsVanillaCapabilitiesBlockRecipeHandler {
+public class GameTestsVanillaCapabilitiesRecipeHandler {
 
     public static final String TEMPLATE_EMPTY = "empty10";
     public static final BlockPos POS = BlockPos.ZERO.offset(2, 1, 2);
@@ -126,7 +126,6 @@ public class GameTestsVanillaCapabilitiesBlockRecipeHandler {
             helper.assertTrue(recipeHandler != null, "Recipe handler does not exist");
             helper.assertValueEqual(recipeHandler.getRecipeInputComponents(), Sets.newHashSet(IngredientComponents.ITEMSTACK), "Input components are incorrect");
             helper.assertValueEqual(recipeHandler.getRecipeOutputComponents(), Sets.newHashSet(IngredientComponents.ITEMSTACK), "Output components are incorrect");
-            System.out.println(recipeHandler.getRecipes().size());
             helper.assertTrue(recipeHandler.getRecipes().size() >= 888, "Recipe count is less than 888");
             for (IRecipeDefinition recipe : recipeHandler.getRecipes()) {
                 helper.assertTrue(recipeHandler.simulate(MixedIngredients.fromRecipeInput(recipe)) != null, "Recipe simulation failed for " + recipe);
@@ -163,7 +162,6 @@ public class GameTestsVanillaCapabilitiesBlockRecipeHandler {
             helper.assertTrue(recipeHandler != null, "Recipe handler does not exist");
             helper.assertValueEqual(recipeHandler.getRecipeInputComponents(), Sets.newHashSet(IngredientComponents.ITEMSTACK), "Input components are incorrect");
             helper.assertValueEqual(recipeHandler.getRecipeOutputComponents(), Sets.newHashSet(IngredientComponents.ITEMSTACK), "Output components are incorrect");
-            System.out.println(recipeHandler.getRecipes().size());
             helper.assertTrue(recipeHandler.getRecipes().size() >= 0, "Recipe count is less than 0");
             for (IRecipeDefinition recipe : recipeHandler.getRecipes()) {
                 helper.assertTrue(recipeHandler.simulate(MixedIngredients.fromRecipeInput(recipe)) != null, "Recipe simulation failed for " + recipe);
