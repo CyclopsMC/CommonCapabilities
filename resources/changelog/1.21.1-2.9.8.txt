@@ -1,0 +1,12 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.25.1 or higher.
+
+Additions:
+* Add nl_nl translations
+
+Fixes:
+* Fix wrong worker hasWork capability on brewing stand
+* Fix recipes for <3x3 grids sometimes being invalid
+* Fix bundle capability storing empty stacks
+* Fix bundle item handler not supporting item removals
+* Fix item entity capabilities not being added correctly
