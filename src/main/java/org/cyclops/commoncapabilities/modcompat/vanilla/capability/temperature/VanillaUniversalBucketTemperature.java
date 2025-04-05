@@ -36,7 +36,7 @@ public class VanillaUniversalBucketTemperature implements ITemperature {
 
     @Override
     public double getMinimumTemperature() {
-        return 0;
+        return ITemperature.ZERO_CELCIUS;
     }
 
     @Override

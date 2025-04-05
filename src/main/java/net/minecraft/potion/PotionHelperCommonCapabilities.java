@@ -39,10 +39,10 @@ public class PotionHelperCommonCapabilities {
             List<IPrototypedIngredient<ItemStack, Integer>> ingredients = Lists.newArrayList();
             PotionBrewing potionBrewing = ServerLifecycleHooks.getCurrentServer().potionBrewing();
             for (PotionBrewing.Mix<Item> mixPredicate : potionBrewing.containerMixes) {
-                ingredients.addAll(VanillaRecipeTypeRecipeHandler.getPrototypesFromIngredient(mixPredicate.ingredient()));
+                ingredients.addAll(VanillaRecipeTypeRecipeHandler.getPrototypesFromIngredient(mixPredicate.ingredient(), null).getAlternatives());
             }
             for (PotionBrewing.Mix<Potion> mixPredicate : potionBrewing.potionMixes) {
-                ingredients.addAll(VanillaRecipeTypeRecipeHandler.getPrototypesFromIngredient(mixPredicate.ingredient()));
+                ingredients.addAll(VanillaRecipeTypeRecipeHandler.getPrototypesFromIngredient(mixPredicate.ingredient(), null).getAlternatives());
             }
 
             List<ItemStack> checkInputItems = Lists.newArrayList(inputItems);

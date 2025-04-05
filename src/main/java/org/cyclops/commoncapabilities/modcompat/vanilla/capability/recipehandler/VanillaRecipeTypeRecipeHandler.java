@@ -3,7 +3,9 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandle
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.minecraft.recipebook.PlaceRecipeHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -11,13 +13,19 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.ShapedCraftingRecipeDisplay;
+import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Pair;
+import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
-import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
-import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
-import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
-import org.cyclops.commoncapabilities.api.ingredient.*;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.*;
+import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
+import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
+import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
+import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
 import org.cyclops.cyclopscore.helper.IModHelpers;
 
 import javax.annotation.Nullable;
@@ -80,22 +88,47 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
     }
 
     /**
+     * A heuristical method for converting a display slot to a list of prototyped ingredients.
+     * @param display A display slot.
+     * @return A list of prototyped ingredients.
+     */
+    public static IPrototypedIngredientAlternatives<ItemStack, Integer> getPrototypesFromDisplay(SlotDisplay display) {
+        if (display instanceof SlotDisplay.TagSlotDisplay(net.minecraft.tags.TagKey<net.minecraft.world.item.Item> tag)) {
+            return new PrototypedIngredientAlternativesItemStackTag(Lists.newArrayList(tag.location().toString()), ItemMatch.ITEM, 1);
+        } else if (display instanceof SlotDisplay.Empty) {
+            return new PrototypedIngredientAlternativesList<>(Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, ItemStack.EMPTY, ItemMatch.ITEM)));
+        } else if (display instanceof SlotDisplay.ItemStackSlotDisplay(ItemStack stack)) {
+            return new PrototypedIngredientAlternativesList<>(Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, stack, ItemMatch.ITEM | ItemMatch.DATA)));
+        } else {
+            PrototypedIngredientAlternativesList<ItemStack, Integer> prototypes = new PrototypedIngredientAlternativesList<>(display.resolveForStacks(ContextMap.EMPTY).stream()
+                    .map(item -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, item, ItemMatch.ITEM))
+                    .collect(Collectors.toList()));
+            if (prototypes.getAlternatives().isEmpty()) {
+                prototypes = new PrototypedIngredientAlternativesList<>(Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, ItemStack.EMPTY, ItemMatch.ITEM)));
+            }
+            return prototypes;
+        }
+    }
+
+    /**
      * A heuristical method for converting an ingredient to a list of prototyped ingredients.
      * @param ingredient An ingredient.
      * @return A list of prototyped ingredients.
      */
-    public static List<IPrototypedIngredient<ItemStack, Integer>> getPrototypesFromIngredient(Ingredient ingredient) {
-        if (ingredient.isCustom()) {
-            return Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
-                    new ItemStack(ingredient.getCustomIngredient().items().findFirst().get().value()), ItemMatch.ITEM | ItemMatch.DATA));
-//        } else if (ingredient instanceof OreIngredient) { // TODO: somehow detect tags in the future, see ShapelessRecipeBuilder
-//            return Arrays.stream(ingredient.getMatchingStacks())
-//                    .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.ITEM))
-//                    .collect(Collectors.toList());
+    public static IPrototypedIngredientAlternatives<ItemStack, Integer> getPrototypesFromIngredient(Ingredient ingredient, @Nullable SlotDisplay display) {
+        if (display != null) {
+            return getPrototypesFromDisplay(display);
+        } else if (ingredient.isCustom()) {
+            return new PrototypedIngredientAlternativesList<>(Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
+                    new ItemStack(ingredient.getCustomIngredient().items().findFirst().get().value()), ItemMatch.ITEM | ItemMatch.DATA)));
         } else {
-            return ingredient.getValues().stream()
+            PrototypedIngredientAlternativesList<ItemStack, Integer> prototypes = new PrototypedIngredientAlternativesList<>(ingredient.getValues().stream()
                     .map(item -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, new ItemStack(item), ItemMatch.ITEM))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toList()));
+            if (prototypes.getAlternatives().isEmpty()) {
+                prototypes = new PrototypedIngredientAlternativesList<>(Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, ItemStack.EMPTY, ItemMatch.ITEM)));
+            }
+            return prototypes;
         }
     }
 
@@ -105,22 +138,37 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
         if (recipeOutput.isEmpty()) {
             return null;
         }
+
         List<Ingredient> ingredients = recipe.placementInfo().ingredients();
         int inputSize = ingredients.size();
-        List<List<IPrototypedIngredient<ItemStack, Integer>>> inputIngredients = Lists.newArrayListWithCapacity(inputSize);
+        List<IPrototypedIngredientAlternatives<ItemStack, Integer>> inputIngredients;
         if (inputSize == 0) {
             return null;
         }
+        RecipeDisplay recipeDisplay = recipe.display().get(0);
 
-        for (int i = 0; i < ingredients.size(); i++) {
-            Ingredient ingredient = ingredients.get(i);
-            List<IPrototypedIngredient<ItemStack, Integer>> prototypes = getPrototypesFromIngredient(ingredient);
-            if (prototypes.isEmpty()) {
-                prototypes.add(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, ItemStack.EMPTY, ItemMatch.ITEM));
+        if (recipe instanceof ShapedRecipe) {
+            int width = 3;
+            int height = 3;
+            inputIngredients = Lists.newArrayListWithCapacity(9);
+            for (int i = 0; i < width * height; i++) {
+                inputIngredients.add(new PrototypedIngredientAlternativesList<>(Lists.newArrayList(
+                        new PrototypedIngredient<>(IngredientComponents.ITEMSTACK, ItemStack.EMPTY, ItemMatch.ITEM | ItemMatch.DATA)
+                )));
             }
-            inputIngredients.add(i, prototypes);
+            ShapedCraftingRecipeDisplay recipeDisplayShaped = (ShapedCraftingRecipeDisplay) recipeDisplay;
+            PlaceRecipeHelper.placeRecipe(width, height, recipeDisplayShaped.width(), recipeDisplayShaped.height(), recipeDisplayShaped.ingredients(), (display, destinationSlot, x, y) -> {
+                inputIngredients.set(destinationSlot, getPrototypesFromDisplay(display));
+            });
+        } else {
+            // Shapeless
+            inputIngredients = Lists.newArrayListWithCapacity(inputSize);
+            List<SlotDisplay> displayIngredients = recipeDisplay instanceof ShapelessCraftingRecipeDisplay recipeDisplayShapeless ? recipeDisplayShapeless.ingredients() : null;
+            for (int i = 0; i < ingredients.size(); i++) {
+                inputIngredients.add(i, getPrototypesFromIngredient(ingredients.get(i), displayIngredients != null ? displayIngredients.get(i) : null));
+            }
         }
-        return RecipeDefinition.ofIngredients(IngredientComponent.ITEMSTACK, inputIngredients,
+        return RecipeDefinition.ofAlternatives(IngredientComponent.ITEMSTACK, inputIngredients,
                 MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipeOutput));
     }
 
@@ -131,7 +179,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
         if (cached == null) {
             if (worldSupplier.get().recipeAccess() instanceof RecipeManager recipeManager) {
                 cached = recipeManager.getRecipes().stream()
-                        .filter(holder -> holder.value().getType() == recipeType)
+                        .filter(holder -> holder.value().getType() == recipeType && !holder.value().isSpecial())
                         .map(recipe -> VanillaRecipeTypeRecipeHandler.recipeToRecipeDefinition(recipe.value(), this.worldSupplier.get()))
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());

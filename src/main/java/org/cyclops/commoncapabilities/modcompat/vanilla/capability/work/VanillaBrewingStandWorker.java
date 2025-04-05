@@ -10,7 +10,7 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
  * @author rubensworks
  */
 public class VanillaBrewingStandWorker implements IWorker {
-    private static final int[] outputSlots = new int[] {0, 1, 2};
+    private static final int[] outputSlots = new int[] {0, 1, 2, 3};
 
     private final BrewingStandBlockEntity brewingStand;
 
