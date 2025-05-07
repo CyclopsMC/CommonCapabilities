@@ -194,7 +194,18 @@ public class IngredientComponentStorageWrapperHandlerFluidStack<C>
 
         @Override
         public FluidStack extract(int slot, long maxQuantity, boolean simulate) {
-            // There's no way to extract from a specific slot in IFluidHandler
+            // There's no way to extract from a specific slot in IFluidHandler,
+            // so we first determine the fluid in the given slot, and then extract with that fluid type.
+            // There are cases where this will select the wrong slot,
+            // but it's the best we can do given the current interface.
+            FluidStack slotContents = storage.getFluidInTank(slot);
+            if (!slotContents.isEmpty()) {
+                if (slotContents.getAmount() != maxQuantity) {
+                    slotContents = slotContents.copy();
+                    slotContents.setAmount((int) maxQuantity);
+                }
+                return storage.drain(slotContents, simulateToFluidAction(simulate));
+            }
             return extract(maxQuantity, simulate);
         }
     }
