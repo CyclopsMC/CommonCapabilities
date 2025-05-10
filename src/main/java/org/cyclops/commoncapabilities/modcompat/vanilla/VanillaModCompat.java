@@ -485,28 +485,6 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public Block getBlock() {
-                    return null;
-                }
-
-                @Override
-                public IBlockCapabilityProvider createProvider() {
-                    return new IBlockCapabilityProvider() {
-                        @Override
-                        public <T> LazyOptional<T> getCapability(@Nonnull BlockState blockState, @Nonnull Capability<T> capability,
-                                                                 @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nullable Direction facing) {
-                            if (blockState.getBlock() instanceof CraftingTableBlock && capability == RecipeHandlerConfig.CAPABILITY) {
-                                return LazyOptional.of(() -> new VanillaRecipeTypeRecipeHandler<>(() -> (Level) world,
-                                        RecipeType.CRAFTING, (size) -> size > 0, false, false)).cast();
-                            }
-                            return LazyOptional.empty();
-                        }
-                    };
-                }
-            });
-            BlockCapabilities.getInstance().register(new IBlockCapabilityConstructor() {
-                @Nullable
-                @Override
-                public Block getBlock() {
                     return Blocks.STONECUTTER;
                 }
 
@@ -529,7 +507,7 @@ public class VanillaModCompat implements IModCompat {
                 @Nullable
                 @Override
                 public Block getBlock() {
-                    return Blocks.STONECUTTER;
+                    return Blocks.SMITHING_TABLE;
                 }
 
                 @Override
@@ -541,6 +519,28 @@ public class VanillaModCompat implements IModCompat {
                             if (capability == RecipeHandlerConfig.CAPABILITY) {
                                 return LazyOptional.of(() -> new VanillaRecipeTypeRecipeHandler<>(() -> (Level) world,
                                         RecipeType.SMITHING, (size) -> size == 1, true, false)).cast();
+                            }
+                            return LazyOptional.empty();
+                        }
+                    };
+                }
+            });
+            BlockCapabilities.getInstance().register(new IBlockCapabilityConstructor() {
+                @Nullable
+                @Override
+                public Block getBlock() {
+                    return null;
+                }
+
+                @Override
+                public IBlockCapabilityProvider createProvider() {
+                    return new IBlockCapabilityProvider() {
+                        @Override
+                        public <T> LazyOptional<T> getCapability(@Nonnull BlockState blockState, @Nonnull Capability<T> capability,
+                                                                 @Nonnull BlockGetter world, @Nonnull BlockPos pos, @Nullable Direction facing) {
+                            if (blockState.getBlock() instanceof CraftingTableBlock && capability == RecipeHandlerConfig.CAPABILITY) {
+                                return LazyOptional.of(() -> new VanillaRecipeTypeRecipeHandler<>(() -> (Level) world,
+                                        RecipeType.CRAFTING, (size) -> size > 0, false, false)).cast();
                             }
                             return LazyOptional.empty();
                         }
