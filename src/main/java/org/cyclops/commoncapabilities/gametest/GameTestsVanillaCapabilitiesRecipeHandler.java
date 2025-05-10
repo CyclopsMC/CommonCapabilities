@@ -146,7 +146,7 @@ public class GameTestsVanillaCapabilitiesRecipeHandler {
             helper.assertValueEqual(recipeHandler.getRecipeOutputComponents(), Sets.newHashSet(IngredientComponents.ITEMSTACK), "Output components are incorrect");
             helper.assertTrue(recipeHandler.getRecipes().size() >= 250, "Recipe count is less than 250");
             for (IRecipeDefinition recipe : recipeHandler.getRecipes()) {
-                helper.assertTrue(recipeHandler.simulate(MixedIngredients.fromRecipeInput(recipe)) != null, "Recipe simulation failed for " + recipe);
+                helper.assertTrue(recipeHandler.simulate(recipe) != null, "Recipe simulation failed for " + recipe);
             }
         });
     }

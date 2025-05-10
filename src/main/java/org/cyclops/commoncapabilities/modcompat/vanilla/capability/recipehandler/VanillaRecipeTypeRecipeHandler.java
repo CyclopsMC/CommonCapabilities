@@ -19,7 +19,7 @@ import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefini
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
 import org.cyclops.commoncapabilities.api.ingredient.*;
-import org.cyclops.cyclopscore.helper.CraftingHelpers;
+import org.cyclops.cyclopscore.helper.IModHelpers;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -54,15 +54,17 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
     private final Predicate<Integer> inputSizePredicate;
     private final Function<CraftingContainer, C> createRecipeInput;
     private final boolean ignoreEmptySlots;
+    private final boolean checkOutput;
 
     private static Map<Pair<RecipeType<?>, ResourceLocation>, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
 
-    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate, Function<CraftingContainer, C> createRecipeInput, boolean ignoreEmptySlots) {
+    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate, Function<CraftingContainer, C> createRecipeInput, boolean ignoreEmptySlots, boolean checkOutput) {
         this.worldSupplier = worldSupplier;
         this.recipeType = recipeType;
         this.inputSizePredicate = inputSizePredicate;
         this.createRecipeInput = createRecipeInput;
         this.ignoreEmptySlots = ignoreEmptySlots;
+        this.checkOutput = checkOutput;
     }
 
     @Override
@@ -161,6 +163,62 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
     @Nullable
     @Override
     public IMixedIngredients simulate(IMixedIngredients input) {
+        // Get inputs
+        C recipeInput = this.createNewRecipeInput(input);
+        if (recipeInput == null) {
+            return null;
+        }
+
+        // Find recipe by checking input
+        T recipe = IModHelpers.get().getCraftingHelpers().findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
+                .map(RecipeHolder::value)
+                .orElse(null);
+        if (recipe == null) {
+            return null;
+        }
+
+        return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem(this.worldSupplier.get().registryAccess()));
+    }
+
+    @Nullable
+    @Override
+    public @org.jetbrains.annotations.Nullable IMixedIngredients simulate(IRecipeDefinition recipe) {
+        MixedIngredients input = MixedIngredients.fromRecipeInput(recipe);
+
+        // Not only check the input, but also the output if needed.
+        if (this.checkOutput) {
+            // Get inputs
+            C recipeInput = this.createNewRecipeInput(input);
+            if (recipeInput == null) {
+                return null;
+            }
+
+            // Get expected output
+            IMixedIngredients output = recipe.getOutput();
+            List<ItemStack> recipeOutputs = output.getInstances(IngredientComponent.ITEMSTACK);
+            if (output.getComponents().size() != 1 || recipeOutputs.size() != 1) {
+                return null;
+            }
+            ItemStack recipeOutput = recipeOutputs.getFirst();
+            Level level = worldSupplier.get();
+
+            // Find recipe with input AND output
+            return IModHelpers.get().getCraftingHelpers().findRecipes(level, recipeType)
+                    .stream()
+                    .filter(recipeHolder ->
+                            recipeHolder.value().matches(recipeInput, level) &&
+                                    ItemStack.isSameItemSameComponents(recipeHolder.value().getResultItem(level.registryAccess()), recipeOutput))
+                    .findFirst()
+                    .map(recipeHolder -> MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipeHolder.value().getResultItem(this.worldSupplier.get().registryAccess())))
+                    .orElse(null);
+        }
+
+        return this.simulate(input);
+    }
+
+    @Nullable
+    protected C createNewRecipeInput(IMixedIngredients input) {
+        // Get inputs
         List<ItemStack> recipeIngredients = input.getInstances(IngredientComponent.ITEMSTACK);
         if (this.ignoreEmptySlots) {
             recipeIngredients = recipeIngredients.stream().filter(itemStack -> !itemStack.isEmpty()).toList();
@@ -169,34 +227,11 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
             return null;
         }
 
-        // First try the recipe in a 3x3 grid
+        // Prepare recipe input object
         CraftingContainer inventoryCrafting = new TransientCraftingContainer(DUMMY_CONTAINTER, 3, 3);
         for (int i = 0; i < recipeIngredients.size(); i++) {
             inventoryCrafting.setItem(i, recipeIngredients.get(i));
         }
-
-        C recipeInput = this.createRecipeInput.apply(inventoryCrafting);
-        T recipe = CraftingHelpers.findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
-                .map(RecipeHolder::value)
-                .orElse(null);
-        if (recipe == null) {
-            // If that failed, try in a 2x2 grid
-            if (recipeIngredients.size() <= 4) {
-                CraftingContainer inventoryCraftingSmall = new TransientCraftingContainer(DUMMY_CONTAINTER, 2, 2);
-                for (int i = 0; i < recipeIngredients.size(); i++) {
-                    inventoryCraftingSmall.setItem(i, recipeIngredients.get(i));
-                }
-
-                recipe = CraftingHelpers.findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
-                        .map(RecipeHolder::value)
-                        .orElse(null);
-            }
-
-            if (recipe == null) {
-                return null;
-            }
-        }
-
-        return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem(this.worldSupplier.get().registryAccess()));
+        return this.createRecipeInput.apply(inventoryCrafting);
     }
 }
