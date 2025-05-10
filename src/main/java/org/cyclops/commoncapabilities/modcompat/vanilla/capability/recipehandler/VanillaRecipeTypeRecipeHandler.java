@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.recipebook.PlaceRecipeHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -26,6 +27,7 @@ import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
+import org.cyclops.cyclopscore.helper.IMinecraftHelpers;
 import org.cyclops.cyclopscore.helper.IModHelpers;
 
 import javax.annotation.Nullable;
@@ -61,15 +63,17 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
     private final Predicate<Integer> inputSizePredicate;
     private final Function<CraftingContainer, C> createRecipeInput;
     private final boolean ignoreEmptySlots;
+    private final boolean checkOutput;
 
     private static Map<Pair<RecipeType<?>, ResourceLocation>, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
 
-    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate, Function<CraftingContainer, C> createRecipeInput, boolean ignoreEmptySlots) {
+    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate, Function<CraftingContainer, C> createRecipeInput, boolean ignoreEmptySlots, boolean checkOutput) {
         this.worldSupplier = worldSupplier;
         this.recipeType = recipeType;
         this.inputSizePredicate = inputSizePredicate;
         this.createRecipeInput = createRecipeInput;
         this.ignoreEmptySlots = ignoreEmptySlots;
+        this.checkOutput = checkOutput;
     }
 
     @Override
@@ -194,6 +198,63 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
     @Nullable
     @Override
     public IMixedIngredients simulate(IMixedIngredients input) {
+        // Get inputs
+        C recipeInput = this.createNewRecipeInput(input);
+        if (recipeInput == null) {
+            return null;
+        }
+
+        // Find recipe by checking input
+        T recipe = IModHelpers.get().getCraftingHelpers().findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
+                .map(RecipeHolder::value)
+                .orElse(null);
+        if (recipe == null) {
+            return null;
+        }
+
+        return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, IModHelpers.get().getMinecraftHelpers().getRecipeOutput(recipe, this.worldSupplier.get()));
+    }
+
+    @Nullable
+    @Override
+    public @org.jetbrains.annotations.Nullable IMixedIngredients simulate(IRecipeDefinition recipe) {
+        MixedIngredients input = MixedIngredients.fromRecipeInput(recipe);
+
+        // Not only check the input, but also the output if needed.
+        if (this.checkOutput) {
+            // Get inputs
+            C recipeInput = this.createNewRecipeInput(input);
+            if (recipeInput == null) {
+                return null;
+            }
+
+            // Get expected output
+            IMixedIngredients output = recipe.getOutput();
+            List<ItemStack> recipeOutputs = output.getInstances(IngredientComponent.ITEMSTACK);
+            if (output.getComponents().size() != 1 || recipeOutputs.size() != 1) {
+                return null;
+            }
+            ItemStack recipeOutput = recipeOutputs.getFirst();
+            ServerLevel level = (ServerLevel) worldSupplier.get();
+
+            // Find recipe with input AND output
+            IMinecraftHelpers mcHelpers = IModHelpers.get().getMinecraftHelpers();
+            return IModHelpers.get().getCraftingHelpers().findRecipes(level, recipeType)
+                    .stream()
+                    .filter(recipeHolder ->
+                            recipeHolder.value().matches(recipeInput, level) &&
+                                    ItemStack.isSameItemSameComponents(mcHelpers.getRecipeOutput(recipeHolder, this.worldSupplier.get()), recipeOutput))
+                    .findFirst()
+                    .map(recipeHolder -> MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, mcHelpers.getRecipeOutput(recipeHolder, this.worldSupplier.get())))
+                    .orElse(null);
+        }
+
+        return this.simulate(input);
+    }
+
+    @Nullable
+    protected C createNewRecipeInput(IMixedIngredients input) {
+        // Get inputs
         List<ItemStack> recipeIngredients = input.getInstances(IngredientComponent.ITEMSTACK);
         if (this.ignoreEmptySlots) {
             recipeIngredients = recipeIngredients.stream().filter(itemStack -> !itemStack.isEmpty()).toList();
@@ -202,34 +263,12 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
             return null;
         }
 
-        // First try the recipe in a 3x3 grid
+        // Prepare recipe input object
         CraftingContainer inventoryCrafting = new TransientCraftingContainer(DUMMY_CONTAINTER, 3, 3);
         for (int i = 0; i < recipeIngredients.size(); i++) {
             inventoryCrafting.setItem(i, recipeIngredients.get(i));
         }
 
-        C recipeInput = this.createRecipeInput.apply(inventoryCrafting);
-        T recipe = IModHelpers.get().getCraftingHelpers().findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
-                .map(RecipeHolder::value)
-                .orElse(null);
-        if (recipe == null) {
-            // If that failed, try in a 2x2 grid
-            if (recipeIngredients.size() <= 4) {
-                CraftingContainer inventoryCraftingSmall = new TransientCraftingContainer(DUMMY_CONTAINTER, 2, 2);
-                for (int i = 0; i < recipeIngredients.size(); i++) {
-                    inventoryCraftingSmall.setItem(i, recipeIngredients.get(i));
-                }
-
-                recipe = IModHelpers.get().getCraftingHelpers().findRecipeCached(recipeType, recipeInput, worldSupplier.get(), true)
-                        .map(RecipeHolder::value)
-                        .orElse(null);
-            }
-
-            if (recipe == null) {
-                return null;
-            }
-        }
-
-        return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, IModHelpers.get().getMinecraftHelpers().getRecipeOutput(recipe, this.worldSupplier.get()));
+        return this.createRecipeInput.apply(inventoryCrafting);
     }
 }

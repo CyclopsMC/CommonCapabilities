@@ -428,7 +428,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public ICapabilityProvider<FurnaceBlockEntity, Direction, IRecipeHandler> createProvider(BlockEntityType<FurnaceBlockEntity> capabilityKey) {
                             return (blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(blockEntity::getLevel,
-                                    RecipeType.SMELTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true);
+                                    RecipeType.SMELTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true, false);
                         }
                     });
             registry.registerBlockEntity(() -> BlockEntityType.BLAST_FURNACE,
@@ -441,7 +441,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public ICapabilityProvider<BlastFurnaceBlockEntity, Direction, IRecipeHandler> createProvider(BlockEntityType<BlastFurnaceBlockEntity> capabilityKey) {
                             return (blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(blockEntity::getLevel,
-                                    RecipeType.BLASTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true);
+                                    RecipeType.BLASTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true, false);
                         }
                     });
             registry.registerBlockEntity(() -> BlockEntityType.SMOKER,
@@ -454,7 +454,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public ICapabilityProvider<SmokerBlockEntity, Direction, IRecipeHandler> createProvider(BlockEntityType<SmokerBlockEntity> capabilityKey) {
                             return (blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(blockEntity::getLevel,
-                                    RecipeType.SMOKING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true);
+                                    RecipeType.SMOKING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true, false);
                         }
                     });
             registry.registerBlockEntity(() -> BlockEntityType.CAMPFIRE,
@@ -467,7 +467,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public ICapabilityProvider<CampfireBlockEntity, Direction, IRecipeHandler> createProvider(BlockEntityType<CampfireBlockEntity> capabilityKey) {
                             return (blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(blockEntity::getLevel,
-                                    RecipeType.CAMPFIRE_COOKING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true);
+                                    RecipeType.CAMPFIRE_COOKING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true, false);
                         }
                     });
             registry.registerInheritableBlock(CraftingTableBlock.class,
@@ -480,7 +480,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public IBlockCapabilityProvider<IRecipeHandler, Direction> createProvider(Block capabilityKey) {
                             return (level, pos, state, blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(() -> level,
-                                    RecipeType.CRAFTING, (size) -> size > 0, CraftingContainer::asCraftInput, false);
+                                    RecipeType.CRAFTING, (size) -> size > 0, CraftingContainer::asCraftInput, false, false);
                         }
                     });
             registry.registerBlock(() -> (StonecutterBlock) Blocks.STONECUTTER,
@@ -493,7 +493,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public IBlockCapabilityProvider<IRecipeHandler, Direction> createProvider(StonecutterBlock capabilityKey) {
                             return (level, pos, state, blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(() -> level,
-                                    RecipeType.STONECUTTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true);
+                                    RecipeType.STONECUTTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true, true);
                         }
                     });
             registry.registerBlock(() -> (SmithingTableBlock) Blocks.SMITHING_TABLE,
@@ -506,7 +506,7 @@ public class VanillaModCompat implements IModCompat {
                         @Override
                         public IBlockCapabilityProvider<IRecipeHandler, Direction> createProvider(SmithingTableBlock capabilityKey) {
                             return (level, pos, state, blockEntity, side) -> new VanillaRecipeTypeRecipeHandler<>(() -> level,
-                                    RecipeType.SMITHING, (size) -> size == 1, (c) -> new SmithingRecipeInput(c.getItem(0), c.getItem(1), c.getItem(2)), true);
+                                    RecipeType.SMITHING, (size) -> size == 1, (c) -> new SmithingRecipeInput(c.getItem(0), c.getItem(1), c.getItem(2)), true, false);
                         }
                     });
         };
