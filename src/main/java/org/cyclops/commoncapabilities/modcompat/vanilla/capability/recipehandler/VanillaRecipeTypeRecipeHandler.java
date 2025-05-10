@@ -22,20 +22,11 @@ import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
-import org.cyclops.commoncapabilities.api.ingredient.IMixedIngredients;
-import org.cyclops.commoncapabilities.api.ingredient.IPrototypedIngredient;
-import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
-import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
-import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
+import org.cyclops.commoncapabilities.api.ingredient.*;
 import org.cyclops.cyclopscore.helper.CraftingHelpers;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -65,14 +56,16 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
     private final RecipeType<T> recipeType;
     private final Predicate<Integer> inputSizePredicate;
     private final boolean ignoreEmptySlots;
+    private final boolean checkOutput;
 
     private static Map<Pair<RecipeType<?>, ResourceLocation>, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
 
-    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate, boolean ignoreEmptySlots) {
+    public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate, boolean ignoreEmptySlots, boolean checkOutput) {
         this.worldSupplier = worldSupplier;
         this.recipeType = recipeType;
         this.inputSizePredicate = inputSizePredicate;
         this.ignoreEmptySlots = ignoreEmptySlots;
+        this.checkOutput = checkOutput;
     }
 
     @Override
@@ -183,5 +176,49 @@ public class VanillaRecipeTypeRecipeHandler<C extends Container, T extends Recip
         }
 
         return MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipe.getResultItem(this.worldSupplier.get().registryAccess()));
+    }
+
+    @Nullable
+    @Override
+    public @org.jetbrains.annotations.Nullable IMixedIngredients simulate(IRecipeDefinition recipe) {
+        MixedIngredients input = MixedIngredients.fromRecipeInput(recipe);
+
+        // Not only check the input, but also the output if needed.
+        if (this.checkOutput) {
+            List<ItemStack> recipeIngredients = input.getInstances(IngredientComponent.ITEMSTACK);
+            if (this.ignoreEmptySlots) {
+                recipeIngredients = recipeIngredients.stream().filter(itemStack -> !itemStack.isEmpty()).toList();
+            }
+            if (input.getComponents().size() != 1 || recipeIngredients.isEmpty()) {
+                return null;
+            }
+
+            // First try the recipe in a 3x3 grid
+            CraftingContainer inventoryCrafting = new TransientCraftingContainer(DUMMY_CONTAINTER, 3, 3);
+            for (int i = 0; i < recipeIngredients.size(); i++) {
+                inventoryCrafting.setItem(i, recipeIngredients.get(i));
+            }
+
+            // Get expected output
+            IMixedIngredients output = recipe.getOutput();
+            List<ItemStack> recipeOutputs = output.getInstances(IngredientComponent.ITEMSTACK);
+            if (output.getComponents().size() != 1 || recipeOutputs.size() != 1) {
+                return null;
+            }
+            ItemStack recipeOutput = recipeOutputs.get(0);
+            Level level = worldSupplier.get();
+
+            // Find recipe with input AND output
+            return CraftingHelpers.findRecipes(level, recipeType)
+                    .stream()
+                    .filter(recipeHolder ->
+                            recipeHolder.matches((C) inventoryCrafting, level) &&
+                                    ItemStack.isSameItemSameTags(recipeHolder.getResultItem(level.registryAccess()), recipeOutput))
+                    .findFirst()
+                    .map(recipeHolder -> MixedIngredients.ofInstance(IngredientComponent.ITEMSTACK, recipeHolder.getResultItem(this.worldSupplier.get().registryAccess())))
+                    .orElse(null);
+        }
+
+        return this.simulate(input);
     }
 }
