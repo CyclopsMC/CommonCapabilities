@@ -65,7 +65,7 @@ public class TestNBTBaseComparator {
                 .set(DataComponents.DAMAGE, 64)
                 .build();
 
-        DyedItemColor color = new DyedItemColor(1, false);
+        DyedItemColor color = new DyedItemColor(1);
         GLINT_FALSE_DYED_C1 = DataComponentMap.builder()
                 .set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false)
                 .set(DataComponents.DYED_COLOR, color)
@@ -76,7 +76,7 @@ public class TestNBTBaseComparator {
                 .build();
         GLINT_FALSE_DYED_D = DataComponentMap.builder()
                 .set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false)
-                .set(DataComponents.DYED_COLOR, new DyedItemColor(2, false))
+                .set(DataComponents.DYED_COLOR, new DyedItemColor(2))
                 .build();
     }
 

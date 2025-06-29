@@ -1,26 +1,22 @@
 package org.cyclops.commoncapabilities.gametest;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.items.IItemHandler;
-import org.cyclops.commoncapabilities.Reference;
+import org.cyclops.cyclopscore.gametest.GameTest;
 
 /**
  * @author rubensworks
  */
-@GameTestHolder(Reference.MOD_ID)
-@PrefixGameTestTemplate(false)
 public class GameTestsVanillaCapabilitiesEntityItemFrame {
 
-    public static final String TEMPLATE_EMPTY = "empty10";
+    public static final String TEMPLATE_EMPTY = "commoncapabilities:empty10";
     public static final BlockPos POS = BlockPos.ZERO.offset(2, 1, 2);
 
     @GameTest(template = TEMPLATE_EMPTY)
@@ -34,8 +30,8 @@ public class GameTestsVanillaCapabilitiesEntityItemFrame {
         ItemStack remaining = itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
 
         helper.succeedIf(() -> {
-            helper.assertTrue(remaining.isEmpty(), "Remaining of insertion is not empty");
-            helper.assertTrue(itemHandler.getStackInSlot(0).getItem() == Items.APPLE, "Item was not added");
+            helper.assertTrue(remaining.isEmpty(), Component.literal("Remaining of insertion is not empty"));
+            helper.assertTrue(itemHandler.getStackInSlot(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
         });
     }
 
@@ -51,8 +47,8 @@ public class GameTestsVanillaCapabilitiesEntityItemFrame {
         ItemStack removed = itemHandler.extractItem(0, 1, false);
 
         helper.succeedIf(() -> {
-            helper.assertTrue(!removed.isEmpty(), "Removed item is empty");
-            helper.assertTrue(itemHandler.getStackInSlot(0).isEmpty(), "Item was not removed");
+            helper.assertTrue(!removed.isEmpty(), Component.literal("Removed item is empty"));
+            helper.assertTrue(itemHandler.getStackInSlot(0).isEmpty(), Component.literal("Item was not removed"));
         });
     }
 

@@ -9,12 +9,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.fml.loading.LoadingModList;
 import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
 import org.cyclops.cyclopscore.nbt.path.NbtParseException;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -44,6 +47,7 @@ public class TestIngredientMatcherItemStack {
     public static void init() throws NbtParseException {
         // We need the Minecraft registries to be filled
         SharedConstants.setVersion(DetectedVersion.BUILT_IN);
+        LoadingModList.of(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), Collections.emptyMap());
         Bootstrap.bootStrap();
         CyclopsCoreInstance.MOD = new ModBaseMocked();
 
@@ -307,8 +311,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1, W_2_T2), is(-1));
         assertThat(M.compare(W_1, W_1_T1), is(20));
         assertThat(M.compare(W_1, W_1_T2), is(20));
-        assertThat(M.compare(W_1, L_1), is(-971));
-        assertThat(M.compare(W_1, L_1_T1), is(-971));
+        assertThat(M.compare(W_1, L_1), is(-996));
+        assertThat(M.compare(W_1, L_1_T1), is(-996));
 
         assertThat(M.compare(W_1_T1, W_1), is(-20));
         assertThat(M.compare(W_1_T1, W_2), is(-1));
@@ -316,8 +320,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T1, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T1, W_1_T1), is(0));
         assertThat(M.compare(W_1_T1, W_1_T2), is(1));
-        assertThat(M.compare(W_1_T1, L_1), is(-971));
-        assertThat(M.compare(W_1_T1, L_1_T1), is(-971));
+        assertThat(M.compare(W_1_T1, L_1), is(-996));
+        assertThat(M.compare(W_1_T1, L_1_T1), is(-996));
 
         assertThat(M.compare(W_1_T2, W_1), is(-20));
         assertThat(M.compare(W_1_T2, W_2), is(-1));
@@ -325,8 +329,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T2, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T2, W_1_T1), is(-1));
         assertThat(M.compare(W_1_T2, W_1_T2), is(0));
-        assertThat(M.compare(W_1_T2, L_1), is(-971));
-        assertThat(M.compare(W_1_T2, L_1_T1), is(-971));
+        assertThat(M.compare(W_1_T2, L_1), is(-996));
+        assertThat(M.compare(W_1_T2, L_1_T1), is(-996));
 
         assertThat(M.compare(W_2, W_1), is(1));
         assertThat(M.compare(W_2, W_1_T1), is(1));
@@ -334,8 +338,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2, W_2), is(0));
         assertThat(M.compare(W_2, W_2_T1), is(20));
         assertThat(M.compare(W_2, W_2_T2), is(20));
-        assertThat(M.compare(W_2, L_1), is(-971));
-        assertThat(M.compare(W_2, L_1_T1), is(-971));
+        assertThat(M.compare(W_2, L_1), is(-996));
+        assertThat(M.compare(W_2, L_1_T1), is(-996));
 
         assertThat(M.compare(W_2_T1, W_1), is(1));
         assertThat(M.compare(W_2_T1, W_1_T1), is(1));
@@ -350,24 +354,24 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2_T2, W_2), is(-20));
         assertThat(M.compare(W_2_T2, W_2_T1), is(-1));
         assertThat(M.compare(W_2_T2, W_2_T2), is(0));
-        assertThat(M.compare(W_2_T2, L_1), is(-971));
-        assertThat(M.compare(W_2_T2, L_1_T1), is(-971));
+        assertThat(M.compare(W_2_T2, L_1), is(-996));
+        assertThat(M.compare(W_2_T2, L_1_T1), is(-996));
 
-        assertThat(M.compare(L_1, W_1), is(971));
-        assertThat(M.compare(L_1, W_1_T1), is(971));
-        assertThat(M.compare(L_1, W_1_T2), is(971));
-        assertThat(M.compare(L_1, W_2), is(971));
-        assertThat(M.compare(L_1, W_2_T1), is(971));
-        assertThat(M.compare(L_1, W_2_T2), is(971));
+        assertThat(M.compare(L_1, W_1), is(996));
+        assertThat(M.compare(L_1, W_1_T1), is(996));
+        assertThat(M.compare(L_1, W_1_T2), is(996));
+        assertThat(M.compare(L_1, W_2), is(996));
+        assertThat(M.compare(L_1, W_2_T1), is(996));
+        assertThat(M.compare(L_1, W_2_T2), is(996));
         assertThat(M.compare(L_1, L_1), is(0));
         assertThat(M.compare(L_1, L_1_T1), is(20));
 
-        assertThat(M.compare(L_1_T1, W_1), is(971));
-        assertThat(M.compare(L_1_T1, W_1_T1), is(971));
-        assertThat(M.compare(L_1_T1, W_1_T2), is(971));
-        assertThat(M.compare(L_1_T1, W_2), is(971));
-        assertThat(M.compare(L_1_T1, W_2_T1), is(971));
-        assertThat(M.compare(L_1_T1, W_2_T2), is(971));
+        assertThat(M.compare(L_1_T1, W_1), is(996));
+        assertThat(M.compare(L_1_T1, W_1_T1), is(996));
+        assertThat(M.compare(L_1_T1, W_1_T2), is(996));
+        assertThat(M.compare(L_1_T1, W_2), is(996));
+        assertThat(M.compare(L_1_T1, W_2_T1), is(996));
+        assertThat(M.compare(L_1_T1, W_2_T2), is(996));
         assertThat(M.compare(L_1_T1, L_1), is(-20));
         assertThat(M.compare(L_1_T1, L_1_T1), is(0));
     }

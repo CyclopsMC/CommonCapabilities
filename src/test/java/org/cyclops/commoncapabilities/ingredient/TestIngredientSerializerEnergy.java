@@ -2,7 +2,6 @@ package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.ByteTag;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.LongTag;
 import net.minecraft.nbt.StringTag;
 import org.junit.BeforeClass;
@@ -30,8 +29,6 @@ public class TestIngredientSerializerEnergy {
 
     @Test
     public void deserializeInstance() {
-        assertThat(S.deserializeInstance(HL, IntTag.valueOf(0)), is(0L));
-        assertThat(S.deserializeInstance(HL, IntTag.valueOf(100)), is(100L));
         assertThat(S.deserializeInstance(HL, LongTag.valueOf(0L)), is(0L));
         assertThat(S.deserializeInstance(HL, LongTag.valueOf(100L)), is(100L));
     }

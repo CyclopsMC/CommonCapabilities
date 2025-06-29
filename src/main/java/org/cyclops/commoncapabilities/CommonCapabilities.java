@@ -12,6 +12,7 @@ import org.cyclops.commoncapabilities.api.capability.recipehandler.IPrototypedIn
 import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesItemStackTag;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesList;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
+import org.cyclops.commoncapabilities.gametest.*;
 import org.cyclops.commoncapabilities.modcompat.vanilla.VanillaModCompat;
 import org.cyclops.commoncapabilities.proxy.ClientProxy;
 import org.cyclops.commoncapabilities.proxy.CommonProxy;
@@ -87,6 +88,18 @@ public class CommonCapabilities extends ModBaseNeoForge<CommonCapabilities> {
         super.onConfigsRegister(configHandler);
 
         configHandler.addConfigurable(new GeneralConfig());
+    }
+
+    @Override
+    public Class<?>[] getGameTestClasses() {
+        return new Class<?>[]{
+                GameTestsVanillaCapabilitiesEntityItem.class,
+                GameTestsVanillaCapabilitiesEntityItemFrame.class,
+                GameTestsVanillaCapabilitiesItemItemHandler.class,
+                GameTestsVanillaCapabilitiesRecipeHandler.class,
+                GameTestsVanillaCapabilitiesTemperature.class,
+                GameTestsVanillaCapabilitiesWorker.class,
+        };
     }
 
     public void onRegister(NewRegistryEvent event) {

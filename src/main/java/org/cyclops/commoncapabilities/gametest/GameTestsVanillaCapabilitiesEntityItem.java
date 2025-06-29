@@ -2,8 +2,8 @@ package org.cyclops.commoncapabilities.gametest;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -11,19 +11,15 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.gametest.GameTestHolder;
-import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 import net.neoforged.neoforge.items.IItemHandler;
-import org.cyclops.commoncapabilities.Reference;
+import org.cyclops.cyclopscore.gametest.GameTest;
 
 /**
  * @author rubensworks
  */
-@GameTestHolder(Reference.MOD_ID)
-@PrefixGameTestTemplate(false)
 public class GameTestsVanillaCapabilitiesEntityItem {
 
-    public static final String TEMPLATE_EMPTY = "empty10";
+    public static final String TEMPLATE_EMPTY = "commoncapabilities:empty10";
     public static final BlockPos POS = BlockPos.ZERO.offset(2, 1, 2);
 
     @GameTest(template = TEMPLATE_EMPTY)
@@ -36,8 +32,8 @@ public class GameTestsVanillaCapabilitiesEntityItem {
         ItemStack remaining = itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
 
         helper.succeedIf(() -> {
-            helper.assertTrue(remaining.isEmpty(), "Remaining of insertion is not empty");
-            helper.assertTrue(itemHandler.getStackInSlot(0).getItem() == Items.APPLE, "Item was not added");
+            helper.assertTrue(remaining.isEmpty(), Component.literal("Remaining of insertion is not empty"));
+            helper.assertTrue(itemHandler.getStackInSlot(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
         });
     }
 
@@ -52,8 +48,8 @@ public class GameTestsVanillaCapabilitiesEntityItem {
         ItemStack removed = itemHandler.extractItem(0, 1, false);
 
         helper.succeedIf(() -> {
-            helper.assertTrue(!removed.isEmpty(), "Removed item is empty");
-            helper.assertTrue(itemHandler.getStackInSlot(0).isEmpty(), "Item was not removed");
+            helper.assertTrue(!removed.isEmpty(), Component.literal("Removed item is empty"));
+            helper.assertTrue(itemHandler.getStackInSlot(0).isEmpty(), Component.literal("Item was not removed"));
         });
     }
 
@@ -67,8 +63,8 @@ public class GameTestsVanillaCapabilitiesEntityItem {
         int filled = fluidHandler.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
 
         helper.succeedIf(() -> {
-            helper.assertTrue(filled == 1000, "Insertion was not 1000");
-            helper.assertTrue(fluidHandler.getFluidInTank(0).getAmount() == 1000, "Fluid was not added");
+            helper.assertTrue(filled == 1000, Component.literal("Insertion was not 1000"));
+            helper.assertTrue(fluidHandler.getFluidInTank(0).getAmount() == 1000, Component.literal("Fluid was not added"));
         });
     }
 
@@ -83,8 +79,8 @@ public class GameTestsVanillaCapabilitiesEntityItem {
         FluidStack drained = fluidHandler.drain(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
 
         helper.succeedIf(() -> {
-            helper.assertTrue(drained.getAmount() == 1000, "Removal was not 1000");
-            helper.assertTrue(fluidHandler.getFluidInTank(0).isEmpty(), "Fluid was not removed");
+            helper.assertTrue(drained.getAmount() == 1000, Component.literal("Removal was not 1000"));
+            helper.assertTrue(fluidHandler.getFluidInTank(0).isEmpty(), Component.literal("Fluid was not removed"));
         });
     }
 
