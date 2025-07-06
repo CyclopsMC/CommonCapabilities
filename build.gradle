@@ -84,67 +84,8 @@ def getChangelog() {
 sourceSets {
     main
     test
-    test_vanilla_capability_entityitem {
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-        resources { srcDir 'src/test_common/resources' }
-    }
-    test_vanilla_capability_inventorystate {
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-        resources { srcDir 'src/test_common/resources' }
-    }
-    test_vanilla_capability_itemitemhandler {
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-        resources { srcDir 'src/test_common/resources' }
-    }
-    test_vanilla_capability_recipehandler {
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-        resources { srcDir 'src/test_common/resources' }
-    }
-    test_vanilla_capability_temperature {
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-        resources { srcDir 'src/test_common/resources' }
-    }
-    test_vanilla_capability_worker {
-        compileClasspath += sourceSets.main.output
-        runtimeClasspath += sourceSets.main.output
-        resources { srcDir 'src/test_common/resources' }
-    }
 }
 sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-configurations {
-    test_vanilla_capability_entityitemImplementation.extendsFrom(implementation)
-    test_vanilla_capability_entityitemRuntimeOnly.extendsFrom(runtimeOnly)
-    test_vanilla_capability_inventorystateImplementation.extendsFrom(implementation)
-    test_vanilla_capability_inventorystateRuntimeOnly.extendsFrom(runtimeOnly)
-    test_vanilla_capability_itemitemhandlerImplementation.extendsFrom(implementation)
-    test_vanilla_capability_itemitemhandlerRuntimeOnly.extendsFrom(runtimeOnly)
-    test_vanilla_capability_recipehandlerImplementation.extendsFrom(implementation)
-    test_vanilla_capability_recipehandlerRuntimeOnly.extendsFrom(runtimeOnly)
-    test_vanilla_capability_temperatureImplementation.extendsFrom(implementation)
-    test_vanilla_capability_temperatureRuntimeOnly.extendsFrom(runtimeOnly)
-    test_vanilla_capability_workerImplementation.extendsFrom(implementation)
-    test_vanilla_capability_workerRuntimeOnly.extendsFrom(runtimeOnly)
-
-    javadoc.classpath += sourceSets.test_vanilla_capability_entityitem.output
-    javadoc.classpath += sourceSets.test_vanilla_capability_inventorystate.output
-    javadoc.classpath += sourceSets.test_vanilla_capability_itemitemhandler.output
-    javadoc.classpath += sourceSets.test_vanilla_capability_recipehandler.output
-    javadoc.classpath += sourceSets.test_vanilla_capability_temperature.output
-    javadoc.classpath += sourceSets.test_vanilla_capability_worker.output
-}
-
-processTest_vanilla_capability_entityitemResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
-processTest_vanilla_capability_inventorystateResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
-processTest_vanilla_capability_itemitemhandlerResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
-processTest_vanilla_capability_recipehandlerResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
-processTest_vanilla_capability_temperatureResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
-processTest_vanilla_capability_workerResources.duplicatesStrategy = DuplicatesStrategy.INCLUDE
 
 repositories {
     mavenCentral()
@@ -193,12 +134,6 @@ runs {
 		systemProperty 'forge.logging.markers', 'REGISTRIES'
         systemProperty 'forge.logging.console.level', 'debug'
         modSource project.sourceSets.main
-		modSource project.sourceSets.test_vanilla_capability_entityitem
-		modSource project.sourceSets.test_vanilla_capability_inventorystate
-		modSource project.sourceSets.test_vanilla_capability_itemitemhandler
-		modSource project.sourceSets.test_vanilla_capability_recipehandler
-		modSource project.sourceSets.test_vanilla_capability_temperature
-		modSource project.sourceSets.test_vanilla_capability_worker
     }
 	
     client {
@@ -217,12 +152,6 @@ runs {
     clientData {
         arguments.addAll '--all', '--validate',
                 '--mod', project.mod_id,
-                '--mod', 'test_vanilla_capability_entityitem',
-                '--mod', 'test_vanilla_capability_inventorystate',
-                '--mod', 'test_vanilla_capability_itemitemhandler',
-                '--mod', 'test_vanilla_capability_recipehandler',
-                '--mod', 'test_vanilla_capability_temperature',
-                '--mod', 'test_vanilla_capability_worker',
                 '--output', file('src/generated/resources/').getAbsolutePath(),
                 '--existing', file('src/main/resources/').getAbsolutePath()
     }
@@ -432,18 +361,6 @@ spotless {
         removeUnusedImports()
     }
 }
-spotlessJava.mustRunAfter(compileTest_vanilla_capability_entityitemJava)
-spotlessJava.mustRunAfter(compileTest_vanilla_capability_inventorystateJava)
-spotlessJava.mustRunAfter(compileTest_vanilla_capability_itemitemhandlerJava)
-spotlessJava.mustRunAfter(compileTest_vanilla_capability_recipehandlerJava)
-spotlessJava.mustRunAfter(compileTest_vanilla_capability_temperatureJava)
-spotlessJava.mustRunAfter(compileTest_vanilla_capability_workerJava)
-spotlessJava.mustRunAfter(processTest_vanilla_capability_entityitemResources)
-spotlessJava.mustRunAfter(processTest_vanilla_capability_inventorystateResources)
-spotlessJava.mustRunAfter(processTest_vanilla_capability_itemitemhandlerResources)
-spotlessJava.mustRunAfter(processTest_vanilla_capability_recipehandlerResources)
-spotlessJava.mustRunAfter(processTest_vanilla_capability_temperatureResources)
-spotlessJava.mustRunAfter(processTest_vanilla_capability_workerResources)
 spotlessJava.mustRunAfter(javadoc)
 spotlessJava.mustRunAfter(compileTestJava)
 spotlessJava.mustRunAfter(test)
