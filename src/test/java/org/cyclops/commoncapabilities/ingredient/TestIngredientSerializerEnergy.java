@@ -1,18 +1,18 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.ByteTag;
-import net.minecraft.nbt.LongTag;
-import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.CompoundTag;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
+import static org.cyclops.commoncapabilities.TestInitHelpers.deserialize;
+import static org.cyclops.commoncapabilities.TestInitHelpers.serialize;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientSerializerEnergy {
-
-    private static final HolderLookup.Provider HL = TestHolderLookupProvider.get();
 
     private static IngredientSerializerEnergy S;
 
@@ -23,19 +23,27 @@ public class TestIngredientSerializerEnergy {
 
     @Test
     public void serializeInstance() {
-        assertThat(S.serializeInstance(HL, 0L), is(LongTag.valueOf(0L)));
-        assertThat(S.serializeInstance(HL, 100L), is(LongTag.valueOf(100L)));
+        CompoundTag tag1 = new CompoundTag();
+        tag1.putLong("i", 0L);
+        assertThat(serialize(o -> S.serializeInstance(o, 0L)), is(tag1));
+        CompoundTag tag2 = new CompoundTag();
+        tag2.putLong("i", 100L);
+        assertThat(serialize(o -> S.serializeInstance(o, 100L)), is(tag2));
     }
 
     @Test
     public void deserializeInstance() {
-        assertThat(S.deserializeInstance(HL, LongTag.valueOf(0L)), is(0L));
-        assertThat(S.deserializeInstance(HL, LongTag.valueOf(100L)), is(100L));
+        CompoundTag tag1 = new CompoundTag();
+        tag1.putLong("i", 0L);
+        assertThat(deserialize(tag1, S::deserializeInstance), is(0L));
+        CompoundTag tag2 = new CompoundTag();
+        tag2.putLong("i", 100L);
+        assertThat(deserialize(tag2, S::deserializeInstance), is(100L));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NoSuchElementException.class)
     public void deserializeInstanceInvalid() {
-        S.deserializeInstance(HL, StringTag.valueOf("0"));
+        deserialize(new CompoundTag(), S::deserializeInstance);
     }
 
     @Test

@@ -1,10 +1,9 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 
@@ -14,17 +13,13 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
  */
 public class IngredientSerializerFluidStack implements IIngredientSerializer<FluidStack, Integer> {
     @Override
-    public Tag serializeInstance(HolderLookup.Provider lookupProvider, FluidStack instance) {
-        return instance.isEmpty() ? new CompoundTag() : FluidStack.OPTIONAL_CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), instance).getOrThrow();
+    public void serializeInstance(ValueOutput valueOutput, FluidStack instance) {
+        valueOutput.store("i", FluidStack.OPTIONAL_CODEC, instance);
     }
 
     @Override
-    public FluidStack deserializeInstance(HolderLookup.Provider lookupProvider, Tag tag) throws IllegalArgumentException {
-        try {
-            return FluidStack.OPTIONAL_CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag).getOrThrow();
-        } catch (IllegalStateException e) {
-            throw new IllegalArgumentException(e);
-        }
+    public FluidStack deserializeInstance(ValueInput valueInput) throws IllegalArgumentException {
+        return valueInput.read("i", FluidStack.OPTIONAL_CODEC).orElseThrow();
     }
 
     @Override

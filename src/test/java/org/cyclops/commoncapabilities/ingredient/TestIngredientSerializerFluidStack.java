@@ -3,7 +3,6 @@ package org.cyclops.commoncapabilities.ingredient;
 import net.minecraft.DetectedVersion;
 import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -17,17 +16,20 @@ import org.cyclops.commoncapabilities.IngredientComponents;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
+import static org.cyclops.commoncapabilities.TestInitHelpers.deserialize;
+import static org.cyclops.commoncapabilities.TestInitHelpers.serialize;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientSerializerFluidStack {
 
-    private static final HolderLookup.Provider HL = TestHolderLookupProvider.get();
-
     private static IngredientSerializerFluidStack S;
     private static DataComponentPatch DATA;
     private static CompoundTag F_TAG1;
     private static CompoundTag F_TAG2;
+    private static CompoundTag F_TAGEMPTY;
     private static FluidStack F1;
     private static FluidStack F2;
 
@@ -44,13 +46,21 @@ public class TestIngredientSerializerFluidStack {
                 .build();
 
         F_TAG1 = new CompoundTag();
-        F_TAG1.putString("id", "minecraft:water");
-        F_TAG1.putInt("amount", 1000);
+        CompoundTag subF_TAG1 = new CompoundTag();
+        F_TAG1.put("i", subF_TAG1);
+        subF_TAG1.putString("id", "minecraft:water");
+        subF_TAG1.putInt("amount", 1000);
 
         F_TAG2 = new CompoundTag();
-        F_TAG2.putString("id", "minecraft:lava");
-        F_TAG2.putInt("amount", 123);
-        F_TAG2.put("components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, DATA).getOrThrow());
+        CompoundTag subF_TAG2 = new CompoundTag();
+        F_TAG2.put("i", subF_TAG2);
+        subF_TAG2.putString("id", "minecraft:lava");
+        subF_TAG2.putInt("amount", 123);
+        subF_TAG2.put("components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, DATA).getOrThrow());
+
+        F_TAGEMPTY = new CompoundTag();
+        CompoundTag subF_TAG3 = new CompoundTag();
+        F_TAGEMPTY.put("i", subF_TAG3);
 
         F1 = new FluidStack(Fluids.WATER, 1000);
         F2 = new FluidStack(Holder.direct(Fluids.LAVA), 123, DATA);
@@ -58,20 +68,20 @@ public class TestIngredientSerializerFluidStack {
 
     @Test
     public void serializeInstance() {
-        assertThat(S.serializeInstance(HL, F1), is(F_TAG1));
-        assertThat(S.serializeInstance(HL, F2), is(F_TAG2));
-        assertThat(S.serializeInstance(HL, FluidStack.EMPTY), is(new CompoundTag()));
+        assertThat(serialize(o -> S.serializeInstance(o, F1)), is(F_TAG1));
+        assertThat(serialize(o -> S.serializeInstance(o, F2)), is(F_TAG2));
+        assertThat(serialize(o -> S.serializeInstance(o, FluidStack.EMPTY)), is(F_TAGEMPTY));
     }
 
     @Test
     public void deserializeInstance() {
-        assertThat(eq(S.deserializeInstance(HL, F_TAG1), F1), is(true));
-        assertThat(eq(S.deserializeInstance(HL, F_TAG2), F2), is(true));
+        assertThat(eq(deserialize(F_TAG1, S::deserializeInstance), F1), is(true));
+        assertThat(eq(deserialize(F_TAG2, S::deserializeInstance), F2), is(true));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = NoSuchElementException.class)
     public void deserializeInstanceInvalid() {
-        S.deserializeInstance(HL, StringTag.valueOf("0"));
+        deserialize(new CompoundTag(), S::deserializeInstance);
     }
 
     @Test

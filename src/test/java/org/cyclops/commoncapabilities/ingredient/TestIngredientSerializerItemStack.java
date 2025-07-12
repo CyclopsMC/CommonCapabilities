@@ -2,7 +2,6 @@ package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.DetectedVersion;
 import net.minecraft.SharedConstants;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -15,12 +14,14 @@ import net.minecraft.world.item.Items;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
+import static org.cyclops.commoncapabilities.TestInitHelpers.deserialize;
+import static org.cyclops.commoncapabilities.TestInitHelpers.serialize;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class TestIngredientSerializerItemStack {
-
-    private static final HolderLookup.Provider HL = TestHolderLookupProvider.get();
 
     private static IngredientSerializerItemStack S;
     private static DataComponentPatch DATA;
@@ -47,26 +48,36 @@ public class TestIngredientSerializerItemStack {
                 .build();
 
         I_TAG1 = new CompoundTag();
-        I_TAG1.putString("id", "minecraft:apple");
-        I_TAG1.putInt("count", 1);
+        CompoundTag subI_TAG1 = new CompoundTag();
+        I_TAG1.put("i", subI_TAG1);
+        subI_TAG1.putString("id", "minecraft:apple");
+        subI_TAG1.putInt("count", 1);
 
         I_TAG2 = new CompoundTag();
-        I_TAG2.putString("id", "minecraft:lead");
-        I_TAG2.putInt("count", 2);
-        I_TAG2.put("components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, DATA).getOrThrow());
+        CompoundTag subI_TAG2 = new CompoundTag();
+        I_TAG2.put("i", subI_TAG2);
+        subI_TAG2.putString("id", "minecraft:lead");
+        subI_TAG2.putInt("count", 2);
+        subI_TAG2.put("components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, DATA).getOrThrow());
 
         I_TAG1L = new CompoundTag();
-        I_TAG1L.putString("id", "minecraft:apple");
-        I_TAG1L.putInt("count", 99);
+        CompoundTag subI_TAG1L = new CompoundTag();
+        I_TAG1L.put("i", subI_TAG1L);
+        subI_TAG1L.putString("id", "minecraft:apple");
+        subI_TAG1L.putInt("count", 99);
         I_TAG1L.putInt("ExtendedCount", 128);
 
         I_TAG2L = new CompoundTag();
-        I_TAG2L.putString("id", "minecraft:lead");
-        I_TAG2L.putInt("count", 99);
-        I_TAG2L.put("components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, DATA).getOrThrow());
+        CompoundTag subI_TAG2L = new CompoundTag();
+        I_TAG2L.put("i", subI_TAG2L);
+        subI_TAG2L.putString("id", "minecraft:lead");
+        subI_TAG2L.putInt("count", 99);
+        subI_TAG2L.put("components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, DATA).getOrThrow());
         I_TAG2L.putInt("ExtendedCount", 2000);
 
         I_TAG_EMPTY = new CompoundTag();
+        CompoundTag subI_TAG_EMPTY = new CompoundTag();
+        I_TAG_EMPTY.put("i", subI_TAG_EMPTY);
 
         I1 = new ItemStack(Items.APPLE);
         I2 = new ItemStack(Items.LEAD, 2);
@@ -78,32 +89,32 @@ public class TestIngredientSerializerItemStack {
 
     @Test
     public void serializeInstance() {
-        assertThat(S.serializeInstance(HL, I1), is(I_TAG1));
-        assertThat(S.serializeInstance(HL, I2), is(I_TAG2));
-        assertThat(S.serializeInstance(HL, ItemStack.EMPTY), is(I_TAG_EMPTY));
+        assertThat(serialize(o -> S.serializeInstance(o, I1)), is(I_TAG1));
+        assertThat(serialize(o -> S.serializeInstance(o, I2)), is(I_TAG2));
+        assertThat(serialize(o -> S.serializeInstance(o, ItemStack.EMPTY)), is(I_TAG_EMPTY));
     }
 
     @Test
     public void serializeInstanceLarge() {
-        assertThat(S.serializeInstance(HL, I1L), is(I_TAG1L));
-        assertThat(S.serializeInstance(HL, I2L), is(I_TAG2L));
+        assertThat(serialize(o -> S.serializeInstance(o, I1L)), is(I_TAG1L));
+        assertThat(serialize(o -> S.serializeInstance(o, I2L)), is(I_TAG2L));
     }
 
     @Test
     public void deserializeInstance() {
-        assertThat(ItemStack.isSameItemSameComponents(I1, S.deserializeInstance(HL, I_TAG1)), is(true));
-        assertThat(ItemStack.isSameItemSameComponents(I2, S.deserializeInstance(HL, I_TAG2)), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(deserialize(I_TAG1, S::deserializeInstance), I1), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(deserialize(I_TAG2, S::deserializeInstance), I2), is(true));
     }
 
     @Test
     public void deserializeInstanceLarge() {
-        assertThat(ItemStack.isSameItemSameComponents(I1L, S.deserializeInstance(HL, I_TAG1L)), is(true));
-        assertThat(ItemStack.isSameItemSameComponents(I2L, S.deserializeInstance(HL, I_TAG2L)), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(deserialize(I_TAG1L, S::deserializeInstance), I1L), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(deserialize(I_TAG2L, S::deserializeInstance), I2L), is(true));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = NoSuchElementException.class)
     public void deserializeInstanceInvalid() {
-        S.deserializeInstance(HL, StringTag.valueOf("0"));
+        deserialize(new CompoundTag(), S::deserializeInstance);
     }
 
     @Test

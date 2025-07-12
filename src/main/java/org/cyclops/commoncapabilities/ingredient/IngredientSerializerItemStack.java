@@ -1,12 +1,10 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import com.google.gson.JsonParseException;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 
 /**
@@ -15,33 +13,20 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
  */
 public class IngredientSerializerItemStack implements IIngredientSerializer<ItemStack, Integer> {
     @Override
-    public Tag serializeInstance(HolderLookup.Provider lookupProvider, ItemStack instance) {
+    public void serializeInstance(ValueOutput valueOutput, ItemStack instance) {
         int count = instance.getCount();
         if (instance.getCount() > 99) {
             instance = instance.copy();
             instance.setCount(99);
+            valueOutput.putInt("ExtendedCount", count);
         }
-        Tag tag = ItemStack.OPTIONAL_CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), instance)
-                .getOrThrow(JsonParseException::new);
-        if (count > 127) {
-            ((CompoundTag) tag).putInt("ExtendedCount", count);
-        }
-        return tag;
+        valueOutput.store("i", ItemStack.OPTIONAL_CODEC, instance);
     }
 
     @Override
-    public ItemStack deserializeInstance(HolderLookup.Provider lookupProvider, Tag tag) throws IllegalArgumentException {
-        ItemStack itemStack = ItemStack.OPTIONAL_CODEC.parse(lookupProvider.createSerializationContext(NbtOps.INSTANCE), tag)
-                .getOrThrow(JsonParseException::new);
-
-
-        if (!(tag instanceof CompoundTag stackTag)) {
-            throw new IllegalArgumentException("This deserializer only accepts NBTTagCompound");
-        }
-        if (stackTag.contains("ExtendedCount")) {
-            itemStack.setCount(stackTag.getInt("ExtendedCount").orElseThrow());
-        }
-
+    public ItemStack deserializeInstance(ValueInput valueInput) throws IllegalArgumentException {
+        ItemStack itemStack = valueInput.read("i", ItemStack.OPTIONAL_CODEC).orElseThrow();
+        valueInput.getInt("ExtendedCount").ifPresent(itemStack::setCount);
         return itemStack;
     }
 

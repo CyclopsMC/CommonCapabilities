@@ -1,9 +1,9 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.ByteTag;
-import net.minecraft.nbt.LongTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
 
 /**
@@ -12,16 +12,13 @@ import org.cyclops.commoncapabilities.api.ingredient.IIngredientSerializer;
  */
 public class IngredientSerializerEnergy implements IIngredientSerializer<Long, Boolean> {
     @Override
-    public Tag serializeInstance(HolderLookup.Provider lookupProvider, Long instance) {
-        return LongTag.valueOf(instance);
+    public void serializeInstance(ValueOutput valueOutput, Long instance) {
+        valueOutput.putLong("i", instance);
     }
 
     @Override
-    public Long deserializeInstance(HolderLookup.Provider lookupProvider, Tag tag) throws IllegalArgumentException {
-        if (tag instanceof LongTag) {
-            return tag.asLong().orElseThrow();
-        }
-        throw new IllegalArgumentException("This deserializer only accepts LongNBT");
+    public Long deserializeInstance(ValueInput valueInput) throws IllegalArgumentException {
+        return valueInput.getLong("i").orElseThrow();
     }
 
     @Override
