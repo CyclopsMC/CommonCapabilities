@@ -1,13 +1,7 @@
 {
-    "_comment": "Configuration",
     "config.commoncapabilities": "Configuração do %s",
-
-    "_comment": "# Recipe components",
-    "recipecomponent.minecraft.itemstack": "Item",
     "recipecomponent.minecraft.fluidstack": "Fluido",
     "recipecomponent.minecraft.energy": "Energia",
-
-    "_comment": "# Capability settings",
     "capability.commoncapabilities.inventoryState": "Estado do inventário",
     "capability.commoncapabilities.temperature": "Temperatura",
     "capability.commoncapabilities.worker": "Trabalhador",
