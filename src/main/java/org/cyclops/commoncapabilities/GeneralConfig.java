@@ -36,9 +36,7 @@ public class GeneralConfig extends DummyConfig {
     public static boolean versionChecker = true;
 
     @ConfigurableProperty(category = "machine", comment = "The data component types that should be filtered away when checking equality.", configLocation = ModConfig.Type.SERVER)
-    public static List<String> ignoreDataComponentsForEqualityFilters = Lists.newArrayList(
-            "cyclopscore:energy_storage" // Integrated Dynamics batteries
-    );
+    public static List<String> ignoreDataComponentsForEqualityFilters = Lists.newArrayList();
 
     @ConfigurableProperty(category = "core", comment = "Only enable this if you know what you are doing, as this will cause lag! This will log checks to the DataComparator where equal items have unequal data components.")
     public static boolean debugLogUnequalItemDataComponents = false;
