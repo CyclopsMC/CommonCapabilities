@@ -42,8 +42,7 @@ public class GeneralConfig extends DummyConfig {
     @ConfigurableProperty(category = "machine", comment = "The NBT Paths that should be filtered away when checking equality.", configLocation = ModConfig.Type.SERVER)
     public static List<String> ignoreNbtPathsForEqualityFilters = Lists.newArrayList(
             "$.ForgeCaps[\"astralsorcery:cap_item_amulet_holder\"]", // Astral Sorcery
-            "$.binding", // Blood Magic Blood Orb player bindings
-            "$.energy" // Integrated Dynamics batteries
+            "$.binding" // Blood Magic Blood Orb player bindings
     );
 
     public GeneralConfig() {

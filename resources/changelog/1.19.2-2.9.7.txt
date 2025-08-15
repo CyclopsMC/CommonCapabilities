@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.17.0 or higher.
+
+Fixes:
+* Remove energy from NBT equality filter config
+  This fixes ID energy batteries incorrectly stacking in Integrated Terminals.
+  Closes CyclopsMC/IntegratedDynamics#1542
