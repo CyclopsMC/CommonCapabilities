@@ -21,9 +21,7 @@ import java.util.stream.Collectors;
 public class GeneralConfig extends DummyConfigCommon<CommonCapabilities> {
 
     @ConfigurablePropertyCommon(category = "machine", comment = "The data component types that should be filtered away when checking equality.", configLocation = ModConfigLocation.SERVER)
-    public static List<String> ignoreDataComponentsForEqualityFilters = Lists.newArrayList(
-            "cyclopscore:energy_storage" // Integrated Dynamics batteries
-    );
+    public static List<String> ignoreDataComponentsForEqualityFilters = Lists.newArrayList();
 
     @ConfigurablePropertyCommon(category = "core", comment = "Only enable this if you know what you are doing, as this will cause lag! This will log checks to the DataComparator where equal items have unequal data components.")
     public static boolean debugLogUnequalItemDataComponents = false;
