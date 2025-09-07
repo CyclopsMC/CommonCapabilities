@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 public abstract class TransformedRecipeHandlerAdapter<R> implements IRecipeHandler {
 
-    private static final Map<String, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
+    public static final Map<String, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
 
     private final Set<IngredientComponent<?, ?>> inputComponents;
     private final Set<IngredientComponent<?, ?>> outputComponents;
