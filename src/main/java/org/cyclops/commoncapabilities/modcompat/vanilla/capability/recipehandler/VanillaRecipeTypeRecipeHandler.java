@@ -56,7 +56,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
     private final boolean ignoreEmptySlots;
     private final boolean checkOutput;
 
-    private static Map<Pair<RecipeType<?>, ResourceLocation>, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
+    public static Map<Pair<RecipeType<?>, ResourceLocation>, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
 
     public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate, Function<CraftingContainer, C> createRecipeInput, boolean ignoreEmptySlots, boolean checkOutput) {
         this.worldSupplier = worldSupplier;
