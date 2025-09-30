@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
+import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.apache.commons.lang3.tuple.Pair;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
@@ -100,6 +101,11 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
                     .map(itemStack -> new PrototypedIngredient<>(IngredientComponent.ITEMSTACK, itemStack, ItemMatch.ITEM))
                     .collect(Collectors.toList());
         }
+    }
+
+    public static List<IPrototypedIngredient<ItemStack, Integer>> getPrototypesFromIngredient(SizedIngredient ingredient) {
+        return Lists.newArrayList(new PrototypedIngredient<>(IngredientComponent.ITEMSTACK,
+                ingredient.getItems()[0], ItemMatch.ITEM | ItemMatch.DATA));
     }
 
     @Nullable
