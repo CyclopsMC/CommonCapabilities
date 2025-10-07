@@ -1,8 +1,16 @@
 # Changelog for Minecraft 1.20.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.20.1-2.9.9"></a>
+## [1.20.1-2.9.9](/compare/1.20.1-2.9.8...1.20.1-2.9.9) - 2025-10-07 07:35:07
+
+
+### Fixed
+* Clear recipe handler caches on server stop
+* Fix not all shapeless recipes not being exposed correctly
+
 <a name="1.20.1-2.9.8"></a>
-## [1.20.1-2.9.8](/compare/1.20.1-2.9.7...1.20.1-2.9.8) - 2025-08-15 08:35:09
+## [1.20.1-2.9.8](/compare/1.20.1-2.9.7...1.20.1-2.9.8) - 2025-08-15 08:35:10 +0200
 
 
 ### Fixed
