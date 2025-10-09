@@ -1,8 +1,19 @@
 # Changelog for Minecraft 1.21.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.21.1-2.10.0"></a>
+## [1.21.1-2.10.0](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.9.12...1.21.1-2.10.0) - 2025-10-07 07:44:32
+
+
+### Added
+* Add SizedIngredient variant for getPrototypesFromIngredient (required for Integrated Mekanism)
+
+### Fixed
+* Clear recipe handler caches on server stop
+* Fix not all shapeless recipes not being exposed correctly
+
 <a name="1.21.1-2.9.12"></a>
-## [1.21.1-2.9.12](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.9.11...1.21.1-2.9.12) - 2025-08-15 08:42:31
+## [1.21.1-2.9.12](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.9.11...1.21.1-2.9.12) - 2025-08-15 08:42:31 +0200
 
 
 ### Added

@@ -18,7 +18,9 @@ import net.neoforged.neoforge.capabilities.BaseCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.IBlockCapabilityProvider;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.cyclops.commoncapabilities.CommonCapabilities;
@@ -27,6 +29,7 @@ import org.cyclops.commoncapabilities.RegistryEntries;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
+import org.cyclops.commoncapabilities.capability.recipehandler.TransformedRecipeHandlerAdapter;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage.VanillaEntityItemEnergyStorage;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage.VanillaEntityItemFrameEnergyStorage;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler.VanillaEntityItemFluidHandler;
@@ -406,6 +409,10 @@ public class VanillaModCompat implements IModCompat {
                     });
 
             // RecipeHandler
+            NeoForge.EVENT_BUS.addListener((ServerStoppedEvent event) -> {
+                VanillaRecipeTypeRecipeHandler.CACHED_RECIPES.clear();
+                TransformedRecipeHandlerAdapter.CACHED_RECIPES.clear();
+            });
             registry.registerBlockEntity(() -> BlockEntityType.BREWING_STAND,
                     new ICapabilityConstructor<BrewingStandBlockEntity, Direction, IRecipeHandler, BlockEntityType<BrewingStandBlockEntity>>() {
                         @Override
