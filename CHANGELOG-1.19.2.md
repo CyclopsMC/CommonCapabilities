@@ -1,8 +1,16 @@
 # Changelog for Minecraft 1.19.2
 All notable changes to this project will be documented in this file.
 
+<a name="1.19.2-2.9.8"></a>
+## [1.19.2-2.9.8](/compare/1.19.2-2.9.7...1.19.2-2.9.8) - 2025-10-17 15:11:00
+
+
+### Changed
+* Optimize equals and hashCode of recipes
+  Related to CyclopsMC/IntegratedCrafting#156
+
 <a name="1.19.2-2.9.7"></a>
-## [1.19.2-2.9.7](/compare/1.19.2-2.9.6...1.19.2-2.9.7) - 2025-08-15 08:34:05
+## [1.19.2-2.9.7](/compare/1.19.2-2.9.6...1.19.2-2.9.7) - 2025-08-15 08:34:05 +0200
 
 
 ### Fixed
