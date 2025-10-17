@@ -1,8 +1,16 @@
 # Changelog for Minecraft 1.21.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.21.1-2.10.1"></a>
+## [1.21.1-2.10.1](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.10.0...1.21.1-2.10.1) - 2025-10-17 15:16:06
+
+
+### Changed
+* Optimize equals and hashCode of recipes
+  Related to CyclopsMC/IntegratedCrafting#156
+
 <a name="1.21.1-2.10.0"></a>
-## [1.21.1-2.10.0](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.9.12...1.21.1-2.10.0) - 2025-10-07 07:44:32
+## [1.21.1-2.10.0](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.9.12...1.21.1-2.10.0) - 2025-10-07 07:44:32 +0200
 
 
 ### Added
