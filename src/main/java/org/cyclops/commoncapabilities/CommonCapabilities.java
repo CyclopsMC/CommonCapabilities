@@ -13,6 +13,7 @@ import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIng
 import org.cyclops.commoncapabilities.api.capability.recipehandler.PrototypedIngredientAlternativesList;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.modcompat.vanilla.VanillaModCompat;
+import org.cyclops.commoncapabilities.modcompat.visualworkbench.VisualWorkbenchModCompat;
 import org.cyclops.commoncapabilities.proxy.ClientProxy;
 import org.cyclops.commoncapabilities.proxy.CommonProxy;
 import org.cyclops.cyclopscore.config.ConfigHandler;
@@ -59,6 +60,8 @@ public class CommonCapabilities extends ModBaseVersionable<CommonCapabilities> {
     protected void loadModCompats(ModCompatLoader modCompatLoader) {
         super.loadModCompats(modCompatLoader);
         modCompatLoader.addModCompat(new VanillaModCompat());
+        modCompatLoader.addModCompat(new VisualWorkbenchModCompat());
+        // TODO: add compat for Visual Workbench mod to add RecipeHandler cap
         // TODO: temporarily disable some mod compats
         //modCompatLoader.addModCompat(new TConstructModCompat());
         //modCompatLoader.addModCompat(new ForestryModCompat());

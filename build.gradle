@@ -156,6 +156,12 @@ repositories {
             password = project.findProperty("gpr.key") ?: System.getenv("MAVEN_KEY") ?: System.getenv("GITHUB_TOKEN")
         }
     }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -167,6 +173,9 @@ dependencies {
     } else {
         implementation "org.cyclops.cyclopscore:cyclopscore-${project.minecraft_version}-neoforge:${project.cyclopscore_version}:deobf"
     }
+
+    implementation("curse.maven:visual-workbench-500273:${visualworkbench_version}")
+    implementation("curse.maven:puzzles-lib-495476:${puzzleslib_version}")
 	
 	// TODO: port mod dependencies once they update
 
