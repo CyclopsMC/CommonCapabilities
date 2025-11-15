@@ -23,7 +23,7 @@ public class IngredientSerializerItemStack implements IIngredientSerializer<Item
         }
         Tag tag = ItemStack.OPTIONAL_CODEC.encodeStart(lookupProvider.createSerializationContext(NbtOps.INSTANCE), instance)
                 .getOrThrow(JsonParseException::new);
-        if (count > 127) {
+        if (count > 99) {
             ((CompoundTag) tag).putInt("ExtendedCount", count);
         }
         return tag;
