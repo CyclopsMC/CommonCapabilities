@@ -29,11 +29,13 @@ public class TestIngredientSerializerItemStack {
     private static CompoundTag I_TAG2;
     private static CompoundTag I_TAG1L;
     private static CompoundTag I_TAG2L;
+    private static CompoundTag I_TAG3L;
     private static CompoundTag I_TAG_EMPTY;
     private static ItemStack I1;
     private static ItemStack I2;
     private static ItemStack I1L;
     private static ItemStack I2L;
+    private static ItemStack I3L;
 
     @BeforeClass
     public static void init() {
@@ -75,6 +77,13 @@ public class TestIngredientSerializerItemStack {
         subI_TAG2L.put("components", DataComponentPatch.CODEC.encodeStart(NbtOps.INSTANCE, DATA).getOrThrow());
         I_TAG2L.putInt("ExtendedCount", 2000);
 
+        I_TAG3L = new CompoundTag();
+        CompoundTag subI_TAG3L = new CompoundTag();
+        I_TAG3L.put("i", subI_TAG3L);
+        subI_TAG3L.putString("id", "minecraft:apple");
+        subI_TAG3L.putInt("count", 99);
+        I_TAG3L.putInt("ExtendedCount", 100);
+
         I_TAG_EMPTY = new CompoundTag();
         CompoundTag subI_TAG_EMPTY = new CompoundTag();
         I_TAG_EMPTY.put("i", subI_TAG_EMPTY);
@@ -84,6 +93,7 @@ public class TestIngredientSerializerItemStack {
         I2.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         I1L = new ItemStack(Items.APPLE, 128);
         I2L = new ItemStack(Items.LEAD, 2000);
+        I3L = new ItemStack(Items.APPLE, 100);
         I2L.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
     }
 
@@ -98,6 +108,7 @@ public class TestIngredientSerializerItemStack {
     public void serializeInstanceLarge() {
         assertThat(serialize(o -> S.serializeInstance(o, I1L)), is(I_TAG1L));
         assertThat(serialize(o -> S.serializeInstance(o, I2L)), is(I_TAG2L));
+        assertThat(serialize(o -> S.serializeInstance(o, I3L)), is(I_TAG3L));
     }
 
     @Test
@@ -110,6 +121,7 @@ public class TestIngredientSerializerItemStack {
     public void deserializeInstanceLarge() {
         assertThat(ItemStack.isSameItemSameComponents(deserialize(I_TAG1L, S::deserializeInstance), I1L), is(true));
         assertThat(ItemStack.isSameItemSameComponents(deserialize(I_TAG2L, S::deserializeInstance), I2L), is(true));
+        assertThat(ItemStack.isSameItemSameComponents(deserialize(I_TAG3L, S::deserializeInstance), I3L), is(true));
     }
 
     @Test(expected = NoSuchElementException.class)
