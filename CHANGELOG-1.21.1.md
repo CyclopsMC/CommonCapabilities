@@ -1,8 +1,16 @@
 # Changelog for Minecraft 1.21.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.21.1-2.11.1"></a>
+## [1.21.1-2.11.1](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.0...1.21.1-2.11.1) - 2025-11-15 05:45:03
+
+
+### Fixed
+* Fix wrong item serialization between size between 99 and 127
+  Closes CyclopsMC/IntegratedTerminals#186
+
 <a name="1.21.1-2.11.0"></a>
-## [1.21.1-2.11.0](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.10.1...1.21.1-2.11.0) - 2025-11-11 15:36:34
+## [1.21.1-2.11.0](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.10.1...1.21.1-2.11.0) - 2025-11-11 15:36:34 +0100
 
 
 ### Added

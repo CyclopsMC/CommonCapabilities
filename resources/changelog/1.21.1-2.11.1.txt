@@ -1,0 +1,7 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.25.1 or higher.
+
+Fixes:
+* Fix wrong item serialization between size between 99 and 127
+  Closes CyclopsMC/IntegratedTerminals#186
+
