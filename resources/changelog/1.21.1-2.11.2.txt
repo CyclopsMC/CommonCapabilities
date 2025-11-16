@@ -1,0 +1,8 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.25.1 or higher.
+
+Changes:
+* Optimize SlotlessItemHandlerWrapper#getLimit
+  Previously, this would iterate over all slots, which could get expensive
+  for inventories with a large number of slots.
+  Related to CyclopsMC/ColossalChests#192
