@@ -1,8 +1,18 @@
 # Changelog for Minecraft 1.20.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.20.1-2.9.11"></a>
+## [1.20.1-2.9.11](/compare/1.20.1-2.9.10...1.20.1-2.9.11) - 2025-11-16 16:46:42
+
+
+### Changed
+* Optimize SlotlessItemHandlerWrapper#getLimit
+  Previously, this would iterate over all slots, which could get expensive
+  for inventories with a large number of slots.
+  Related to CyclopsMC/ColossalChests#192
+
 <a name="1.20.1-2.9.10"></a>
-## [1.20.1-2.9.10](/compare/1.20.1-2.9.9...1.20.1-2.9.10) - 2025-10-17 15:12:02
+## [1.20.1-2.9.10](/compare/1.20.1-2.9.9...1.20.1-2.9.10) - 2025-10-17 15:12:02 +0200
 
 
 ### Changed
