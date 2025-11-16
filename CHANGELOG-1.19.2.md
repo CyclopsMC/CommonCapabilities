@@ -1,8 +1,26 @@
 # Changelog for Minecraft 1.19.2
 All notable changes to this project will be documented in this file.
 
+<a name="1.19.2-2.9.9"></a>
+## [1.19.2-2.9.9](/compare/1.19.2-2.9.8...1.19.2-2.9.9) - 2025-11-16 16:43:48
+
+
+### Changed
+* Optimize SlotlessItemHandlerWrapper#getLimit
+  Previously, this would iterate over all slots, which could get expensive
+  for inventories with a large number of slots.
+  Related to CyclopsMC/ColossalChests#192
+
+<a name="1.19.2-2.9.8"></a>
+## [1.19.2-2.9.8](/compare/1.19.2-2.9.7...1.19.2-2.9.8) - 2025-10-17 15:11:00 +0200
+
+
+### Changed
+* Optimize equals and hashCode of recipes
+  Related to CyclopsMC/IntegratedCrafting#156
+
 <a name="1.19.2-2.9.7"></a>
-## [1.19.2-2.9.7](/compare/1.19.2-2.9.6...1.19.2-2.9.7) - 2025-08-15 08:34:05
+## [1.19.2-2.9.7](/compare/1.19.2-2.9.6...1.19.2-2.9.7) - 2025-08-15 08:34:05 +0200
 
 
 ### Fixed
