@@ -1,5 +1,7 @@
 {
+    "_comment": "# Capability settings",
     "config.commoncapabilities": "Configuração do %s",
+    "recipecomponent.minecraft.itemstack": "Item",
     "recipecomponent.minecraft.fluidstack": "Fluido",
     "recipecomponent.minecraft.energy": "Energia",
     "capability.commoncapabilities.inventoryState": "Estado do inventário",
