@@ -1,29 +1,24 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.cyclops.commoncapabilities.IngredientComponents;
-import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidHandlerConcatenate;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
-import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidTankFixed;
-import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
+import org.cyclops.cyclopscore.fluid.SingleUseTank;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientArrayList;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientLinkedList;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestFluidStackComponentStorageWrapper {
 
@@ -42,26 +37,18 @@ public class TestFluidStackComponentStorageWrapper {
     private static FluidStack WATER_2;
     private static FluidStack WATER_9;
 
-    private IFluidHandler storage;
-    private IngredientComponentStorageWrapperHandlerFluidStack.ComponentStorageWrapper wrapper;
-    private FluidTank t1;
-    private FluidTank t2;
-    private FluidTank t3;
-    private FluidTank t4;
-
-    @BeforeClass
-    public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-        CyclopsCoreInstance.MOD = new ModBaseMocked();
-    }
+    private FluidHandlerConcatenate storage;
+    private IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<FluidResource, FluidStack, Integer> wrapper;
+    private SingleUseTank t1;
+    private SingleUseTank t2;
+    private SingleUseTank t3;
+    private SingleUseTank t4;
 
     public static boolean eq(FluidStack a, FluidStack b) {
         return IngredientComponents.FLUIDSTACK.getMatcher().matchesExactly(a, b);
     }
 
-    @Before
+    @BeforeEach
     public void beforeEach() {
         WATER_1 = new FluidStack(Fluids.WATER, 1);
         LAVA_1_NB = new FluidStack(Holder.direct(Fluids.LAVA), 1, DataComponentPatch.builder()
@@ -84,27 +71,30 @@ public class TestFluidStackComponentStorageWrapper {
         WATER_2 = new FluidStack(Fluids.WATER, 2);
         WATER_9 = new FluidStack(Fluids.WATER, 9);
 
-        t1 = new FluidTankFixed(64);
-        t2 = new FluidTankFixed(64);
-        t3 = new FluidTankFixed(64);
-        t4 = new FluidTankFixed(64);
+        t1 = new SingleUseTank(64);
+        t2 = new SingleUseTank(64);
+        t3 = new SingleUseTank(64);
+        t4 = new SingleUseTank(64);
         storage = new FluidHandlerConcatenate(
-                new FluidTankFixed(64),
-                new FluidTankFixed(64),
+                new SingleUseTank(64),
+                new SingleUseTank(64),
                 t1,
-                new FluidTankFixed(64),
+                new SingleUseTank(64),
                 t2,
-                new FluidTankFixed(64),
+                new SingleUseTank(64),
                 t3,
-                new FluidTankFixed(64),
+                new SingleUseTank(64),
                 t4,
-                new FluidTankFixed(64)
+                new SingleUseTank(64)
         );
-        t1.fill(WATER_1.copy(), IFluidHandler.FluidAction.EXECUTE);
-        t2.fill(LAVA_1_NB.copy(), IFluidHandler.FluidAction.EXECUTE);
-        t3.fill(LAVA_10.copy(), IFluidHandler.FluidAction.EXECUTE);
-        t4.fill(WATER_10.copy(), IFluidHandler.FluidAction.EXECUTE);
-        wrapper = new IngredientComponentStorageWrapperHandlerFluidStack.ComponentStorageWrapper(IngredientComponents.FLUIDSTACK, storage);
+        try (var tx = Transaction.openRoot()) {
+            t1.insert(FluidResource.of(WATER_1), WATER_1.getAmount(), tx);
+            t2.insert(FluidResource.of(LAVA_1_NB), LAVA_1_NB.getAmount(), tx);
+            t3.insert(FluidResource.of(LAVA_10), LAVA_10.getAmount(), tx);
+            t4.insert(FluidResource.of(WATER_10), WATER_10.getAmount(), tx);
+            tx.commit();
+        }
+        wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, storage, IngredientComponents.FLUIDSTACK_CONVERTER);
     }
 
     @Test
@@ -193,8 +183,8 @@ public class TestFluidStackComponentStorageWrapper {
 
     @Test
     public void testInsertFull() {
-        IFluidHandler storage = new FluidTank(0);
-        IngredientComponentStorageWrapperHandlerFluidStack.ComponentStorageWrapper wrapper = new IngredientComponentStorageWrapperHandlerFluidStack.ComponentStorageWrapper(IngredientComponents.FLUIDSTACK, storage);
+        SingleUseTank storage = new SingleUseTank(0);
+        IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<FluidResource, FluidStack, Integer> wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, storage, IngredientComponents.FLUIDSTACK_CONVERTER);
         assertThat(eq(wrapper.insert(WATER_64, true), WATER_64), is(true));
     }
 
@@ -232,9 +222,9 @@ public class TestFluidStackComponentStorageWrapper {
         assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.AMOUNT, true), WATER_1), is(true));
         assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
-        assertThat(eq(wrapper.extract(WATER_10, FluidMatch.AMOUNT, true), WATER_10), is(true));
+        assertThat(eq(wrapper.extract(WATER_10, FluidMatch.AMOUNT, true), LAVA_10), is(true));
         assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
-        assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.AMOUNT, true), WATER_10), is(true));
+        assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.AMOUNT, true), LAVA_10), is(true));
         assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.AMOUNT, false), WATER_1), is(true));
@@ -384,9 +374,9 @@ public class TestFluidStackComponentStorageWrapper {
         assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
         assertThat(eq(wrapper.extract(LAVA_1_NB, FluidMatch.AMOUNT | FluidMatch.DATA, true), LAVA_1_NB), is(true));
         assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
-        assertThat(eq(wrapper.extract(WATER_10, FluidMatch.AMOUNT | FluidMatch.DATA, true), WATER_10), is(true));
+        assertThat(eq(wrapper.extract(WATER_10, FluidMatch.AMOUNT | FluidMatch.DATA, true), LAVA_10), is(true));
         assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
-        assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.AMOUNT | FluidMatch.DATA, true), WATER_10), is(true));
+        assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.AMOUNT | FluidMatch.DATA, true), LAVA_10), is(true));
         assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
 
         assertThat(eq(wrapper.extract(WATER_1, FluidMatch.AMOUNT | FluidMatch.DATA, false), WATER_1), is(true));
@@ -446,14 +436,17 @@ public class TestFluidStackComponentStorageWrapper {
 
     @Test
     public void testExtractNoExtract() {
-        IFluidHandler storage = new FluidTank(1) {
+        SingleUseTank storage = new SingleUseTank(1) {
             @Override
-            public FluidStack drain(int maxDrain, FluidAction action) {
-                return FluidStack.EMPTY;
+            public int extract(int index, FluidResource resource, int amount, TransactionContext transaction) {
+                return 0;
             }
         };
-        storage.fill(LAVA_10, IFluidHandler.FluidAction.EXECUTE);
-        IngredientComponentStorageWrapperHandlerFluidStack.ComponentStorageWrapper wrapper = new IngredientComponentStorageWrapperHandlerFluidStack.ComponentStorageWrapper(IngredientComponents.FLUIDSTACK, storage);
+        try (var tx = Transaction.openRoot()) {
+            storage.insert(FluidResource.of(LAVA_10), LAVA_10.getAmount(), tx);
+            tx.commit();
+        }
+        IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<FluidResource, FluidStack, Integer> wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, storage, IngredientComponents.FLUIDSTACK_CONVERTER);
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.EXACT, false), FluidStack.EMPTY), is(true));
     }
 
@@ -525,10 +518,10 @@ public class TestFluidStackComponentStorageWrapper {
 
     @Test
     public void testExtractAmountSlot() {
-        assertThat(eq(wrapper.extract(0, 10, true), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(2), WATER_1), is(true));
+        assertThat(eq(wrapper.extract(8, 10, true), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), WATER_10), is(true));
 
-        assertThat(eq(wrapper.extract(0, 10, false), WATER_10), is(true));
-        assertThat(eq(storage.getFluidInTank(2), FluidStack.EMPTY), is(true));
+        assertThat(eq(wrapper.extract(8, 10, false), WATER_10), is(true));
+        assertThat(eq(storage.getFluidInTank(8), FluidStack.EMPTY), is(true));
     }
 }

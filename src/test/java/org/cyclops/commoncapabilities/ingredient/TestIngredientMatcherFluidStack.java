@@ -1,21 +1,16 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
-import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
-import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestIngredientMatcherFluidStack {
 
@@ -33,13 +28,8 @@ public class TestIngredientMatcherFluidStack {
     private static FluidStack L_1;
     private static FluidStack L_1_T1;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-        CyclopsCoreInstance.MOD = new ModBaseMocked();
-
         M = new IngredientMatcherFluidStack();
 
         DataComponentPatch tag1 = DataComponentPatch.builder()
@@ -78,6 +68,11 @@ public class TestIngredientMatcherFluidStack {
     @Test
     public void testGetExactMatchCondition() {
         assertThat(M.getExactMatchCondition(), is(FluidMatch.EXACT));
+    }
+
+    @Test
+    public void testGetQuantityMatchCondition() {
+        assertThat(M.getQuantityMatchCondition(), is(FluidMatch.AMOUNT));
     }
 
     @Test

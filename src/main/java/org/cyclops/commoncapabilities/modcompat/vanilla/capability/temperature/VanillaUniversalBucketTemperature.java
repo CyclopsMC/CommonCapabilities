@@ -2,7 +2,7 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.temperature;
 
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
 
 /**
@@ -17,7 +17,7 @@ public class VanillaUniversalBucketTemperature implements ITemperature {
     }
 
     protected FluidStack getFluidStack() {
-        return FluidUtil.getFluidContained(itemStack).orElse(FluidStack.EMPTY);
+        return FluidUtil.getFirstStackContained(itemStack);
     }
 
     @Override

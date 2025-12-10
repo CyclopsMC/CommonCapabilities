@@ -3,27 +3,25 @@ package org.cyclops.commoncapabilities.api.capability.itemhandler;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.items.IItemHandler;
-import org.cyclops.commoncapabilities.TestInitHelpers;
-import org.cyclops.commoncapabilities.ingredient.DataComparator;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestFilteredItemHandlerItemStackIterator {
 
-    private static IItemHandler HANDLER_EMPTY;
-    private static IItemHandler HANDLER;
+    private static ResourceHandler<ItemResource> HANDLER_EMPTY;
+    private static ResourceHandler<ItemResource> HANDLER;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
-        TestInitHelpers.initMinecraft();
-
         HANDLER_EMPTY = new ImmutableListItemHandler(NonNullList.withSize(0, ItemStack.EMPTY));
         HANDLER = new ImmutableListItemHandler(NonNullList.of(ItemStack.EMPTY,
                 new ItemStack(Items.APPLE),
@@ -31,8 +29,6 @@ public class TestFilteredItemHandlerItemStackIterator {
                 new ItemStack(Items.LEAD, 10),
                 new ItemStack(Items.BOWL)
         ));
-
-        ItemMatch.DATA_COMPARATOR = DataComparator.INSTANCE = new DataComparator(null);
     }
 
     @Test
@@ -41,10 +37,10 @@ public class TestFilteredItemHandlerItemStackIterator {
         assertThat(it.hasNext(), is(false));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testEmptyNext() {
         Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER_EMPTY, new ItemStack(Items.APPLE), ItemMatch.ITEM);
-        it.next();
+        Assertions.assertThrows(NoSuchElementException.class, it::next);
     }
 
     @Test
@@ -55,14 +51,14 @@ public class TestFilteredItemHandlerItemStackIterator {
         assertThat(it.hasNext(), is(false));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testNonEmptyAppleOutOfRange() {
         Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.APPLE), ItemMatch.ITEM);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.APPLE));
         assertThat(it.hasNext(), is(false));
 
-        it.next();
+        Assertions.assertThrows(NoSuchElementException.class, it::next);
     }
 
     @Test
@@ -75,7 +71,7 @@ public class TestFilteredItemHandlerItemStackIterator {
         assertThat(it.hasNext(), is(false));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testNonEmptyLeadOutOfRange() {
         Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.LEAD), ItemMatch.ITEM);
         assertThat(it.hasNext(), is(true));
@@ -84,7 +80,7 @@ public class TestFilteredItemHandlerItemStackIterator {
         assertThat(it.next().getItem(), is(Items.LEAD));
         assertThat(it.hasNext(), is(false));
 
-        it.next();
+        Assertions.assertThrows(NoSuchElementException.class, it::next);
     }
 
     @Test
@@ -95,14 +91,14 @@ public class TestFilteredItemHandlerItemStackIterator {
         assertThat(it.hasNext(), is(false));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testNonEmptyLeadExactOutOfRange() {
         Iterator<ItemStack> it = new FilteredItemHandlerItemStackIterator(HANDLER, new ItemStack(Items.LEAD, 10), ItemMatch.EXACT);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.LEAD));
         assertThat(it.hasNext(), is(false));
 
-        it.next();
+        Assertions.assertThrows(NoSuchElementException.class, it::next);
     }
 
 }

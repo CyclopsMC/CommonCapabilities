@@ -4,6 +4,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IIngredientMatcher;
 import org.cyclops.cyclopscore.helper.IModHelpers;
@@ -26,6 +27,11 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     @Override
     public Integer getExactMatchCondition() {
         return ItemMatch.EXACT;
+    }
+
+    @Override
+    public Integer getQuantityMatchCondition() {
+        return ItemMatch.STACKSIZE;
     }
 
     @Override
@@ -56,6 +62,11 @@ public class IngredientMatcherItemStack implements IIngredientMatcher<ItemStack,
     @Override
     public ItemStack getEmptyInstance() {
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack getNonEmptyInstance() {
+        return new ItemStack(Items.APPLE);
     }
 
     @Override

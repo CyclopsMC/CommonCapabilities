@@ -1,32 +1,29 @@
-package org.cyclops.commoncapabilities.api.capability.itemhandler;
+package org.cyclops.commoncapabilities.api.capability.resourcehandler;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.NonNullList;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.items.IItemHandler;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import org.cyclops.commoncapabilities.IngredientComponents;
+import org.cyclops.commoncapabilities.api.capability.itemhandler.ImmutableListItemHandler;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-public class TestItemHandlerItemStackIterator {
+public class TestResourceHandlerItemStackIterator {
 
-    private static IItemHandler HANDLER_EMPTY;
-    private static IItemHandler HANDLER;
+    private static ResourceHandler<ItemResource> HANDLER_EMPTY;
+    private static ResourceHandler<ItemResource> HANDLER;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-
         HANDLER_EMPTY = new ImmutableListItemHandler(NonNullList.withSize(0, ItemStack.EMPTY));
         HANDLER = new ImmutableListItemHandler(NonNullList.of(ItemStack.EMPTY,
                 new ItemStack(Items.APPLE),
@@ -37,19 +34,19 @@ public class TestItemHandlerItemStackIterator {
 
     @Test
     public void testEmpty() {
-        Iterator<ItemStack> it = new ItemHandlerItemStackIterator(HANDLER_EMPTY);
+        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER_EMPTY, IngredientComponents.ITEMSTACK_CONVERTER);
         assertThat(it.hasNext(), is(false));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testEmptyNext() {
-        Iterator<ItemStack> it = new ItemHandlerItemStackIterator(HANDLER_EMPTY);
-        it.next();
+        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER_EMPTY, IngredientComponents.ITEMSTACK_CONVERTER);
+        Assertions.assertThrows(NoSuchElementException.class, it::next);
     }
 
     @Test
     public void testNonEmpty() {
-        Iterator<ItemStack> it = new ItemHandlerItemStackIterator(HANDLER);
+        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.ITEMSTACK_CONVERTER);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.APPLE));
         assertThat(it.hasNext(), is(true));
@@ -61,25 +58,25 @@ public class TestItemHandlerItemStackIterator {
 
     @Test
     public void testNonEmptyOffset() {
-        Iterator<ItemStack> it1 = new ItemHandlerItemStackIterator(HANDLER, 1);
+        Iterator<ItemStack> it1 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.ITEMSTACK_CONVERTER, 1);
         assertThat(it1.hasNext(), is(true));
         assertThat(it1.next().getItem(), is(Items.LEAD));
         assertThat(it1.hasNext(), is(true));
         assertThat(it1.next().getItem(), is(Items.BOWL));
         assertThat(it1.hasNext(), is(false));
 
-        Iterator<ItemStack> it2 = new ItemHandlerItemStackIterator(HANDLER, 2);
+        Iterator<ItemStack> it2 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.ITEMSTACK_CONVERTER, 2);
         assertThat(it2.hasNext(), is(true));
         assertThat(it2.next().getItem(), is(Items.BOWL));
         assertThat(it2.hasNext(), is(false));
 
-        Iterator<ItemStack> it3 = new ItemHandlerItemStackIterator(HANDLER, 3);
+        Iterator<ItemStack> it3 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.ITEMSTACK_CONVERTER, 3);
         assertThat(it3.hasNext(), is(false));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testNonEmptyOutOfRange() {
-        Iterator<ItemStack> it = new ItemHandlerItemStackIterator(HANDLER);
+        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.ITEMSTACK_CONVERTER);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.APPLE));
         assertThat(it.hasNext(), is(true));
@@ -88,7 +85,7 @@ public class TestItemHandlerItemStackIterator {
         assertThat(it.next().getItem(), is(Items.BOWL));
         assertThat(it.hasNext(), is(false));
 
-        it.next();
+        Assertions.assertThrows(NoSuchElementException.class, it::next);
     }
 
 }

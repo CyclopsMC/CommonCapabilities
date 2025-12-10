@@ -1,85 +1,89 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler;
 
 import net.minecraft.world.entity.decoration.ItemFrame;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.ItemCapability;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.VanillaEntityItemFrameCapabilityDelegator;
-
-import javax.annotation.Nonnull;
 
 /**
  * An item handler for entity item frames that have an item handler.
  * @author rubensworks
  */
-public class VanillaEntityItemFrameItemHandler extends VanillaEntityItemFrameCapabilityDelegator<IItemHandler> implements IItemHandler {
+public class VanillaEntityItemFrameItemHandler extends VanillaEntityItemFrameCapabilityDelegator<ResourceHandler<ItemResource>> implements ResourceHandler<ItemResource> {
 
     public VanillaEntityItemFrameItemHandler(ItemFrame entity) {
         super(entity);
     }
 
     @Override
-    protected ItemCapability<IItemHandler, Void> getCapabilityType() {
-        return Capabilities.ItemHandler.ITEM;
+    protected ItemCapability<ResourceHandler<ItemResource>, ItemAccess> getCapabilityType() {
+        return Capabilities.Item.ITEM;
     }
 
     @Override
-    public int getSlots() {
+    public int size() {
         return getCapability()
-                .map(IItemHandler::getSlots)
-                .orElse(0);
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return getCapability()
-                .map(itemHandler -> itemHandler.getStackInSlot(slot))
-                .orElse(ItemStack.EMPTY);
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        return getCapability()
-                .map(itemHandler -> {
-                    ItemStack innerStack = getItemStack();
-                    ItemStack ret = itemHandler.insertItem(slot, stack, simulate);
-                    if (stack.getCount() != ret.getCount() && !simulate) {
-                        updateItemStack(innerStack);
-                    }
-                    return ret;
-                })
-                .orElse(ItemStack.EMPTY);
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        return getCapability()
-                .map(itemHandler -> {
-                    ItemStack innerStack = getItemStack();
-                    ItemStack ret = itemHandler.extractItem(slot, amount, simulate);
-                    if (!ret.isEmpty() && !simulate) {
-                        updateItemStack(innerStack);
-                    }
-                    return ret;
-                })
-                .orElse(ItemStack.EMPTY);
-    }
-
-    @Override
-    public int getSlotLimit(int slot) {
-        return getCapability()
-                .map(itemHandler -> itemHandler.getSlotLimit(slot))
+                .map(ResourceHandler::size)
                 .orElse(0);
     }
 
     @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+    public ItemResource getResource(int slot) {
         return getCapability()
-                .map(itemHandler -> itemHandler.isItemValid(slot, stack))
+                .map(itemHandler -> itemHandler.getResource(slot))
+                .orElse(ItemResource.EMPTY);
+    }
+
+    @Override
+    public long getAmountAsLong(int slot) {
+        return getCapability()
+                .map(itemHandler -> itemHandler.getAmountAsLong(slot))
+                .orElse(0L);
+    }
+
+    @Override
+    public long getCapacityAsLong(int slot, ItemResource itemResource) {
+        return getCapability()
+                .map(itemHandler -> itemHandler.getCapacityAsLong(slot, itemResource))
+                .orElse(0L);
+    }
+
+    @Override
+    public boolean isValid(int slot, ItemResource itemResource) {
+        return getCapability()
+                .map(itemHandler -> itemHandler.isValid(slot, itemResource))
                 .orElse(false);
+    }
+
+    @Override
+    public int insert(int slot, ItemResource itemResource, int amount, TransactionContext transactionContext) {
+        return getCapability()
+                .map(itemHandler -> itemHandler.insert(slot, itemResource, amount, transactionContext))
+                .orElse(0);
+    }
+
+    @Override
+    public int insert(ItemResource itemResource, int amount, TransactionContext transactionContext) {
+        return getCapability()
+                .map(itemHandler -> itemHandler.insert(itemResource, amount, transactionContext))
+                .orElse(0);
+    }
+
+    @Override
+    public int extract(int slot, ItemResource itemResource, int amount, TransactionContext transactionContext) {
+        return getCapability()
+                .map(itemHandler -> itemHandler.extract(slot, itemResource, amount, transactionContext))
+                .orElse(0);
+    }
+
+    @Override
+    public int extract(ItemResource itemResource, int amount, TransactionContext transactionContext) {
+        return getCapability()
+                .map(itemHandler -> itemHandler.extract(itemResource, amount, transactionContext))
+                .orElse(0);
     }
 }

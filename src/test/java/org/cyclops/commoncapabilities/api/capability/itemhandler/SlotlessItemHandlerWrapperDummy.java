@@ -1,7 +1,8 @@
 package org.cyclops.commoncapabilities.api.capability.itemhandler;
 
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 import javax.annotation.Nonnull;
 import java.util.PrimitiveIterator;
@@ -19,7 +20,7 @@ public class SlotlessItemHandlerWrapperDummy extends SlotlessItemHandlerWrapper 
     private final Supplier<PrimitiveIterator.OfInt> emptySlots;
     private final Supplier<PrimitiveIterator.OfInt> nonEmptySlots;
 
-    public SlotlessItemHandlerWrapperDummy(IItemHandler itemHandler,
+    public SlotlessItemHandlerWrapperDummy(ResourceHandler<ItemResource> itemHandler,
                                            Supplier<PrimitiveIterator.OfInt> nonFullSlotsWithItemStack,
                                            Supplier<PrimitiveIterator.OfInt> nonEmptySlotsWithItemStack,
                                            Supplier<PrimitiveIterator.OfInt> slotsWithItemStack,

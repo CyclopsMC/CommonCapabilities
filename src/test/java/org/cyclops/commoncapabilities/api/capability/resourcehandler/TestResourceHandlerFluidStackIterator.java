@@ -1,32 +1,29 @@
-package org.cyclops.commoncapabilities.api.capability.fluidhandler;
+package org.cyclops.commoncapabilities.api.capability.resourcehandler;
 
 import com.google.common.collect.Lists;
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import org.cyclops.commoncapabilities.IngredientComponents;
+import org.cyclops.commoncapabilities.api.capability.fluidhandler.ImmutableListFluidHandler;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-public class TestFluidHandlerFluidStackIterator {
+public class TestResourceHandlerFluidStackIterator {
 
-    private static IFluidHandler HANDLER_EMPTY;
-    private static IFluidHandler HANDLER;
+    private static ResourceHandler<FluidResource> HANDLER_EMPTY;
+    private static ResourceHandler<FluidResource> HANDLER;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-
         HANDLER_EMPTY = new ImmutableListFluidHandler(Lists.newArrayList());
         HANDLER = new ImmutableListFluidHandler(Lists.newArrayList(
                 new FluidStack(Fluids.WATER, 1000),
@@ -37,19 +34,19 @@ public class TestFluidHandlerFluidStackIterator {
 
     @Test
     public void testEmpty() {
-        Iterator<FluidStack> it = new FluidHandlerFluidStackIterator(HANDLER_EMPTY);
+        Iterator<FluidStack> it = new ResourceHandlerIngredientIterator<>(HANDLER_EMPTY, IngredientComponents.FLUIDSTACK_CONVERTER);
         assertThat(it.hasNext(), is(false));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testEmptyNext() {
-        Iterator<FluidStack> it = new FluidHandlerFluidStackIterator(HANDLER_EMPTY);
-        it.next();
+        Iterator<FluidStack> it = new ResourceHandlerIngredientIterator<>(HANDLER_EMPTY, IngredientComponents.FLUIDSTACK_CONVERTER);
+        Assertions.assertThrows(NoSuchElementException.class, it::next);
     }
 
     @Test
     public void testNonEmpty() {
-        Iterator<FluidStack> it = new FluidHandlerFluidStackIterator(HANDLER);
+        Iterator<FluidStack> it = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.FLUIDSTACK_CONVERTER);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(true));
@@ -61,25 +58,25 @@ public class TestFluidHandlerFluidStackIterator {
 
     @Test
     public void testNonEmptyOffset() {
-        Iterator<FluidStack> it1 = new FluidHandlerFluidStackIterator(HANDLER, 1);
+        Iterator<FluidStack> it1 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.FLUIDSTACK_CONVERTER, 1);
         assertThat(it1.hasNext(), is(true));
         assertThat(it1.next().getFluid(), is(Fluids.WATER));
         assertThat(it1.hasNext(), is(true));
         assertThat(it1.next().getFluid(), is(Fluids.LAVA));
         assertThat(it1.hasNext(), is(false));
 
-        Iterator<FluidStack> it2 = new FluidHandlerFluidStackIterator(HANDLER, 2);
+        Iterator<FluidStack> it2 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.FLUIDSTACK_CONVERTER, 2);
         assertThat(it2.hasNext(), is(true));
         assertThat(it2.next().getFluid(), is(Fluids.LAVA));
         assertThat(it2.hasNext(), is(false));
 
-        Iterator<FluidStack> it3 = new FluidHandlerFluidStackIterator(HANDLER, 3);
+        Iterator<FluidStack> it3 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.FLUIDSTACK_CONVERTER, 3);
         assertThat(it3.hasNext(), is(false));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testNonEmptyOutOfRange() {
-        Iterator<FluidStack> it = new FluidHandlerFluidStackIterator(HANDLER);
+        Iterator<FluidStack> it = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.FLUIDSTACK_CONVERTER);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getFluid(), is(Fluids.WATER));
         assertThat(it.hasNext(), is(true));
@@ -88,7 +85,7 @@ public class TestFluidHandlerFluidStackIterator {
         assertThat(it.next().getFluid(), is(Fluids.LAVA));
         assertThat(it.hasNext(), is(false));
 
-        it.next();
+        Assertions.assertThrows(NoSuchElementException.class, it::next);
     }
 
 }

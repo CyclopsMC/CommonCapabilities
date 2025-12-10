@@ -5,13 +5,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.cyclops.cyclopscore.gametest.GameTest;
 
 /**
@@ -28,12 +28,16 @@ public class GameTestsVanillaCapabilitiesEntityItem {
         ItemEntity entity = helper.spawnItem(Items.SHULKER_BOX, POS);
 
         // Add item to shulker box
-        IItemHandler itemHandler = entity.getCapability(Capabilities.ItemHandler.ENTITY);
-        ItemStack remaining = itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
+        ResourceHandler<ItemResource> itemHandler = entity.getCapability(Capabilities.Item.ENTITY);
+        int inserted;
+        try (var tx = Transaction.openRoot()) {
+            inserted = itemHandler.insert(ItemResource.of(Items.APPLE), 1, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(remaining.isEmpty(), Component.literal("Remaining of insertion is not empty"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
+            helper.assertTrue(inserted == 1, Component.literal("Remaining of insertion is not empty"));
+            helper.assertTrue(itemHandler.getResource(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
         });
     }
 
@@ -43,13 +47,17 @@ public class GameTestsVanillaCapabilitiesEntityItem {
         ItemEntity entity = helper.spawnItem(Items.SHULKER_BOX, POS);
 
         // Remove item from shulker box
-        IItemHandler itemHandler = entity.getCapability(Capabilities.ItemHandler.ENTITY);
-        itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
-        ItemStack removed = itemHandler.extractItem(0, 1, false);
+        ResourceHandler<ItemResource> itemHandler = entity.getCapability(Capabilities.Item.ENTITY);
+        int removed;
+        try (var tx = Transaction.openRoot()) {
+            itemHandler.insert(ItemResource.of(Items.APPLE), 1, tx);
+            removed = itemHandler.extract(ItemResource.of(Items.APPLE), 1, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(!removed.isEmpty(), Component.literal("Removed item is empty"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).isEmpty(), Component.literal("Item was not removed"));
+            helper.assertTrue(removed == 1, Component.literal("Removed item is empty"));
+            helper.assertTrue(itemHandler.getResource(0).isEmpty(), Component.literal("Item was not removed"));
         });
     }
 
@@ -59,12 +67,16 @@ public class GameTestsVanillaCapabilitiesEntityItem {
         ItemEntity entity = helper.spawnItem(Items.BUCKET, POS);
 
         // Add fluid to bucket
-        IFluidHandler fluidHandler = entity.getCapability(Capabilities.FluidHandler.ENTITY, Direction.UP);
-        int filled = fluidHandler.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+        ResourceHandler<FluidResource> fluidHandler = entity.getCapability(Capabilities.Fluid.ENTITY, Direction.UP);
+        int filled;
+        try (var tx = Transaction.openRoot()) {
+            filled = fluidHandler.insert(FluidResource.of(Fluids.WATER), 1000, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
             helper.assertTrue(filled == 1000, Component.literal("Insertion was not 1000"));
-            helper.assertTrue(fluidHandler.getFluidInTank(0).getAmount() == 1000, Component.literal("Fluid was not added"));
+            helper.assertTrue(fluidHandler.getAmountAsInt(0) == 1000, Component.literal("Fluid was not added"));
         });
     }
 
@@ -74,13 +86,17 @@ public class GameTestsVanillaCapabilitiesEntityItem {
         ItemEntity entity = helper.spawnItem(Items.WATER_BUCKET, POS);
 
         // Remove water from bucket
-        IFluidHandler fluidHandler = entity.getCapability(Capabilities.FluidHandler.ENTITY, Direction.UP);
-        fluidHandler.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
-        FluidStack drained = fluidHandler.drain(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.EXECUTE);
+        ResourceHandler<FluidResource> fluidHandler = entity.getCapability(Capabilities.Fluid.ENTITY, Direction.UP);
+        int drained;
+        try (var tx = Transaction.openRoot()) {
+            fluidHandler.insert(FluidResource.of(Fluids.WATER), 1000, tx);
+            drained = fluidHandler.extract(FluidResource.of(Fluids.WATER), 1000, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(drained.getAmount() == 1000, Component.literal("Removal was not 1000"));
-            helper.assertTrue(fluidHandler.getFluidInTank(0).isEmpty(), Component.literal("Fluid was not removed"));
+            helper.assertTrue(drained == 1000, Component.literal("Removal was not 1000"));
+            helper.assertTrue(fluidHandler.getResource(0).isEmpty(), Component.literal("Fluid was not removed"));
         });
     }
 

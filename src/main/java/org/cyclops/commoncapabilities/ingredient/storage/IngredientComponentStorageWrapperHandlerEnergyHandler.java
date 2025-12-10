@@ -2,7 +2,9 @@ package org.cyclops.commoncapabilities.ingredient.storage;
 
 import com.google.common.collect.Iterators;
 import net.neoforged.neoforge.capabilities.BaseCapability;
-import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.capability.ICapabilityGetter;
 import org.cyclops.commoncapabilities.api.ingredient.storage.IIngredientComponentStorage;
@@ -17,35 +19,35 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * Energy storage wrapper handler for {@link IEnergyStorage}.
+ * Energy storage wrapper handler for {@link EnergyHandler}.
  * @author rubensworks
  */
-public class IngredientComponentStorageWrapperHandlerEnergyStorage<C> implements
-        IIngredientComponentStorageWrapperHandler<Long, Boolean, IEnergyStorage, C> {
+public class IngredientComponentStorageWrapperHandlerEnergyHandler<C> implements
+        IIngredientComponentStorageWrapperHandler<Long, Boolean, EnergyHandler, C> {
 
     private final IngredientComponent<Long, Boolean> ingredientComponent;
-    private final BaseCapability<IEnergyStorage, C> capability;
+    private final BaseCapability<EnergyHandler, C> capability;
 
-    public IngredientComponentStorageWrapperHandlerEnergyStorage(
+    public IngredientComponentStorageWrapperHandlerEnergyHandler(
             IngredientComponent<Long, Boolean> ingredientComponent,
-            BaseCapability<IEnergyStorage, C> capability
+            BaseCapability<EnergyHandler, C> capability
     ) {
         this.ingredientComponent = Objects.requireNonNull(ingredientComponent);
         this.capability = capability;
     }
 
     @Override
-    public IIngredientComponentStorage<Long, Boolean> wrapComponentStorage(IEnergyStorage storage) {
+    public IIngredientComponentStorage<Long, Boolean> wrapComponentStorage(EnergyHandler storage) {
         return new ComponentStorageWrapper(getComponent(), storage);
     }
 
     @Override
-    public IEnergyStorage wrapStorage(IIngredientComponentStorage<Long, Boolean> componentStorage) {
+    public EnergyHandler wrapStorage(IIngredientComponentStorage<Long, Boolean> componentStorage) {
         return new EnergyStorageWrapper(componentStorage);
     }
 
     @Override
-    public Optional<IEnergyStorage> getStorage(ICapabilityGetter<C> capabilityProvider, @Nullable C context) {
+    public Optional<EnergyHandler> getStorage(ICapabilityGetter<C> capabilityProvider, @Nullable C context) {
         return Optional.ofNullable(capabilityProvider.getCapability(this.capability, context));
     }
 
@@ -57,9 +59,9 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage<C> implements
     public static class ComponentStorageWrapper implements IIngredientComponentStorage<Long, Boolean> {
 
         private final IngredientComponent<Long, Boolean> ingredientComponent;
-        private final IEnergyStorage storage;
+        private final EnergyHandler storage;
 
-        public ComponentStorageWrapper(IngredientComponent<Long, Boolean> ingredientComponent, IEnergyStorage storage) {
+        public ComponentStorageWrapper(IngredientComponent<Long, Boolean> ingredientComponent, EnergyHandler storage) {
             this.ingredientComponent = ingredientComponent;
             this.storage = storage;
         }
@@ -71,7 +73,7 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage<C> implements
 
         @Override
         public Iterator<Long> iterator() {
-            return Iterators.forArray((long) storage.getEnergyStored());
+            return Iterators.forArray(storage.getAmountAsLong());
         }
 
         @Override
@@ -81,32 +83,34 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage<C> implements
 
         @Override
         public long getMaxQuantity() {
-            return storage.getMaxEnergyStored();
+            return storage.getCapacityAsLong();
         }
 
         @Override
-        public Long insert(@Nonnull Long ingredient, boolean simulate) {
-            return ingredient - storage.receiveEnergy(IModHelpers.get().getBaseHelpers().castSafe(ingredient), simulate);
+        public Long insert(@Nonnull Long ingredient, TransactionContext transactionContext) {
+            return ingredient - storage.insert(IModHelpers.get().getBaseHelpers().castSafe(ingredient), transactionContext);
         }
 
         @Override
-        public Long extract(@Nonnull Long prototype, Boolean matchFlags, boolean simulate) {
+        public Long extract(@Nonnull Long prototype, Boolean matchFlags, TransactionContext transactionContext) {
             if (matchFlags) {
-                int extractable = storage.extractEnergy(IModHelpers.get().getBaseHelpers().castSafe(prototype), true);
-                if (extractable != prototype) {
-                    return 0L;
+                try (var tx = Transaction.open(transactionContext)) {
+                    int extractable = storage.extract(IModHelpers.get().getBaseHelpers().castSafe(prototype), tx);
+                    if (extractable != prototype) {
+                        return 0L;
+                    }
                 }
             }
-            return (long) storage.extractEnergy(IModHelpers.get().getBaseHelpers().castSafe(prototype), simulate);
+            return (long) storage.extract(IModHelpers.get().getBaseHelpers().castSafe(prototype), transactionContext);
         }
 
         @Override
-        public Long extract(long maxQuantity, boolean simulate) {
-            return (long) storage.extractEnergy(IModHelpers.get().getBaseHelpers().castSafe(maxQuantity), simulate);
+        public Long extract(long maxQuantity, TransactionContext transactionContext) {
+            return (long) storage.extract(IModHelpers.get().getBaseHelpers().castSafe(maxQuantity), transactionContext);
         }
     }
 
-    public static class EnergyStorageWrapper implements IEnergyStorage {
+    public static class EnergyStorageWrapper implements EnergyHandler {
 
         private final IIngredientComponentStorage<Long, Boolean> storage;
 
@@ -115,17 +119,7 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage<C> implements
         }
 
         @Override
-        public int receiveEnergy(int maxReceive, boolean simulate) {
-            return maxReceive - IModHelpers.get().getBaseHelpers().castSafe(storage.insert((long) maxReceive, simulate));
-        }
-
-        @Override
-        public int extractEnergy(int maxExtract, boolean simulate) {
-            return IModHelpers.get().getBaseHelpers().castSafe(storage.extract(maxExtract, simulate));
-        }
-
-        @Override
-        public int getEnergyStored() {
+        public long getAmountAsLong() {
             long total = 0;
             for (Long stored : storage) {
                 total = Math.addExact(total, stored);
@@ -134,18 +128,18 @@ public class IngredientComponentStorageWrapperHandlerEnergyStorage<C> implements
         }
 
         @Override
-        public int getMaxEnergyStored() {
-            return IModHelpers.get().getBaseHelpers().castSafe(storage.getMaxQuantity());
+        public long getCapacityAsLong() {
+            return storage.getMaxQuantity();
         }
 
         @Override
-        public boolean canExtract() {
-            return true;
+        public int insert(int max, TransactionContext transactionContext) {
+            return max - IModHelpers.get().getBaseHelpers().castSafe(storage.insert((long) max, transactionContext));
         }
 
         @Override
-        public boolean canReceive() {
-            return true;
+        public int extract(int max, TransactionContext transactionContext) {
+            return IModHelpers.get().getBaseHelpers().castSafe(storage.extract(max, transactionContext));
         }
     }
 }

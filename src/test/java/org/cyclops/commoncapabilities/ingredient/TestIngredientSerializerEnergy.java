@@ -2,21 +2,22 @@ package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.CompoundTag;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
 import static org.cyclops.commoncapabilities.TestInitHelpers.deserialize;
 import static org.cyclops.commoncapabilities.TestInitHelpers.serialize;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestIngredientSerializerEnergy {
 
     private static IngredientSerializerEnergy S;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         S = new IngredientSerializerEnergy();
     }
@@ -41,9 +42,9 @@ public class TestIngredientSerializerEnergy {
         assertThat(deserialize(tag2, S::deserializeInstance), is(100L));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void deserializeInstanceInvalid() {
-        deserialize(new CompoundTag(), S::deserializeInstance);
+        Assertions.assertThrows(NoSuchElementException.class, () -> deserialize(new CompoundTag(), S::deserializeInstance));
     }
 
     @Test

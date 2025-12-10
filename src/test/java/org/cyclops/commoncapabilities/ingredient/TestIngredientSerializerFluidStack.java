@@ -1,7 +1,5 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
@@ -9,19 +7,19 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import org.cyclops.commoncapabilities.IngredientComponents;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
 import static org.cyclops.commoncapabilities.TestInitHelpers.deserialize;
 import static org.cyclops.commoncapabilities.TestInitHelpers.serialize;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestIngredientSerializerFluidStack {
 
@@ -33,12 +31,8 @@ public class TestIngredientSerializerFluidStack {
     private static FluidStack F1;
     private static FluidStack F2;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-
         S = new IngredientSerializerFluidStack();
 
         DATA = DataComponentPatch.builder()
@@ -79,9 +73,9 @@ public class TestIngredientSerializerFluidStack {
         assertThat(eq(deserialize(F_TAG2, S::deserializeInstance), F2), is(true));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void deserializeInstanceInvalid() {
-        deserialize(new CompoundTag(), S::deserializeInstance);
+        Assertions.assertThrows(NoSuchElementException.class, () -> deserialize(new CompoundTag(), S::deserializeInstance));
     }
 
     @Test
@@ -94,9 +88,9 @@ public class TestIngredientSerializerFluidStack {
         assertThat(S.deserializeCondition(IntTag.valueOf(1)), is(1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deserializeConditionInvalid() {
-        S.deserializeCondition(StringTag.valueOf("0"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> S.deserializeCondition(StringTag.valueOf("0")));
     }
 
     public static boolean eq(FluidStack a, FluidStack b) {

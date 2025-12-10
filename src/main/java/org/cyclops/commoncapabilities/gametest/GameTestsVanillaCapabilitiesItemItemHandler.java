@@ -6,7 +6,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.cyclops.cyclopscore.gametest.GameTest;
 
 /**
@@ -23,12 +26,16 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
         ItemStack itemStack = new ItemStack(Items.SHULKER_BOX);
 
         // Add item to shulker box
-        IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
-        ItemStack remaining = itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
+        ResourceHandler<ItemResource> itemHandler = itemStack.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(itemStack));
+        int inserted;
+        try (var tx = Transaction.openRoot()) {
+            inserted = itemHandler.insert(ItemResource.of(Items.APPLE), 1, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(remaining.isEmpty(), Component.literal("Remaining of insertion is not empty"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
+            helper.assertTrue(inserted == 1, Component.literal("Remaining of insertion is not empty"));
+            helper.assertTrue(itemHandler.getResource(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
         });
     }
 
@@ -38,13 +45,17 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
         ItemStack itemStack = new ItemStack(Items.SHULKER_BOX);
 
         // Remove item from shulker box
-        IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
-        itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
-        ItemStack removed = itemHandler.extractItem(0, 1, false);
+        ResourceHandler<ItemResource> itemHandler = itemStack.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(itemStack));
+        int removed;
+        try (var tx = Transaction.openRoot()) {
+            itemHandler.insert(ItemResource.of(Items.APPLE), 1, tx);
+            removed = itemHandler.extract(ItemResource.of(Items.APPLE), 1, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(!removed.isEmpty(), Component.literal("Removed item is empty"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).isEmpty(), Component.literal("Item was not removed"));
+            helper.assertTrue(removed == 1, Component.literal("Removed item is empty"));
+            helper.assertTrue(itemHandler.getResource(0).isEmpty(), Component.literal("Item was not removed"));
         });
     }
 
@@ -54,12 +65,16 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
         ItemStack itemStack = new ItemStack(Items.BUNDLE);
 
         // Add item to shulker box
-        IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
-        ItemStack remaining = itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
+        ResourceHandler<ItemResource> itemHandler = itemStack.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(itemStack));
+        int inserted;
+        try (var tx = Transaction.openRoot()) {
+            inserted = itemHandler.insert(ItemResource.of(Items.APPLE), 1, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(remaining.isEmpty(), Component.literal("Remaining of insertion is not empty"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
+            helper.assertTrue(inserted == 1, Component.literal("Remaining of insertion is not empty"));
+            helper.assertTrue(itemHandler.getResource(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
         });
     }
 
@@ -69,13 +84,17 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
         ItemStack itemStack = new ItemStack(Items.BUNDLE);
 
         // Remove item from shulker box
-        IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
-        itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
-        ItemStack removed = itemHandler.extractItem(0, 1, false);
+        ResourceHandler<ItemResource> itemHandler = itemStack.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(itemStack));
+        int removed;
+        try (var tx = Transaction.openRoot()) {
+            itemHandler.insert(ItemResource.of(Items.APPLE), 1, tx);
+            removed = itemHandler.extract(ItemResource.of(Items.APPLE), 1, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(!removed.isEmpty(), Component.literal("Removed item is empty"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).isEmpty(), Component.literal("Item was not removed"));
+            helper.assertTrue(removed == 1, Component.literal("Removed item is empty"));
+            helper.assertTrue(itemHandler.getResource(0).isEmpty(), Component.literal("Item was not removed"));
         });
     }
 
@@ -85,22 +104,29 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
         ItemStack itemStack = new ItemStack(Items.BUNDLE);
 
         // Add item to shulker box
-        IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
-        ItemStack remaining1 = itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
-        ItemStack remaining2 = itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
-        ItemStack remaining3 = itemHandler.insertItem(1, new ItemStack(Items.APPLE), false);
-        ItemStack remaining4 = itemHandler.insertItem(1, new ItemStack(Items.APPLE), false);
+        ResourceHandler<ItemResource> itemHandler = itemStack.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(itemStack));
+        int inserted1;
+        int inserted2;
+        int inserted3;
+        int inserted4;
+        try (var tx = Transaction.openRoot()) {
+            inserted1 = itemHandler.insert(0, ItemResource.of(Items.APPLE), 1, tx);
+            inserted2 = itemHandler.insert(0, ItemResource.of(Items.APPLE), 1, tx);
+            inserted3 = itemHandler.insert(1, ItemResource.of(Items.APPLE), 1, tx);
+            inserted4 = itemHandler.insert(1, ItemResource.of(Items.APPLE), 1, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(remaining1.isEmpty(), Component.literal("Remaining of insertion 1 is not empty"));
-            helper.assertTrue(remaining2.isEmpty(), Component.literal("Remaining of insertion 2 is not empty"));
-            helper.assertTrue(remaining3.isEmpty(), Component.literal("Remaining of insertion 3 is not empty"));
-            helper.assertTrue(remaining4.isEmpty(), Component.literal("Remaining of insertion 4 is not empty"));
-            helper.assertTrue(itemHandler.getSlots() == 3, Component.literal("Slot count was not 3"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).getItem() == Items.APPLE, Component.literal("Item was not added in slot 0"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).getCount() == 2, Component.literal("Item count was not 2 in slot 0"));
-            helper.assertTrue(itemHandler.getStackInSlot(1).getItem() == Items.APPLE, Component.literal("Item was not added in slot 1"));
-            helper.assertTrue(itemHandler.getStackInSlot(1).getCount() == 2, Component.literal("Item count was not 2 in slot 1"));
+            helper.assertTrue(inserted1 == 1, Component.literal("Remaining of insertion 1 is not empty"));
+            helper.assertTrue(inserted2 == 1, Component.literal("Remaining of insertion 2 is not empty"));
+            helper.assertTrue(inserted3 == 1, Component.literal("Remaining of insertion 3 is not empty"));
+            helper.assertTrue(inserted4 == 1, Component.literal("Remaining of insertion 4 is not empty"));
+            helper.assertTrue(itemHandler.size() == 3, Component.literal("Slot count was not 3"));
+            helper.assertTrue(itemHandler.getResource(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
+            helper.assertTrue(itemHandler.getAmountAsInt(0) == 2, Component.literal("Item count was not 2 in slot 0"));
+            helper.assertTrue(itemHandler.getResource(1).getItem() == Items.APPLE, Component.literal("Item was not added"));
+            helper.assertTrue(itemHandler.getAmountAsInt(1) == 2, Component.literal("Item count was not 2 in slot 1"));
         });
     }
 
@@ -110,21 +136,27 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
         ItemStack itemStack = new ItemStack(Items.BUNDLE);
 
         // Remove item from shulker box
-        IItemHandler itemHandler = itemStack.getCapability(Capabilities.ItemHandler.ITEM);
-        itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
-        itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
-        itemHandler.insertItem(1, new ItemStack(Items.APPLE), false);
-        itemHandler.insertItem(1, new ItemStack(Items.APPLE), false);
-        ItemStack removed1 = itemHandler.extractItem(1, 2, false);
-        ItemStack removed2 = itemHandler.extractItem(0, 1, false);
-        ItemStack removed3 = itemHandler.extractItem(0, 1, false);
+        ResourceHandler<ItemResource> itemHandler = itemStack.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(itemStack));
+        int removed1;
+        int removed2;
+        int removed3;
+        try (var tx = Transaction.openRoot()) {
+            itemHandler.insert(0, ItemResource.of(Items.APPLE), 1, tx);
+            itemHandler.insert(0, ItemResource.of(Items.APPLE), 1, tx);
+            itemHandler.insert(1, ItemResource.of(Items.APPLE), 1, tx);
+            itemHandler.insert(1, ItemResource.of(Items.APPLE), 1, tx);
+            removed1 = itemHandler.extract(1, ItemResource.of(Items.APPLE), 2, tx);
+            removed2 = itemHandler.extract(0, ItemResource.of(Items.APPLE), 1, tx);
+            removed3 = itemHandler.extract(0, ItemResource.of(Items.APPLE), 1, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(removed1.getCount() == 2, Component.literal("Removed item 3 is not 2"));
-            helper.assertTrue(!removed2.isEmpty(), Component.literal("Removed item 1 is empty"));
-            helper.assertTrue(!removed3.isEmpty(), Component.literal("Removed item 2 is empty"));
-            helper.assertTrue(itemHandler.getSlots() == 1, Component.literal("Slot count was not 1"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).isEmpty(), Component.literal("Item was not removed in slot 0"));
+            helper.assertTrue(removed1 == 2, Component.literal("Removed item 3 is not 2"));
+            helper.assertTrue(removed2 == 1, Component.literal("Removed item 1 is empty"));
+            helper.assertTrue(removed3 == 1, Component.literal("Removed item 2 is empty"));
+            helper.assertTrue(itemHandler.size() == 1, Component.literal("Slot count was not 1"));
+            helper.assertTrue(itemHandler.getResource(0).isEmpty(), Component.literal("Item was not removed in slot 0"));
         });
     }
 

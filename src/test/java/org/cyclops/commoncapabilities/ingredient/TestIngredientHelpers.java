@@ -3,7 +3,7 @@ package org.cyclops.commoncapabilities.ingredient;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.minecraft.core.component.DataComponentMap;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,7 +11,7 @@ import java.util.Comparator;
 import static org.cyclops.commoncapabilities.api.ingredient.MixedIngredients.compareCollection;
 import static org.cyclops.commoncapabilities.ingredient.IngredientHelpers.compareData;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestIngredientHelpers {
 

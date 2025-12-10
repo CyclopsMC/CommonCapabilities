@@ -6,23 +6,19 @@ import com.google.common.collect.Sets;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.cyclops.commoncapabilities.IngredientComponents;
-import org.cyclops.commoncapabilities.ModBaseMocked;
-import org.cyclops.commoncapabilities.TestInitHelpers;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
 import org.cyclops.commoncapabilities.ingredient.DataComparator;
-import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestRecipeDefinition {
 
@@ -31,18 +27,8 @@ public class TestRecipeDefinition {
     private static RecipeDefinition D_2;
     private static RecipeDefinition D_3;
 
-    private static void setStatic(Field field, Object newValue) throws IllegalAccessException {
-        field.setAccessible(true);
-        field.set(null, newValue);
-    }
-
-    @BeforeClass
+    @BeforeAll
     public static void init() throws NoSuchFieldException, IllegalAccessException {
-        TestInitHelpers.initMinecraft();
-
-        setStatic(IngredientComponent.class.getField("ITEMSTACK"), IngredientComponents.ITEMSTACK);
-        CyclopsCoreInstance.MOD = new ModBaseMocked();
-
         Map<IngredientComponent<?, ?>, List<IPrototypedIngredientAlternatives<?, ?>>> dInputMap = Maps.newIdentityHashMap();
         dInputMap.put(IngredientComponents.ITEMSTACK, Lists.newArrayList(
                 new PrototypedIngredientAlternativesList<>(Lists.newArrayList(

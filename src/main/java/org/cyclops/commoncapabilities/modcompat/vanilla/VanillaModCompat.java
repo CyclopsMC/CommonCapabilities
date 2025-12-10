@@ -19,10 +19,12 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.IBlockCapabilityProvider;
 import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.energy.EnergyHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.cyclops.commoncapabilities.CommonCapabilities;
 import org.cyclops.commoncapabilities.Reference;
 import org.cyclops.commoncapabilities.RegistryEntries;
@@ -30,11 +32,15 @@ import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandle
 import org.cyclops.commoncapabilities.api.capability.temperature.ITemperature;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 import org.cyclops.commoncapabilities.capability.recipehandler.TransformedRecipeHandlerAdapter;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.IVanillaEntityItemCapabilityDelegator;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage.VanillaEntityItemEnergyStorage;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.energystorage.VanillaEntityItemFrameEnergyStorage;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler.VanillaEntityItemFluidHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.fluidhandler.VanillaEntityItemFrameFluidHandler;
-import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.*;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaEntityItemFrameItemHandler;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaEntityItemItemHandler;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaItemBundleItemHandler;
+import org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler.VanillaItemShulkerBoxItemHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler.VanillaBrewingStandRecipeHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler.VanillaRecipeTypeRecipeHandler;
 import org.cyclops.commoncapabilities.modcompat.vanilla.capability.temperature.VanillaAbstractFurnaceTemperature;
@@ -199,14 +205,14 @@ public class VanillaModCompat implements IModCompat {
 
 
             // ItemHandler
-            ICapabilityConstructor<ItemStack, Void, IItemHandler, ItemLike> shulkerboxConstructor = new ICapabilityConstructor<>() {
+            ICapabilityConstructor<ItemStack, ItemAccess, ResourceHandler<ItemResource>, ItemLike> shulkerboxConstructor = new ICapabilityConstructor<>() {
                 @Override
-                public BaseCapability<IItemHandler, Void> getCapability() {
-                    return Capabilities.ItemHandler.ITEM;
+                public BaseCapability<ResourceHandler<ItemResource>, ItemAccess> getCapability() {
+                    return Capabilities.Item.ITEM;
                 }
 
                 @Override
-                public ICapabilityProvider<ItemStack, Void, IItemHandler> createProvider(ItemLike host) {
+                public ICapabilityProvider<ItemStack, ItemAccess, ResourceHandler<ItemResource>> createProvider(ItemLike host) {
                     return (itemStack, context) -> new VanillaItemShulkerBoxItemHandler(itemStack);
                 }
             };
@@ -227,28 +233,28 @@ public class VanillaModCompat implements IModCompat {
             registry.registerItem(RegistryEntries.ITEM_GREEN_SHULKER_BOX::get, shulkerboxConstructor);
             registry.registerItem(RegistryEntries.ITEM_RED_SHULKER_BOX::get, shulkerboxConstructor);
             registry.registerItem(RegistryEntries.ITEM_BLACK_SHULKER_BOX::get, shulkerboxConstructor);
-            registry.registerItem(RegistryEntries.ITEM_BUNDLE::get, new ICapabilityConstructor<ItemStack, Void, IItemHandler, ItemLike>() {
+            registry.registerItem(RegistryEntries.ITEM_BUNDLE::get, new ICapabilityConstructor<ItemStack, ItemAccess, ResourceHandler<ItemResource>, ItemLike>() {
                 @Override
-                public BaseCapability<IItemHandler, Void> getCapability() {
-                    return Capabilities.ItemHandler.ITEM;
+                public BaseCapability<ResourceHandler<ItemResource>, ItemAccess> getCapability() {
+                    return Capabilities.Item.ITEM;
                 }
 
                 @Override
-                public ICapabilityProvider<ItemStack, Void, IItemHandler> createProvider(ItemLike host) {
+                public ICapabilityProvider<ItemStack, ItemAccess, ResourceHandler<ItemResource>> createProvider(ItemLike host) {
                     return (itemStack, context) -> new VanillaItemBundleItemHandler(itemStack);
                 }
             });
             registry.registerEntity(() -> EntityType.ITEM,
-                    new ICapabilityConstructor<ItemEntity, Void, IItemHandler, EntityType<ItemEntity>>() {
+                    new ICapabilityConstructor<ItemEntity, Void, ResourceHandler<ItemResource>, EntityType<ItemEntity>>() {
                         @Override
-                        public BaseCapability<IItemHandler, Void> getCapability() {
-                            return Capabilities.ItemHandler.ENTITY;
+                        public BaseCapability<ResourceHandler<ItemResource>, Void> getCapability() {
+                            return Capabilities.Item.ENTITY;
                         }
 
                         @Override
-                        public ICapabilityProvider<ItemEntity, Void, IItemHandler> createProvider(EntityType<ItemEntity> host) {
+                        public ICapabilityProvider<ItemEntity, Void, ResourceHandler<ItemResource>> createProvider(EntityType<ItemEntity> host) {
                             return (entity, context) -> {
-                                if (entity.getItem().getCapability(Capabilities.ItemHandler.ITEM) != null) {
+                                if (entity.getItem().getCapability(Capabilities.Item.ITEM, IVanillaEntityItemCapabilityDelegator.ItemAccessEntity.of(entity)) != null) {
                                     return new VanillaEntityItemItemHandler(entity);
                                 }
                                 return null;
@@ -256,16 +262,16 @@ public class VanillaModCompat implements IModCompat {
                         }
                     });
             registry.registerEntity(() -> EntityType.ITEM_FRAME,
-                    new ICapabilityConstructor<ItemFrame, Void, IItemHandler, EntityType<ItemFrame>>() {
+                    new ICapabilityConstructor<ItemFrame, Void, ResourceHandler<ItemResource>, EntityType<ItemFrame>>() {
                         @Override
-                        public BaseCapability<IItemHandler, Void> getCapability() {
-                            return Capabilities.ItemHandler.ENTITY;
+                        public BaseCapability<ResourceHandler<ItemResource>, Void> getCapability() {
+                            return Capabilities.Item.ENTITY;
                         }
 
                         @Override
-                        public ICapabilityProvider<ItemFrame, Void, IItemHandler> createProvider(EntityType<ItemFrame> capabilityKey) {
+                        public ICapabilityProvider<ItemFrame, Void, ResourceHandler<ItemResource>> createProvider(EntityType<ItemFrame> capabilityKey) {
                             return (entity, context) -> {
-                                if (entity.getItem().getCapability(Capabilities.ItemHandler.ITEM) != null) {
+                                if (entity.getItem().getCapability(Capabilities.Item.ITEM, IVanillaEntityItemCapabilityDelegator.ItemAccessEntity.of(entity)) != null) {
                                     return new VanillaEntityItemFrameItemHandler(entity);
                                 }
                                 return null;
@@ -273,47 +279,35 @@ public class VanillaModCompat implements IModCompat {
                         }
                     });
             registry.registerEntity(() -> EntityType.GLOW_ITEM_FRAME,
-                    new ICapabilityConstructor<GlowItemFrame, Void, IItemHandler, EntityType<GlowItemFrame>>() {
+                    new ICapabilityConstructor<GlowItemFrame, Void, ResourceHandler<ItemResource>, EntityType<GlowItemFrame>>() {
                         @Override
-                        public BaseCapability<IItemHandler, Void> getCapability() {
-                            return Capabilities.ItemHandler.ENTITY;
+                        public BaseCapability<ResourceHandler<ItemResource>, Void> getCapability() {
+                            return Capabilities.Item.ENTITY;
                         }
 
                         @Override
-                        public ICapabilityProvider<GlowItemFrame, Void, IItemHandler> createProvider(EntityType<GlowItemFrame> capabilityKey) {
+                        public ICapabilityProvider<GlowItemFrame, Void, ResourceHandler<ItemResource>> createProvider(EntityType<GlowItemFrame> capabilityKey) {
                             return (entity, context) -> {
-                                if (entity.getItem().getCapability(Capabilities.ItemHandler.ITEM) != null) {
+                                if (entity.getItem().getCapability(Capabilities.Item.ITEM, IVanillaEntityItemCapabilityDelegator.ItemAccessEntity.of(entity)) != null) {
                                     return new VanillaEntityItemFrameItemHandler(entity);
                                 }
                                 return null;
                             };
                         }
                     });
-            registry.registerBlock(() -> (ComposterBlock) Blocks.COMPOSTER,
-                    new IBlockCapabilityConstructor<ComposterBlock, Direction, IItemHandler, ComposterBlock>() {
-                        @Override
-                        public BaseCapability<IItemHandler, Direction> getCapability() {
-                            return Capabilities.ItemHandler.BLOCK;
-                        }
-
-                        @Override
-                        public IBlockCapabilityProvider<IItemHandler, Direction> createProvider(ComposterBlock capabilityKey) {
-                            return (level, pos, state, blockEntity, side) -> new VanillaBlockComposterItemHandler(state, level, pos, side);
-                        }
-                    });
 
             // FluidHandler
             registry.registerEntity(() -> EntityType.ITEM,
-                    new ICapabilityConstructor<ItemEntity, Direction, IFluidHandler, EntityType<ItemEntity>>() {
+                    new ICapabilityConstructor<ItemEntity, Direction, ResourceHandler<FluidResource>, EntityType<ItemEntity>>() {
                         @Override
-                        public BaseCapability<IFluidHandler, Direction> getCapability() {
-                            return Capabilities.FluidHandler.ENTITY;
+                        public BaseCapability<ResourceHandler<FluidResource>, Direction> getCapability() {
+                            return Capabilities.Fluid.ENTITY;
                         }
 
                         @Override
-                        public ICapabilityProvider<ItemEntity, Direction, IFluidHandler> createProvider(EntityType<ItemEntity> capabilityKey) {
+                        public ICapabilityProvider<ItemEntity, Direction, ResourceHandler<FluidResource>> createProvider(EntityType<ItemEntity> capabilityKey) {
                             return (entity, context) -> {
-                                if (entity.getItem().getCapability(Capabilities.FluidHandler.ITEM) != null) {
+                                if (entity.getItem().getCapability(Capabilities.Fluid.ITEM, IVanillaEntityItemCapabilityDelegator.ItemAccessEntity.of(entity)) != null) {
                                     return new VanillaEntityItemFluidHandler(entity);
                                 }
                                 return null;
@@ -321,16 +315,16 @@ public class VanillaModCompat implements IModCompat {
                         }
                     });
             registry.registerEntity(() -> EntityType.ITEM_FRAME,
-                    new ICapabilityConstructor<ItemFrame, Direction, IFluidHandler, EntityType<ItemFrame>>() {
+                    new ICapabilityConstructor<ItemFrame, Direction, ResourceHandler<FluidResource>, EntityType<ItemFrame>>() {
                         @Override
-                        public BaseCapability<IFluidHandler, Direction> getCapability() {
-                            return Capabilities.FluidHandler.ENTITY;
+                        public BaseCapability<ResourceHandler<FluidResource>, Direction> getCapability() {
+                            return Capabilities.Fluid.ENTITY;
                         }
 
                         @Override
-                        public ICapabilityProvider<ItemFrame, Direction, IFluidHandler> createProvider(EntityType<ItemFrame> capabilityKey) {
+                        public ICapabilityProvider<ItemFrame, Direction, ResourceHandler<FluidResource>> createProvider(EntityType<ItemFrame> capabilityKey) {
                             return (entity, context) -> {
-                                if (entity.getItem().getCapability(Capabilities.FluidHandler.ITEM) != null) {
+                                if (entity.getItem().getCapability(Capabilities.Fluid.ITEM, IVanillaEntityItemCapabilityDelegator.ItemAccessEntity.of(entity)) != null) {
                                     return new VanillaEntityItemFrameFluidHandler(entity);
                                 }
                                 return null;
@@ -338,16 +332,16 @@ public class VanillaModCompat implements IModCompat {
                         }
                     });
             registry.registerEntity(() -> EntityType.GLOW_ITEM_FRAME,
-                    new ICapabilityConstructor<GlowItemFrame, Direction, IFluidHandler, EntityType<GlowItemFrame>>() {
+                    new ICapabilityConstructor<GlowItemFrame, Direction, ResourceHandler<FluidResource>, EntityType<GlowItemFrame>>() {
                         @Override
-                        public BaseCapability<IFluidHandler, Direction> getCapability() {
-                            return Capabilities.FluidHandler.ENTITY;
+                        public BaseCapability<ResourceHandler<FluidResource>, Direction> getCapability() {
+                            return Capabilities.Fluid.ENTITY;
                         }
 
                         @Override
-                        public ICapabilityProvider<GlowItemFrame, Direction, IFluidHandler> createProvider(EntityType<GlowItemFrame> capabilityKey) {
+                        public ICapabilityProvider<GlowItemFrame, Direction, ResourceHandler<FluidResource>> createProvider(EntityType<GlowItemFrame> capabilityKey) {
                             return (entity, context) -> {
-                                if (entity.getItem().getCapability(Capabilities.FluidHandler.ITEM) != null) {
+                                if (entity.getItem().getCapability(Capabilities.Fluid.ITEM, IVanillaEntityItemCapabilityDelegator.ItemAccessEntity.of(entity)) != null) {
                                     return new VanillaEntityItemFrameFluidHandler(entity);
                                 }
                                 return null;
@@ -357,16 +351,16 @@ public class VanillaModCompat implements IModCompat {
 
             // EnergyStorage
             registry.registerEntity(() -> EntityType.ITEM,
-                    new ICapabilityConstructor<ItemEntity, Direction, IEnergyStorage, EntityType<ItemEntity>>() {
+                    new ICapabilityConstructor<ItemEntity, Direction, EnergyHandler, EntityType<ItemEntity>>() {
                         @Override
-                        public BaseCapability<IEnergyStorage, Direction> getCapability() {
-                            return Capabilities.EnergyStorage.ENTITY;
+                        public BaseCapability<EnergyHandler, Direction> getCapability() {
+                            return Capabilities.Energy.ENTITY;
                         }
 
                         @Override
-                        public ICapabilityProvider<ItemEntity, Direction, IEnergyStorage> createProvider(EntityType<ItemEntity> capabilityKey) {
+                        public ICapabilityProvider<ItemEntity, Direction, EnergyHandler> createProvider(EntityType<ItemEntity> capabilityKey) {
                             return (entity, context) -> {
-                                if (entity.getItem().getCapability(Capabilities.EnergyStorage.ITEM) != null) {
+                                if (entity.getItem().getCapability(Capabilities.Energy.ITEM, IVanillaEntityItemCapabilityDelegator.ItemAccessEntity.of(entity)) != null) {
                                     return new VanillaEntityItemEnergyStorage(entity);
                                 }
                                 return null;
@@ -374,16 +368,16 @@ public class VanillaModCompat implements IModCompat {
                         }
                     });
             registry.registerEntity(() -> EntityType.ITEM_FRAME,
-                    new ICapabilityConstructor<ItemFrame, Direction, IEnergyStorage, EntityType<ItemFrame>>() {
+                    new ICapabilityConstructor<ItemFrame, Direction, EnergyHandler, EntityType<ItemFrame>>() {
                         @Override
-                        public BaseCapability<IEnergyStorage, Direction> getCapability() {
-                            return Capabilities.EnergyStorage.ENTITY;
+                        public BaseCapability<EnergyHandler, Direction> getCapability() {
+                            return Capabilities.Energy.ENTITY;
                         }
 
                         @Override
-                        public ICapabilityProvider<ItemFrame, Direction, IEnergyStorage> createProvider(EntityType<ItemFrame> capabilityKey) {
+                        public ICapabilityProvider<ItemFrame, Direction, EnergyHandler> createProvider(EntityType<ItemFrame> capabilityKey) {
                             return (entity, context) -> {
-                                if (entity.getItem().getCapability(Capabilities.EnergyStorage.ITEM) != null) {
+                                if (entity.getItem().getCapability(Capabilities.Energy.ITEM, IVanillaEntityItemCapabilityDelegator.ItemAccessEntity.of(entity)) != null) {
                                     return new VanillaEntityItemFrameEnergyStorage(entity);
                                 }
                                 return null;
@@ -391,16 +385,16 @@ public class VanillaModCompat implements IModCompat {
                         }
                     });
             registry.registerEntity(() -> EntityType.GLOW_ITEM_FRAME,
-                    new ICapabilityConstructor<GlowItemFrame, Direction, IEnergyStorage, EntityType<GlowItemFrame>>() {
+                    new ICapabilityConstructor<GlowItemFrame, Direction, EnergyHandler, EntityType<GlowItemFrame>>() {
                         @Override
-                        public BaseCapability<IEnergyStorage, Direction> getCapability() {
-                            return Capabilities.EnergyStorage.ENTITY;
+                        public BaseCapability<EnergyHandler, Direction> getCapability() {
+                            return Capabilities.Energy.ENTITY;
                         }
 
                         @Override
-                        public ICapabilityProvider<GlowItemFrame, Direction, IEnergyStorage> createProvider(EntityType<GlowItemFrame> capabilityKey) {
+                        public ICapabilityProvider<GlowItemFrame, Direction, EnergyHandler> createProvider(EntityType<GlowItemFrame> capabilityKey) {
                             return (entity, context) -> {
-                                if (entity.getItem().getCapability(Capabilities.EnergyStorage.ITEM) != null) {
+                                if (entity.getItem().getCapability(Capabilities.Energy.ITEM, IVanillaEntityItemCapabilityDelegator.ItemAccessEntity.of(entity)) != null) {
                                     return new VanillaEntityItemFrameEnergyStorage(entity);
                                 }
                                 return null;

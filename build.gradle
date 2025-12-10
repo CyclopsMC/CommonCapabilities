@@ -1,6 +1,6 @@
 plugins {
-    id 'net.neoforged.gradle.userdev' version '7.0.185'
-    id 'net.darkhax.curseforgegradle' version '1.1.26'
+    id 'net.neoforged.moddev' version '2.0.119' apply false
+    id 'net.darkhax.curseforgegradle' version '1.1.28'
     id 'com.github.kt3k.coveralls' version '2.12.0'
     id 'com.diffplug.spotless' version '6.25.0'
 	id 'com.modrinth.minotaur' version '2.+'
@@ -9,11 +9,11 @@ plugins {
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
+apply plugin: 'net.neoforged.moddev'
 
 
 import net.darkhax.curseforgegradle.Constants
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
-import net.neoforged.gradle.common.tasks.PotentiallySignJar
 
 // Determine build number
 String build_number = "DEV" // this will be referenced as simply build_number from now on.
@@ -107,7 +107,13 @@ repositories {
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${project.neoforge_version}"
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.7.1'
+    testImplementation 'org.junit.platform:junit-platform-suite-api:1.14.1'
+    testImplementation 'org.hamcrest:hamcrest:2.1'
+    testImplementation "org.mockito:mockito-core:2.+"
+    testRuntimeOnly 'org.junit.platform:junit-platform-suite-engine'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // Add something like 'cyclopscore_version_local=0.1.0-DEV' to your secrets.properties if you want to use a custom local CyclopsCore version.
     if (secrets.cyclopscore_version_local) {
@@ -120,49 +126,55 @@ dependencies {
     implementation("curse.maven:puzzles-lib-495476:${puzzleslib_version}")
 	
 	// TODO: port mod dependencies once they update
-
-    testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-core:1.+"
 }
 
-minecraft {
-    accessTransformers {
-        file('src/main/resources/META-INF/accesstransformer.cfg')
-	}
+test {
+    useJUnitPlatform()
 }
 
-subsystems {
+neoForge {
+    version = "${neoforge_version}"
+
     parchment {
-        minecraftVersion = "${project.parchment_minecraft_version}"
-        mappingsVersion = "${project.parchment_version}"
-    }
-}
-
-runs {
-    configureEach {
-		systemProperty 'forge.logging.markers', 'REGISTRIES'
-        systemProperty 'forge.logging.console.level', 'debug'
-        modSource project.sourceSets.main
-    }
-	
-    client {
-        systemProperty 'neoforge.enabledGameTestNamespaces', "cyclopscore,${mod_id}"
+        mappingsVersion = "${parchment_version}"
+        minecraftVersion = "${parchment_minecraft_version}"
     }
 
-    server {
-        systemProperty 'neoforge.enabledGameTestNamespaces', "cyclopscore,${mod_id}"
-        argument '--nogui'
+    // Automatically enable neoforge AccessTransformers if the file exists
+    def at = file('src/main/resources/META-INF/accesstransformer.cfg')
+    if (at.exists()) {
+        accessTransformers = [ at.absolutePath ]
     }
 
-    gameTestServer {
-        systemProperty 'neoforge.enabledGameTestNamespaces', "cyclopscore,${mod_id}"
+    validateAccessTransformers = true
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+            programArgument '--nogui'
+        }
+        gameTestServer {
+            type = "gameTestServer"
+        }
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.DEBUG
+            systemProperty 'neoforge.enabledGameTestNamespaces', "cyclopscore,${mod_id}"
+        }
     }
 
-    clientData {
-        arguments.addAll '--all', '--validate',
-                '--mod', project.mod_id,
-                '--output', file('src/generated/resources/').getAbsolutePath(),
-                '--existing', file('src/main/resources/').getAbsolutePath()
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+
+    unitTest {
+        enable()
+        testedMod = mods.commoncapabilities
     }
 }
 
@@ -181,20 +193,20 @@ jar {
     }
 }
 
-task signJar(type: PotentiallySignJar, dependsOn: jar) {
-	dependsOn(tasks.jar)
-
-    onlyIf {
-        System.getenv().SIGN_KEYSTORE
-    }
-
-    keyStore = System.getenv().SIGN_KEYSTORE
-    alias = System.getenv().SIGN_ALIAS
-    storePass = System.getenv().SIGN_STOREPASS
-    keyPass = System.getenv().SIGN_KEYPASS
-    input = jar.archivePath
-    output = jar.archivePath
-}
+// task signJar(type: PotentiallySignJar, dependsOn: jar) {
+// 	dependsOn(tasks.jar)
+// 
+//     onlyIf {
+//         System.getenv().SIGN_KEYSTORE
+//     }
+// 
+//     keyStore = System.getenv().SIGN_KEYSTORE
+//     alias = System.getenv().SIGN_ALIAS
+//     storePass = System.getenv().SIGN_STOREPASS
+//     keyPass = System.getenv().SIGN_KEYPASS
+//     input = jar.archivePath
+//     output = jar.archivePath
+// }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
@@ -382,16 +394,6 @@ compileJava.dependsOn updateGitHooks
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
-}
-
-// The following is required to fix running unit tests during build phase
-tasks.configureEach { task ->
-    if (task.name.startsWith("test")) {
-        task.enabled = true
-    }
-    if (task.name.startsWith("testJunit")) {
-        task.enabled = false
-    }
 }
 
 idea {

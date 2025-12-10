@@ -62,7 +62,6 @@ public class CommonCapabilities extends ModBaseNeoForge<CommonCapabilities> {
         super.loadModCompats(modCompatLoader);
         modCompatLoader.addModCompat(new VanillaModCompat());
         modCompatLoader.addModCompat(new VisualWorkbenchModCompat());
-        // TODO: add compat for Visual Workbench mod to add RecipeHandler cap
         // TODO: temporarily disable some mod compats
         //modCompatLoader.addModCompat(new TConstructModCompat());
         //modCompatLoader.addModCompat(new ForestryModCompat());

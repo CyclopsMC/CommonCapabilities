@@ -5,18 +5,18 @@ import net.minecraft.resources.ResourceLocation;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.ingredient.IngredientMatcherEnergy;
 import org.cyclops.commoncapabilities.ingredient.IngredientSerializerEnergy;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestIngredientInstanceWrapper {
 
     private static IngredientComponent<Long, Boolean> C;
     private static IngredientComponent<Long, Boolean> C_OTHER;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         C = IngredientComponents.ENERGY;
         C_OTHER = new IngredientComponent<>("minecraft:energyother", new IngredientMatcherEnergy(),

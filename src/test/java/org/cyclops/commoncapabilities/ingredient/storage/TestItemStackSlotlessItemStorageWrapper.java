@@ -1,24 +1,17 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
 import org.cyclops.commoncapabilities.IngredientComponents;
-import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.DefaultSlotlessItemHandlerWrapper;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
-import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
+import org.cyclops.commoncapabilities.ingredient.ItemStacksResourceHandlerTesting;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientArrayList;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestItemStackSlotlessItemStorageWrapper {
 
@@ -30,23 +23,15 @@ public class TestItemStackSlotlessItemStorageWrapper {
     private static ItemStack APPLE_9;
     private static ItemStack APPLE_11;
 
-    private IItemHandler innerStorage;
+    private ItemStacksResourceHandlerTesting innerStorage;
     private IngredientComponentStorageWrapperHandlerItemStackSlotless.ComponentStorageWrapper storage;
     private IngredientComponentStorageWrapperHandlerItemStackSlotless.ItemStorageWrapper wrapper;
-
-    @BeforeClass
-    public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-        CyclopsCoreInstance.MOD = new ModBaseMocked();
-    }
 
     public static boolean eq(ItemStack a, ItemStack b) {
         return IngredientComponents.ITEMSTACK.getMatcher().matchesExactly(a, b);
     }
 
-    @Before
+    @BeforeEach
     public void beforeEach() {
         APPLE_1 = new ItemStack(Items.APPLE, 1);
         APPLE_10 = new ItemStack(Items.APPLE, 10);
@@ -56,11 +41,11 @@ public class TestItemStackSlotlessItemStorageWrapper {
         APPLE_9 = new ItemStack(Items.APPLE, 9);
         APPLE_11 = new ItemStack(Items.APPLE, 11);
 
-        innerStorage = new ItemStackHandler(10);
-        ((ItemStackHandler) innerStorage).setStackInSlot(2, APPLE_1.copy());
-        ((ItemStackHandler) innerStorage).setStackInSlot(6, APPLE_10.copy());
+        innerStorage = new ItemStacksResourceHandlerTesting(10);
+        innerStorage.setStackInSlot(2, APPLE_1.copy());
+        innerStorage.setStackInSlot(6, APPLE_10.copy());
         storage = new IngredientComponentStorageWrapperHandlerItemStackSlotless.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, new DefaultSlotlessItemHandlerWrapper(innerStorage));
-        wrapper = new IngredientComponentStorageWrapperHandlerItemStackSlotless.ItemStorageWrapper(IngredientComponents.ITEMSTACK, storage);
+        wrapper = new IngredientComponentStorageWrapperHandlerItemStackSlotless.ItemStorageWrapper(storage);
     }
 
     @Test

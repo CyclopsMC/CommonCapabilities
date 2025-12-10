@@ -4,11 +4,10 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.BundleContents;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.apache.commons.lang3.math.Fraction;
 import org.cyclops.commoncapabilities.capability.itemhandler.ItemItemHandler;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 
 /**
  * An item handler wrapper for the bundle.
@@ -38,35 +37,31 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
     }
 
     @Override
-    public int getSlots() {
+    public int size() {
         return getItemList().size();
     }
 
 
     @Override
-    public int getSlotLimit(int slot) {
+    public long getCapacityAsLong(int slot, ItemResource itemResource) {
         return 64;
     }
 
     @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-        return stack.isEmpty() || (getMaxAmountToAdd(stack) > 0 && stack.getItem().canFitInsideContainerItems());
+    public boolean isValid(int slot, ItemResource itemResource) {
+        return itemResource.isEmpty() || (itemResource.getItem().canFitInsideContainerItems());
+    }
+
+    protected boolean isAmountValid(ItemStack stack) {
+        return getMaxAmountToAdd(stack) > 0;
     }
 
     @Override
-    public void setStackInSlot(int slot, ItemStack stack) {
-        if (isItemValid(slot, stack)) {
-            super.setStackInSlot(slot, stack);
+    public int insert(int slot, ItemResource itemResource, int amount, TransactionContext transaction) {
+        if (!(isValid(slot, itemResource) && isAmountValid(itemResource.toStack(amount)))) {
+            return 0;
         }
-    }
-
-    @NotNull
-    @Override
-    public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if (!isItemValid(slot, stack)) {
-            return stack;
-        }
-        return super.insertItem(slot, stack, simulate);
+        return super.insert(slot, itemResource, amount, transaction);
     }
 
     // Copied from BundleContents

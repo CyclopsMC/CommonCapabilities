@@ -1,25 +1,23 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.StringTag;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
 import static org.cyclops.commoncapabilities.TestInitHelpers.deserialize;
 import static org.cyclops.commoncapabilities.TestInitHelpers.serialize;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestIngredientSerializerItemStack {
 
@@ -37,12 +35,8 @@ public class TestIngredientSerializerItemStack {
     private static ItemStack I2L;
     private static ItemStack I3L;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-
         S = new IngredientSerializerItemStack();
 
         DATA = DataComponentPatch.builder()
@@ -124,9 +118,9 @@ public class TestIngredientSerializerItemStack {
         assertThat(ItemStack.isSameItemSameComponents(deserialize(I_TAG3L, S::deserializeInstance), I3L), is(true));
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void deserializeInstanceInvalid() {
-        deserialize(new CompoundTag(), S::deserializeInstance);
+        Assertions.assertThrows(NoSuchElementException.class, () -> deserialize(new CompoundTag(), S::deserializeInstance));
     }
 
     @Test
@@ -139,9 +133,9 @@ public class TestIngredientSerializerItemStack {
         assertThat(S.deserializeCondition(IntTag.valueOf(1)), is(1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void deserializeConditionInvalid() {
-        S.deserializeCondition(StringTag.valueOf("0"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> S.deserializeCondition(StringTag.valueOf("0")));
     }
 
 }

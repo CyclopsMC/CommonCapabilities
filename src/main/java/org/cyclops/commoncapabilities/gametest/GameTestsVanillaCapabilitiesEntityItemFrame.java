@@ -8,7 +8,9 @@ import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.cyclops.cyclopscore.gametest.GameTest;
 
 /**
@@ -26,12 +28,16 @@ public class GameTestsVanillaCapabilitiesEntityItemFrame {
         entity.setItem(new ItemStack(Items.SHULKER_BOX));
 
         // Add item to shulker box
-        IItemHandler itemHandler = entity.getCapability(Capabilities.ItemHandler.ENTITY);
-        ItemStack remaining = itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
+        ResourceHandler<ItemResource> itemHandler = entity.getCapability(Capabilities.Item.ENTITY);
+        int inserted;
+        try (var tx = Transaction.openRoot()) {
+            inserted = itemHandler.insert(ItemResource.of(Items.APPLE), 1, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(remaining.isEmpty(), Component.literal("Remaining of insertion is not empty"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
+            helper.assertTrue(inserted == 1, Component.literal("Remaining of insertion is not empty"));
+            helper.assertTrue(itemHandler.getResource(0).getItem() == Items.APPLE, Component.literal("Item was not added"));
         });
     }
 
@@ -42,13 +48,17 @@ public class GameTestsVanillaCapabilitiesEntityItemFrame {
         entity.setItem(new ItemStack(Items.SHULKER_BOX));
 
         // Remove item from shulker box
-        IItemHandler itemHandler = entity.getCapability(Capabilities.ItemHandler.ENTITY);
-        itemHandler.insertItem(0, new ItemStack(Items.APPLE), false);
-        ItemStack removed = itemHandler.extractItem(0, 1, false);
+        ResourceHandler<ItemResource> itemHandler = entity.getCapability(Capabilities.Item.ENTITY);
+        int removed;
+        try (var tx = Transaction.openRoot()) {
+            itemHandler.insert(ItemResource.of(Items.APPLE), 1, tx);
+            removed = itemHandler.extract(ItemResource.of(Items.APPLE), 1, tx);
+            tx.commit();
+        }
 
         helper.succeedIf(() -> {
-            helper.assertTrue(!removed.isEmpty(), Component.literal("Removed item is empty"));
-            helper.assertTrue(itemHandler.getStackInSlot(0).isEmpty(), Component.literal("Item was not removed"));
+            helper.assertTrue(removed == 1, Component.literal("Removed item is empty"));
+            helper.assertTrue(itemHandler.getResource(0).isEmpty(), Component.literal("Item was not removed"));
         });
     }
 

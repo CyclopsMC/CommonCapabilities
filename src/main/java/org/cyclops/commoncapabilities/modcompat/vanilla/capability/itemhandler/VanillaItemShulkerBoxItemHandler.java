@@ -4,9 +4,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.cyclops.commoncapabilities.capability.itemhandler.ItemItemHandler;
 
-import javax.annotation.Nonnull;
 
 /**
  * An item handler wrapper for the shulker box in item form.
@@ -34,18 +34,18 @@ public class VanillaItemShulkerBoxItemHandler extends ItemItemHandler {
     }
 
     @Override
-    public int getSlots() {
+    public int size() {
         return getItemList().size();
     }
 
 
     @Override
-    public int getSlotLimit(int slot) {
+    public long getCapacityAsLong(int slot, ItemResource itemResource) {
         return 64;
     }
 
     @Override
-    public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+    public boolean isValid(int slot, ItemResource itemResource) {
         return true;
     }
 }

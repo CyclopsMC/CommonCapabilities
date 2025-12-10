@@ -1,30 +1,19 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
-import com.google.common.collect.Sets;
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.cyclops.commoncapabilities.IngredientComponents;
-import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
-import org.cyclops.commoncapabilities.ingredient.DataComparator;
-import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
+import org.cyclops.commoncapabilities.ingredient.ItemStacksResourceHandlerTesting;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientArrayList;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientLinkedList;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import javax.annotation.Nonnull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestItemStackComponentStorageWrapper {
 
@@ -41,29 +30,17 @@ public class TestItemStackComponentStorageWrapper {
     private static ItemStack APPLE_70;
     private static ItemStack APPLE_60;
 
-    private IItemHandler storage;
-    private IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapper;
+    private ItemStacksResourceHandlerTesting storage;
+    private IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapper;
 
-    private IItemHandler storageLarge;
-    private IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapperLarge;
-
-    @BeforeClass
-    public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-        CyclopsCoreInstance.MOD = new ModBaseMocked();
-
-        ItemMatch.DATA_COMPARATOR = DataComparator.INSTANCE = new DataComparator(Sets.newHashSet(
-                BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(DataComponents.DAMAGE)
-        ));
-    }
+    private ItemStacksResourceHandlerTesting storageLarge;
+    private IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapperLarge;
 
     public static boolean eq(ItemStack a, ItemStack b) {
         return IngredientComponents.ITEMSTACK.getMatcher().matchesExactly(a, b);
     }
 
-    @Before
+    @BeforeEach
     public void beforeEach() {
         APPLE_1 = new ItemStack(Items.APPLE, 1);
         APPLE_10 = new ItemStack(Items.APPLE, 10);
@@ -78,19 +55,19 @@ public class TestItemStackComponentStorageWrapper {
         APPLE_70 = new ItemStack(Items.APPLE, 70);
         APPLE_60 = new ItemStack(Items.APPLE, 60);
 
-        storage = new ItemStackHandler(10);
-        ((ItemStackHandler) storage).setStackInSlot(2, APPLE_1.copy());
-        ((ItemStackHandler) storage).setStackInSlot(6, APPLE_10.copy());
-        wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, storage);
+        storage = new ItemStacksResourceHandlerTesting(10);
+        storage.set(2, ItemResource.of(APPLE_1), APPLE_1.getCount());
+        storage.set(6, ItemResource.of(APPLE_10), APPLE_10.getCount());
+        wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponents.ITEMSTACK_CONVERTER);
 
-        storageLarge = new ItemStackHandler(1) {
+        storageLarge = new ItemStacksResourceHandlerTesting(1) {
             @Override
-            public int getSlotLimit(int slot) {
+            public int getCapacity(int slot, ItemResource resource) {
                 return 130;
             }
         };
-        ((ItemStackHandler) storageLarge).setStackInSlot(0, APPLE_130.copy());
-        wrapperLarge = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, storageLarge);
+        storageLarge.set(0, ItemResource.of(APPLE_130), APPLE_130.getCount());
+        wrapperLarge = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storageLarge, IngredientComponents.ITEMSTACK_CONVERTER);
     }
 
     @Test
@@ -193,8 +170,8 @@ public class TestItemStackComponentStorageWrapper {
 
     @Test
     public void testInsertFull() {
-        ItemStackHandler storage = new ItemStackHandler(0);
-        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, storage);
+        ItemStacksResourceHandlerTesting storage = new ItemStacksResourceHandlerTesting(0);
+        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponents.ITEMSTACK_CONVERTER);
         assertThat(eq(wrapper.insert(APPLE_64, true), APPLE_64), is(true));
 
         assertThat(wrapperLarge.insert(APPLE_130, true), is(APPLE_130));
@@ -247,11 +224,11 @@ public class TestItemStackComponentStorageWrapper {
 
     @Test
     public void testExtractExactSplit() {
-        IItemHandler storage = new ItemStackHandler(10);
-        ((ItemStackHandler) storage).setStackInSlot(2, APPLE_1.copy());
-        ((ItemStackHandler) storage).setStackInSlot(6, APPLE_10.copy());
-        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapper =
-                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, storage);
+        ItemStacksResourceHandlerTesting storage = new ItemStacksResourceHandlerTesting(10);
+        storage.setStackInSlot(2, APPLE_1.copy());
+        storage.setStackInSlot(6, APPLE_10.copy());
+        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapper =
+                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponents.ITEMSTACK_CONVERTER);
 
         assertThat(eq(wrapper.extract(APPLE_11, ItemMatch.EXACT, true), APPLE_11), is(true));
         assertThat(eq(storage.getStackInSlot(2), APPLE_1), is(true));
@@ -270,11 +247,11 @@ public class TestItemStackComponentStorageWrapper {
 
     @Test
     public void testExtractStackSizeSplit() {
-        IItemHandler storage = new ItemStackHandler(10);
-        ((ItemStackHandler) storage).setStackInSlot(2, APPLE_1.copy());
-        ((ItemStackHandler) storage).setStackInSlot(6, APPLE_10.copy());
-        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapper =
-                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, storage);
+        ItemStacksResourceHandlerTesting storage = new ItemStacksResourceHandlerTesting(10);
+        storage.setStackInSlot(2, APPLE_1.copy());
+        storage.setStackInSlot(6, APPLE_10.copy());
+        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapper =
+                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponents.ITEMSTACK_CONVERTER);
 
         assertThat(eq(wrapper.extract(APPLE_8, ItemMatch.STACKSIZE, true), APPLE_8), is(true));
         assertThat(eq(storage.getStackInSlot(2), APPLE_1), is(true));
@@ -293,27 +270,27 @@ public class TestItemStackComponentStorageWrapper {
 
     @Test
     public void testExtractNoExtract() {
-        ItemStackHandler storage = new ItemStackHandler(1) {
-            @Nonnull
+        ItemStacksResourceHandlerTesting storage = new ItemStacksResourceHandlerTesting(1) {
             @Override
-            public ItemStack extractItem(int slot, int amount, boolean simulate) {
-                return ItemStack.EMPTY;
+            public int extract(int index, ItemResource resource, int amount, TransactionContext transaction) {
+                return 0;
             }
         };
         storage.setStackInSlot(0, APPLE_10);
-        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(IngredientComponents.ITEMSTACK, storage);
+        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapper =
+                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponents.ITEMSTACK_CONVERTER);
         assertThat(eq(wrapper.extract(APPLE_10, ItemMatch.EXACT, false), ItemStack.EMPTY), is(true));
     }
 
     @Test
     public void testExtractMax() {
-        assertThat(eq(wrapper.extract(10, true), APPLE_1), is(true));
+        assertThat(eq(wrapper.extract(10, true), APPLE_10), is(true));
         assertThat(eq(storage.getStackInSlot(2), APPLE_1), is(true));
         assertThat(eq(wrapper.extract(1, true), APPLE_1), is(true));
         assertThat(eq(storage.getStackInSlot(2), APPLE_1), is(true));
-        assertThat(eq(wrapper.extract(10, true), APPLE_1), is(true));
+        assertThat(eq(wrapper.extract(10, true), APPLE_10), is(true));
         assertThat(eq(storage.getStackInSlot(2), APPLE_1), is(true));
-        assertThat(eq(wrapper.extract(10, true), APPLE_1), is(true));
+        assertThat(eq(wrapper.extract(10, true), APPLE_10), is(true));
         assertThat(eq(storage.getStackInSlot(2), APPLE_1), is(true));
 
         assertThat(eq(wrapper.extract(1, false), APPLE_1), is(true));

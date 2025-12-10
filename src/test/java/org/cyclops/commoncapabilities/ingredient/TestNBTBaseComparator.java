@@ -1,16 +1,13 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.component.DyedItemColor;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestNBTBaseComparator {
 
@@ -30,12 +27,8 @@ public class TestNBTBaseComparator {
     private static DataComponentMap GLINT_FALSE_DYED_C2;
     private static DataComponentMap GLINT_FALSE_DYED_D;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-
         COMP = new DataComparator(null);
 
         EMPTY = DataComponentMap.builder()

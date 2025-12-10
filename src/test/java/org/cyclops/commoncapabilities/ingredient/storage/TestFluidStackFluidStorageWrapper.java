@@ -1,26 +1,22 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.cyclops.commoncapabilities.IngredientComponents;
-import org.cyclops.commoncapabilities.ModBaseMocked;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidHandlerConcatenate;
-import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidTankFixed;
-import org.cyclops.cyclopscore.helper.CyclopsCoreInstance;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.cyclops.cyclopscore.fluid.SingleUseTank;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestFluidStackFluidStorageWrapper {
 
@@ -37,27 +33,15 @@ public class TestFluidStackFluidStorageWrapper {
     private static FluidStack WATER_11;
     private static FluidStack LAVA_11_NB;
 
-    private IFluidHandler innerStorage;
-    private IngredientComponentStorageWrapperHandlerFluidStack.ComponentStorageWrapper storage;
-    private IngredientComponentStorageWrapperHandlerFluidStack.FluidStorageWrapper wrapper;
-    private FluidTank t1;
-    private FluidTank t2;
-    private FluidTank t3;
-    private FluidTank t4;
+    private ResourceHandler<FluidResource> innerStorage;
+    private IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<FluidResource, FluidStack, Integer> storage;
+    private IngredientComponentStorageWrapperHandlerResourceHandler.ResourceStorageWrapper<FluidResource, FluidStack, Integer> wrapper;
+    private SingleUseTank t1;
+    private SingleUseTank t2;
+    private SingleUseTank t3;
+    private SingleUseTank t4;
 
-    @BeforeClass
-    public static void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-        CyclopsCoreInstance.MOD = new ModBaseMocked();
-    }
-
-    public static boolean eq(FluidStack a, FluidStack b) {
-        return IngredientComponents.FLUIDSTACK.getMatcher().matchesExactly(a, b);
-    }
-
-    @Before
+    @BeforeEach
     public void beforeEach() {
         WATER_1 = new FluidStack(Fluids.WATER, 1);
         LAVA_1_NB = new FluidStack(Holder.direct(Fluids.LAVA), 1, DataComponentPatch.builder()
@@ -76,105 +60,154 @@ public class TestFluidStackFluidStorageWrapper {
                 .set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
                 .build());
 
-        t1 = new FluidTankFixed(64);
-        t2 = new FluidTankFixed(64);
-        t3 = new FluidTankFixed(64);
-        t4 = new FluidTankFixed(64);
+        t1 = new SingleUseTank(64);
+        t2 = new SingleUseTank(64);
+        t3 = new SingleUseTank(64);
+        t4 = new SingleUseTank(64);
         innerStorage = new FluidHandlerConcatenate(
-                new FluidTankFixed(64),
-                new FluidTankFixed(64),
+                new SingleUseTank(64),
+                new SingleUseTank(64),
                 t1,
-                new FluidTankFixed(64),
+                new SingleUseTank(64),
                 t2,
-                new FluidTankFixed(64),
+                new SingleUseTank(64),
                 t3,
-                new FluidTankFixed(64),
+                new SingleUseTank(64),
                 t4,
-                new FluidTankFixed(64)
+                new SingleUseTank(64)
         );
-        t1.fill(WATER_1.copy(), IFluidHandler.FluidAction.EXECUTE);
-        t2.fill(LAVA_1_NB.copy(), IFluidHandler.FluidAction.EXECUTE);
-        t3.fill(LAVA_10.copy(), IFluidHandler.FluidAction.EXECUTE);
-        t4.fill(WATER_10.copy(), IFluidHandler.FluidAction.EXECUTE);
-        storage = new IngredientComponentStorageWrapperHandlerFluidStack.ComponentStorageWrapper(IngredientComponents.FLUIDSTACK, innerStorage);
-        wrapper = new IngredientComponentStorageWrapperHandlerFluidStack.FluidStorageWrapper(storage);
+        try (var tx = Transaction.openRoot()) {
+            t1.insert(FluidResource.of(WATER_1), WATER_1.getAmount(), tx);
+            t2.insert(FluidResource.of(LAVA_1_NB), LAVA_1_NB.getAmount(), tx);
+            t3.insert(FluidResource.of(LAVA_10), LAVA_10.getAmount(), tx);
+            t4.insert(FluidResource.of(WATER_10), WATER_10.getAmount(), tx);
+            tx.commit();
+        }
+        storage = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, innerStorage, IngredientComponents.FLUIDSTACK_CONVERTER);
+        wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ResourceStorageWrapper<>(storage, IngredientComponents.FLUIDSTACK_CONVERTER);
     }
 
     @Test
     public void testGetTankProperties() {
-        assertThat(wrapper.getTanks(), is(11));
+        assertThat(wrapper.size(), is(11));
 
-        for (int i = 0; i < wrapper.getTanks(); i++) {
-            assertThat(wrapper.getTankCapacity(i), is(640));
+        for (int i = 0; i < wrapper.size(); i++) {
+            assertThat(wrapper.getCapacityAsInt(i, FluidResource.of(Fluids.WATER)), is(640));
         }
 
-        assertThat(eq(wrapper.getFluidInTank(0), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(2), WATER_1), is(true));
-        assertThat(eq(wrapper.getFluidInTank(3), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(4), LAVA_1_NB), is(true));
-        assertThat(eq(wrapper.getFluidInTank(5), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(6), LAVA_10), is(true));
-        assertThat(eq(wrapper.getFluidInTank(7), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(8), WATER_10), is(true));
-        assertThat(eq(wrapper.getFluidInTank(9), FluidStack.EMPTY), is(true));
+        assertThat(wrapper.getResource(0), equalTo(FluidResource.EMPTY));
+        assertThat(wrapper.getAmountAsInt(0), equalTo(0));
+        assertThat(wrapper.getResource(1), equalTo(FluidResource.EMPTY));
+        assertThat(wrapper.getAmountAsInt(1), equalTo(0));
+        assertThat(wrapper.getResource(2), equalTo(FluidResource.of(WATER_1)));
+        assertThat(wrapper.getAmountAsInt(2), equalTo(1));
+        assertThat(wrapper.getResource(3), equalTo(FluidResource.EMPTY));
+        assertThat(wrapper.getAmountAsInt(3), equalTo(0));
+        assertThat(wrapper.getResource(4), equalTo(FluidResource.of(LAVA_1_NB)));
+        assertThat(wrapper.getAmountAsInt(4), equalTo(1));
+        assertThat(wrapper.getResource(5), equalTo(FluidResource.EMPTY));
+        assertThat(wrapper.getAmountAsInt(5), equalTo(0));
+        assertThat(wrapper.getResource(6), equalTo(FluidResource.of(LAVA_10)));
+        assertThat(wrapper.getAmountAsInt(6), equalTo(10));
+        assertThat(wrapper.getResource(7), equalTo(FluidResource.EMPTY));
+        assertThat(wrapper.getAmountAsInt(7), equalTo(0));
+        assertThat(wrapper.getResource(8), equalTo(FluidResource.of(WATER_10)));
+        assertThat(wrapper.getAmountAsInt(8), equalTo(10));
+        assertThat(wrapper.getResource(9), equalTo(FluidResource.EMPTY));
+        assertThat(wrapper.getAmountAsInt(9), equalTo(0));
     }
 
     @Test
     public void testFill() {
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.SIMULATE), is(64));
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.SIMULATE), is(64));
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.SIMULATE), is(64));
-        assertThat(eq(wrapper.getFluidInTank(0), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(1), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(2), WATER_1), is(true));
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(64));
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(64));
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(64));
+        }
+        assertThat(wrapper.getResource(0), equalTo(FluidResource.EMPTY));
+        assertThat(wrapper.getAmountAsInt(0), equalTo(0));
+        assertThat(wrapper.getResource(1), equalTo(FluidResource.EMPTY));
+        assertThat(wrapper.getAmountAsInt(1), equalTo(0));
+        assertThat(wrapper.getResource(2), equalTo(FluidResource.of(WATER_1)));
+        assertThat(wrapper.getAmountAsInt(2), equalTo(1));
 
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
-        assertThat(eq(wrapper.getFluidInTank(0), WATER_64), is(true));
-        assertThat(eq(wrapper.getFluidInTank(1), WATER_64), is(true));
-        assertThat(eq(wrapper.getFluidInTank(2), WATER_64), is(true));
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(64));
+            tx.commit();
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(64));
+            tx.commit();
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(64));
+            tx.commit();
+        }
+        assertThat(wrapper.getResource(0), equalTo(FluidResource.of(WATER_64)));
+        assertThat(wrapper.getAmountAsInt(0), equalTo(64));
+        assertThat(wrapper.getResource(1), equalTo(FluidResource.of(WATER_64)));
+        assertThat(wrapper.getAmountAsInt(1), equalTo(64));
+        assertThat(wrapper.getResource(2), equalTo(FluidResource.of(WATER_64)));
+        assertThat(wrapper.getAmountAsInt(2), equalTo(64));
 
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(64));
-        assertThat(wrapper.fill(WATER_64, IFluidHandler.FluidAction.EXECUTE), is(53));
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(64));
+            tx.commit();
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(64));
+            tx.commit();
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(64));
+            tx.commit();
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(64));
+            tx.commit();
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.insert(FluidResource.of(WATER_64), WATER_64.getAmount(), tx), is(53));
+            tx.commit();
+        }
     }
 
     @Test
     public void testDrain() {
-        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
-        assertThat(eq(wrapper.getFluidInTank(2), WATER_1), is(true));
-        assertThat(eq(wrapper.getFluidInTank(8), WATER_10), is(true));
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.extract(FluidResource.of(WATER_10), WATER_10.getAmount(), tx), is(10));
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.extract(FluidResource.of(WATER_10), WATER_10.getAmount(), tx), is(10));
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.extract(FluidResource.of(WATER_10), WATER_10.getAmount(), tx), is(10));
+        }
+        assertThat(wrapper.getResource(2), equalTo(FluidResource.of(WATER_1)));
+        assertThat(wrapper.getAmountAsInt(2), equalTo(1));
+        assertThat(wrapper.getResource(8), equalTo(FluidResource.of(WATER_10)));
+        assertThat(wrapper.getAmountAsInt(8), equalTo(10));
 
-        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.EXECUTE), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.EXECUTE), WATER_1), is(true));
-        assertThat(eq(wrapper.drain(WATER_10, IFluidHandler.FluidAction.EXECUTE), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(2), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(8), FluidStack.EMPTY), is(true));
-    }
-
-    @Test
-    public void testDrainMax() {
-        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.SIMULATE), WATER_10), is(true));
-        assertThat(eq(wrapper.getFluidInTank(2), WATER_1), is(true));
-        assertThat(eq(wrapper.getFluidInTank(4), LAVA_1_NB), is(true));
-        assertThat(eq(wrapper.getFluidInTank(6), LAVA_10), is(true));
-        assertThat(eq(wrapper.getFluidInTank(8), WATER_10), is(true));
-
-        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.EXECUTE), WATER_10), is(true));
-        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.EXECUTE), LAVA_1_NB), is(true));
-        assertThat(eq(wrapper.drain(10, IFluidHandler.FluidAction.EXECUTE), LAVA_10), is(true));
-        assertThat(eq(wrapper.getFluidInTank(2), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(4), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(6), FluidStack.EMPTY), is(true));
-        assertThat(eq(wrapper.getFluidInTank(8), WATER_1), is(true));
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.extract(FluidResource.of(WATER_10), WATER_10.getAmount(), tx), is(10));
+            tx.commit();
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.extract(FluidResource.of(WATER_10), WATER_10.getAmount(), tx), is(1));
+            tx.commit();
+        }
+        try (var tx = Transaction.openRoot()) {
+            assertThat(wrapper.extract(FluidResource.of(WATER_10), WATER_10.getAmount(), tx), is(0));
+            tx.commit();
+        }
+        assertThat(wrapper.getResource(2), equalTo(FluidResource.EMPTY));
+        assertThat(wrapper.getAmountAsInt(2), equalTo(0));
+        assertThat(wrapper.getResource(8), equalTo(FluidResource.EMPTY));
+        assertThat(wrapper.getAmountAsInt(8), equalTo(0));
     }
 
 }

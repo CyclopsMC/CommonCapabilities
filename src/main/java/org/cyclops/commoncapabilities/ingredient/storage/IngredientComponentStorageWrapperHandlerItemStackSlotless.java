@@ -2,6 +2,7 @@ package org.cyclops.commoncapabilities.ingredient.storage;
 
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.BaseCapability;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ISlotlessItemHandler;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.capability.ICapabilityGetter;
@@ -40,7 +41,7 @@ public class IngredientComponentStorageWrapperHandlerItemStackSlotless<C>
 
     @Override
     public ISlotlessItemHandler wrapStorage(IIngredientComponentStorage<ItemStack, Integer> componentStorage) {
-        return new ItemStorageWrapper(getComponent(), componentStorage);
+        return new ItemStorageWrapper(componentStorage);
     }
 
     @Override
@@ -85,29 +86,26 @@ public class IngredientComponentStorageWrapperHandlerItemStackSlotless<C>
         }
 
         @Override
-        public ItemStack insert(@Nonnull ItemStack ingredient, boolean simulate) {
-            return storage.insertItem(ingredient, simulate);
+        public ItemStack insert(@Nonnull ItemStack ingredient, TransactionContext transaction) {
+            return storage.insertItem(ingredient, transaction);
         }
 
         @Override
-        public ItemStack extract(@Nonnull ItemStack prototype, Integer matchFlags, boolean simulate) {
-            return storage.extractItem(prototype, matchFlags, simulate);
+        public ItemStack extract(@Nonnull ItemStack prototype, Integer matchFlags, TransactionContext transaction) {
+            return storage.extractItem(prototype, matchFlags, transaction);
         }
 
         @Override
-        public ItemStack extract(long maxQuantity, boolean simulate) {
-            return storage.extractItem(IModHelpers.get().getBaseHelpers().castSafe(maxQuantity), simulate);
+        public ItemStack extract(long maxQuantity, TransactionContext transaction) {
+            return storage.extractItem(IModHelpers.get().getBaseHelpers().castSafe(maxQuantity), transaction);
         }
     }
 
     public static class ItemStorageWrapper implements ISlotlessItemHandler {
 
-        private final IngredientComponent<ItemStack, Integer> ingredientComponent;
         private final IIngredientComponentStorage<ItemStack, Integer> storage;
 
-        public ItemStorageWrapper(IngredientComponent<ItemStack, Integer> ingredientComponent,
-                                  IIngredientComponentStorage<ItemStack, Integer> storage) {
-            this.ingredientComponent = ingredientComponent;
+        public ItemStorageWrapper(IIngredientComponentStorage<ItemStack, Integer> storage) {
             this.storage = storage;
         }
 
@@ -123,20 +121,20 @@ public class IngredientComponentStorageWrapperHandlerItemStackSlotless<C>
 
         @Nonnull
         @Override
-        public ItemStack insertItem(@Nonnull ItemStack stack, boolean simulate) {
-            return storage.insert(stack, simulate);
+        public ItemStack insertItem(@Nonnull ItemStack stack, TransactionContext transaction) {
+            return storage.insert(stack, transaction);
         }
 
         @Nonnull
         @Override
-        public ItemStack extractItem(int amount, boolean simulate) {
-            return storage.extract(amount, simulate);
+        public ItemStack extractItem(int amount, TransactionContext transaction) {
+            return storage.extract(amount, transaction);
         }
 
         @Nonnull
         @Override
-        public ItemStack extractItem(@Nonnull ItemStack matchStack, int matchFlags, boolean simulate) {
-            return storage.extract(matchStack, matchFlags, simulate);
+        public ItemStack extractItem(@Nonnull ItemStack matchStack, int matchFlags, TransactionContext transaction) {
+            return storage.extract(matchStack, matchFlags, transaction);
         }
 
         @Override

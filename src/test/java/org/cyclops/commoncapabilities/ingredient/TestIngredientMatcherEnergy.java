@@ -1,16 +1,16 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestIngredientMatcherEnergy {
 
     private static IngredientMatcherEnergy M;
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         M = new IngredientMatcherEnergy();
     }
@@ -23,6 +23,11 @@ public class TestIngredientMatcherEnergy {
     @Test
     public void testGetExactMatchCondition() {
         assertThat(M.getExactMatchCondition(), is(true));
+    }
+
+    @Test
+    public void testGetQuantityMatchCondition() {
+        assertThat(M.getQuantityMatchCondition(), is(true));
     }
 
     @Test

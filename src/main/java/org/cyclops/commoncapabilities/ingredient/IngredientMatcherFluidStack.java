@@ -30,6 +30,11 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     }
 
     @Override
+    public Integer getQuantityMatchCondition() {
+        return FluidMatch.AMOUNT;
+    }
+
+    @Override
     public Integer getExactMatchNoQuantityCondition() {
         return FluidMatch.FLUID | FluidMatch.DATA;
     }
@@ -57,6 +62,11 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     @Override
     public FluidStack getEmptyInstance() {
         return FluidStack.EMPTY;
+    }
+
+    @Override
+    public FluidStack getNonEmptyInstance() {
+        return new FluidStack(Fluids.WATER, 1000);
     }
 
     @Override

@@ -1,44 +1,39 @@
 package org.cyclops.commoncapabilities.api.capability.itemhandler;
 
-import net.minecraft.DetectedVersion;
-import net.minecraft.SharedConstants;
 import net.minecraft.core.NonNullList;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import org.cyclops.commoncapabilities.ingredient.DataComparator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.PrimitiveIterator;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import static org.cyclops.commoncapabilities.api.ingredient.IngredientTestMatcher.isItemStack;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author rubensworks
  */
 public class TestSlotlessItemHandlerWrapper {
 
-    private IItemHandler handlerEmpty;
-    private IItemHandler handler;
+    private ResourceHandler<ItemResource> handlerEmpty;
+    private ResourceHandler<ItemResource> handler;
     private Supplier<PrimitiveIterator.OfInt> itEmpty;
     private Supplier<PrimitiveIterator.OfInt> it0;
     private Supplier<PrimitiveIterator.OfInt> it9;
     private Supplier<PrimitiveIterator.OfInt> itAll;
 
-    @Before
+    @BeforeEach
     public void init() {
-        // We need the Minecraft registries to be filled
-        SharedConstants.setVersion(DetectedVersion.BUILT_IN);
-        Bootstrap.bootStrap();
-
-        handlerEmpty = new ItemStackHandler(NonNullList.withSize(10, ItemStack.EMPTY));
-        handler = new ItemStackHandler(NonNullList.of(ItemStack.EMPTY,
+        handlerEmpty = new ItemStacksResourceHandler(NonNullList.withSize(10, ItemStack.EMPTY));
+        handler = new ItemStacksResourceHandler(NonNullList.of(ItemStack.EMPTY,
                 new ItemStack(Items.APPLE, 5),
                 new ItemStack(Items.LEAD, 11),
                 new ItemStack(Items.BOWL, 64),
@@ -79,12 +74,14 @@ public class TestSlotlessItemHandlerWrapper {
         ItemStack inserting0 = new ItemStack(Items.DIAMOND, 10);
         assertThat(wrapper.insertItem(inserting0, true), isItemStack(ItemStack.EMPTY));
         assertThat(wrapper.insertItem(inserting0, false), isItemStack(ItemStack.EMPTY));
-        assertThat(handlerEmpty.getStackInSlot(0), isItemStack(inserting0));
+        assertThat(handlerEmpty.getResource(0), equalTo(ItemResource.of(Items.DIAMOND)));
+        assertThat(handlerEmpty.getAmountAsInt(0), equalTo(10));
 
         ItemStack inserting1 = new ItemStack(Items.APPLE, 10);
         assertThat(wrapper.insertItem(inserting1, true), isItemStack(ItemStack.EMPTY));
         assertThat(wrapper.insertItem(inserting1, false), isItemStack(ItemStack.EMPTY));
-        assertThat(handlerEmpty.getStackInSlot(1), isItemStack(inserting1));
+        assertThat(handlerEmpty.getResource(1), equalTo(ItemResource.of(Items.APPLE)));
+        assertThat(handlerEmpty.getAmountAsInt(1), equalTo(10));
     }
 
     @Test
@@ -99,25 +96,32 @@ public class TestSlotlessItemHandlerWrapper {
         ItemStack inserting0 = new ItemStack(Items.DIAMOND, 10);
         assertThat(wrapper.insertItem(inserting0, true), isItemStack(ItemStack.EMPTY));
         assertThat(wrapper.insertItem(inserting0, false), isItemStack(ItemStack.EMPTY));
-        assertThat(handlerEmpty.getStackInSlot(0), isItemStack(inserting0));
+        assertThat(handlerEmpty.getResource(0), equalTo(ItemResource.of(Items.DIAMOND)));
+        assertThat(handlerEmpty.getAmountAsInt(0), equalTo(10));
 
         ItemStack inserting1 = new ItemStack(Items.APPLE, 10);
         assertThat(wrapper.insertItem(inserting1, true), isItemStack(ItemStack.EMPTY));
         assertThat(wrapper.insertItem(inserting1, false), isItemStack(ItemStack.EMPTY));
-        assertThat(handlerEmpty.getStackInSlot(1), isItemStack(inserting1));
+        assertThat(handlerEmpty.getResource(1), equalTo(ItemResource.of(Items.APPLE)));
+        assertThat(handlerEmpty.getAmountAsInt(1), equalTo(10));
 
         ItemStack inserting2 = new ItemStack(Items.DIAMOND, 64);
         assertThat(wrapper.insertItem(inserting2, true), isItemStack(ItemStack.EMPTY));
         assertThat(wrapper.insertItem(inserting2, false), isItemStack(ItemStack.EMPTY));
-        assertThat(handlerEmpty.getStackInSlot(0), isItemStack(new ItemStack(Items.DIAMOND, 64)));
-        assertThat(handlerEmpty.getStackInSlot(2), isItemStack(new ItemStack(Items.DIAMOND, 10)));
+        assertThat(handlerEmpty.getResource(0), equalTo(ItemResource.of(Items.DIAMOND)));
+        assertThat(handlerEmpty.getAmountAsInt(0), equalTo(64));
+        assertThat(handlerEmpty.getResource(2), equalTo(ItemResource.of(Items.DIAMOND)));
+        assertThat(handlerEmpty.getAmountAsInt(2), equalTo(10));
 
         ItemStack inserting3 = new ItemStack(Items.DIAMOND, 100);
         assertThat(wrapper.insertItem(inserting3, true), isItemStack(ItemStack.EMPTY));
         assertThat(wrapper.insertItem(inserting3, false), isItemStack(ItemStack.EMPTY));
-        assertThat(handlerEmpty.getStackInSlot(0), isItemStack(new ItemStack(Items.DIAMOND, 64)));
-        assertThat(handlerEmpty.getStackInSlot(2), isItemStack(new ItemStack(Items.DIAMOND, 64)));
-        assertThat(handlerEmpty.getStackInSlot(3), isItemStack(new ItemStack(Items.DIAMOND, 46)));
+        assertThat(handlerEmpty.getResource(0), equalTo(ItemResource.of(Items.DIAMOND)));
+        assertThat(handlerEmpty.getAmountAsInt(0), equalTo(64));
+        assertThat(handlerEmpty.getResource(2), equalTo(ItemResource.of(Items.DIAMOND)));
+        assertThat(handlerEmpty.getAmountAsInt(2), equalTo(64));
+        assertThat(handlerEmpty.getResource(3), equalTo(ItemResource.of(Items.DIAMOND)));
+        assertThat(handlerEmpty.getAmountAsInt(3), equalTo(46));
     }
 
     @Test
@@ -144,9 +148,12 @@ public class TestSlotlessItemHandlerWrapper {
 
         assertThat(wrapper.extractItem(10, true), isItemStack(new ItemStack(Items.APPLE, 5)));
         assertThat(wrapper.extractItem(10, false), isItemStack(new ItemStack(Items.APPLE, 5)));
-        assertThat(handler.getStackInSlot(0), isItemStack(ItemStack.EMPTY));
-        assertThat(handler.getStackInSlot(1), isItemStack(new ItemStack(Items.LEAD, 11)));
-        assertThat(handler.getStackInSlot(3), isItemStack(new ItemStack(Items.APPLE, 60)));
+        assertThat(handler.getResource(0), equalTo(ItemResource.EMPTY));
+        assertThat(handler.getAmountAsInt(0), equalTo(0));
+        assertThat(handler.getResource(1), equalTo(ItemResource.of(Items.LEAD)));
+        assertThat(handler.getAmountAsInt(1), equalTo(11));
+        assertThat(handler.getResource(3), equalTo(ItemResource.of(Items.APPLE)));
+        assertThat(handler.getAmountAsInt(3), equalTo(60));
     }
 
     @Test
@@ -160,9 +167,12 @@ public class TestSlotlessItemHandlerWrapper {
 
         assertThat(wrapper.extractItem(10, true), isItemStack(new ItemStack(Items.APPLE, 10)));
         assertThat(wrapper.extractItem(10, false), isItemStack(new ItemStack(Items.APPLE, 10)));
-        assertThat(handler.getStackInSlot(0), isItemStack(ItemStack.EMPTY));
-        assertThat(handler.getStackInSlot(1), isItemStack(new ItemStack(Items.LEAD, 11)));
-        assertThat(handler.getStackInSlot(3), isItemStack(new ItemStack(Items.APPLE, 55)));
+        assertThat(handler.getResource(0), equalTo(ItemResource.EMPTY));
+        assertThat(handler.getAmountAsInt(0), equalTo(0));
+        assertThat(handler.getResource(1), equalTo(ItemResource.of(Items.LEAD)));
+        assertThat(handler.getAmountAsInt(1), equalTo(11));
+        assertThat(handler.getResource(3), equalTo(ItemResource.of(Items.APPLE)));
+        assertThat(handler.getAmountAsInt(3), equalTo(55));
     }
 
     @Test
@@ -176,9 +186,12 @@ public class TestSlotlessItemHandlerWrapper {
 
         assertThat(wrapper.extractItem(65, true), isItemStack(new ItemStack(Items.APPLE, 65)));
         assertThat(wrapper.extractItem(65, false), isItemStack(new ItemStack(Items.APPLE, 65)));
-        assertThat(handler.getStackInSlot(0), isItemStack(ItemStack.EMPTY));
-        assertThat(handler.getStackInSlot(1), isItemStack(new ItemStack(Items.LEAD, 11)));
-        assertThat(handler.getStackInSlot(3), isItemStack(ItemStack.EMPTY));
+        assertThat(handler.getResource(0), equalTo(ItemResource.EMPTY));
+        assertThat(handler.getAmountAsInt(0), equalTo(0));
+        assertThat(handler.getResource(1), equalTo(ItemResource.of(Items.LEAD)));
+        assertThat(handler.getAmountAsInt(1), equalTo(11));
+        assertThat(handler.getResource(3), equalTo(ItemResource.EMPTY));
+        assertThat(handler.getAmountAsInt(3), equalTo(0));
     }
 
     @Test
@@ -193,7 +206,8 @@ public class TestSlotlessItemHandlerWrapper {
         ItemStack extracting0 = new ItemStack(Items.APPLE, 10);
         assertThat(wrapper.extractItem(extracting0, ItemMatch.EXACT, true), isItemStack(ItemStack.EMPTY));
         assertThat(wrapper.extractItem(extracting0, ItemMatch.EXACT, false), isItemStack(ItemStack.EMPTY));
-        assertThat(handler.getStackInSlot(0), isItemStack(new ItemStack(Items.APPLE, 5)));
+        assertThat(handlerEmpty.getResource(0), equalTo(ItemResource.EMPTY));
+        assertThat(handlerEmpty.getAmountAsInt(0), equalTo(0));
     }
 
     @Test
@@ -208,8 +222,10 @@ public class TestSlotlessItemHandlerWrapper {
         ItemStack extracting0 = new ItemStack(Items.APPLE, 10);
         assertThat(wrapper.extractItem(extracting0, ItemMatch.EXACT, true), isItemStack(new ItemStack(Items.APPLE, 5)));
         assertThat(wrapper.extractItem(extracting0, ItemMatch.EXACT, false), isItemStack(new ItemStack(Items.APPLE, 5)));
-        assertThat(handler.getStackInSlot(0), isItemStack(ItemStack.EMPTY));
-        assertThat(handler.getStackInSlot(1), isItemStack(new ItemStack(Items.LEAD, 11)));
+        assertThat(handler.getResource(0), equalTo(ItemResource.EMPTY));
+        assertThat(handler.getAmountAsInt(0), equalTo(0));
+        assertThat(handler.getResource(1), equalTo(ItemResource.of(Items.LEAD)));
+        assertThat(handler.getAmountAsInt(1), equalTo(11));
     }
 
     @Test
@@ -224,9 +240,12 @@ public class TestSlotlessItemHandlerWrapper {
         ItemStack extracting0 = new ItemStack(Items.APPLE, 10);
         assertThat(wrapper.extractItem(extracting0, ItemMatch.EXACT, true), isItemStack(extracting0));
         assertThat(wrapper.extractItem(extracting0, ItemMatch.EXACT, false), isItemStack(extracting0));
-        assertThat(handler.getStackInSlot(0), isItemStack(ItemStack.EMPTY));
-        assertThat(handler.getStackInSlot(1), isItemStack(new ItemStack(Items.LEAD, 11)));
-        assertThat(handler.getStackInSlot(3), isItemStack(new ItemStack(Items.APPLE, 55)));
+        assertThat(handler.getResource(0), equalTo(ItemResource.EMPTY));
+        assertThat(handler.getAmountAsInt(0), equalTo(0));
+        assertThat(handler.getResource(1), equalTo(ItemResource.of(Items.LEAD)));
+        assertThat(handler.getAmountAsInt(1), equalTo(11));
+        assertThat(handler.getResource(3), equalTo(ItemResource.of(Items.APPLE)));
+        assertThat(handler.getAmountAsInt(3), equalTo(55));
     }
 
     @Test
@@ -241,9 +260,12 @@ public class TestSlotlessItemHandlerWrapper {
         ItemStack extracting0 = new ItemStack(Items.APPLE, 65);
         assertThat(wrapper.extractItem(extracting0, ItemMatch.EXACT, true), isItemStack(extracting0));
         assertThat(wrapper.extractItem(extracting0, ItemMatch.EXACT, false), isItemStack(extracting0));
-        assertThat(handler.getStackInSlot(0), isItemStack(ItemStack.EMPTY));
-        assertThat(handler.getStackInSlot(1), isItemStack(new ItemStack(Items.LEAD, 11)));
-        assertThat(handler.getStackInSlot(3), isItemStack(ItemStack.EMPTY));
+        assertThat(handler.getResource(0), equalTo(ItemResource.EMPTY));
+        assertThat(handler.getAmountAsInt(0), equalTo(0));
+        assertThat(handler.getResource(1), equalTo(ItemResource.of(Items.LEAD)));
+        assertThat(handler.getAmountAsInt(1), equalTo(11));
+        assertThat(handler.getResource(3), equalTo(ItemResource.EMPTY));
+        assertThat(handler.getAmountAsInt(3), equalTo(0));
     }
 
 }
