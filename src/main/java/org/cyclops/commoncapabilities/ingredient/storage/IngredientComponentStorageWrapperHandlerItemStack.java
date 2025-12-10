@@ -5,7 +5,6 @@ import net.neoforged.neoforge.capabilities.BaseCapability;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
-import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ISlotlessItemHandler;
 import org.cyclops.commoncapabilities.api.ingredient.IResourceConverter;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
@@ -33,7 +32,7 @@ public class IngredientComponentStorageWrapperHandlerItemStack<C>
             BaseCapability<ResourceHandler<ItemResource>, C> capability,
             BaseCapability<ISlotlessItemHandler, C> capabilitySlotless
     ) {
-        super(ingredientComponent, capability, IngredientComponents.ITEMSTACK_CONVERTER);
+        super(ingredientComponent, capability, IngredientComponent.ITEMSTACK_CONVERTER);
         this.capabilitySlotless = capabilitySlotless;
     }
 

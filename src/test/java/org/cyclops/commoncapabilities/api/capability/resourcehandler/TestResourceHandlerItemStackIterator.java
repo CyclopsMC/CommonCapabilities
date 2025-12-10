@@ -5,8 +5,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
-import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ImmutableListItemHandler;
+import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -34,19 +34,19 @@ public class TestResourceHandlerItemStackIterator {
 
     @Test
     public void testEmpty() {
-        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER_EMPTY, IngredientComponents.ITEMSTACK_CONVERTER);
+        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER_EMPTY, IngredientComponent.ITEMSTACK_CONVERTER);
         assertThat(it.hasNext(), is(false));
     }
 
     @Test
     public void testEmptyNext() {
-        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER_EMPTY, IngredientComponents.ITEMSTACK_CONVERTER);
+        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER_EMPTY, IngredientComponent.ITEMSTACK_CONVERTER);
         Assertions.assertThrows(NoSuchElementException.class, it::next);
     }
 
     @Test
     public void testNonEmpty() {
-        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.ITEMSTACK_CONVERTER);
+        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponent.ITEMSTACK_CONVERTER);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.APPLE));
         assertThat(it.hasNext(), is(true));
@@ -58,25 +58,25 @@ public class TestResourceHandlerItemStackIterator {
 
     @Test
     public void testNonEmptyOffset() {
-        Iterator<ItemStack> it1 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.ITEMSTACK_CONVERTER, 1);
+        Iterator<ItemStack> it1 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponent.ITEMSTACK_CONVERTER, 1);
         assertThat(it1.hasNext(), is(true));
         assertThat(it1.next().getItem(), is(Items.LEAD));
         assertThat(it1.hasNext(), is(true));
         assertThat(it1.next().getItem(), is(Items.BOWL));
         assertThat(it1.hasNext(), is(false));
 
-        Iterator<ItemStack> it2 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.ITEMSTACK_CONVERTER, 2);
+        Iterator<ItemStack> it2 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponent.ITEMSTACK_CONVERTER, 2);
         assertThat(it2.hasNext(), is(true));
         assertThat(it2.next().getItem(), is(Items.BOWL));
         assertThat(it2.hasNext(), is(false));
 
-        Iterator<ItemStack> it3 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.ITEMSTACK_CONVERTER, 3);
+        Iterator<ItemStack> it3 = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponent.ITEMSTACK_CONVERTER, 3);
         assertThat(it3.hasNext(), is(false));
     }
 
     @Test
     public void testNonEmptyOutOfRange() {
-        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponents.ITEMSTACK_CONVERTER);
+        Iterator<ItemStack> it = new ResourceHandlerIngredientIterator<>(HANDLER, IngredientComponent.ITEMSTACK_CONVERTER);
         assertThat(it.hasNext(), is(true));
         assertThat(it.next().getItem(), is(Items.APPLE));
         assertThat(it.hasNext(), is(true));

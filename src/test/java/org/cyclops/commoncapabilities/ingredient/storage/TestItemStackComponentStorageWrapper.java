@@ -6,6 +6,7 @@ import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
+import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.ingredient.ItemStacksResourceHandlerTesting;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientArrayList;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientLinkedList;
@@ -58,7 +59,7 @@ public class TestItemStackComponentStorageWrapper {
         storage = new ItemStacksResourceHandlerTesting(10);
         storage.set(2, ItemResource.of(APPLE_1), APPLE_1.getCount());
         storage.set(6, ItemResource.of(APPLE_10), APPLE_10.getCount());
-        wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponents.ITEMSTACK_CONVERTER);
+        wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponent.ITEMSTACK_CONVERTER);
 
         storageLarge = new ItemStacksResourceHandlerTesting(1) {
             @Override
@@ -67,7 +68,7 @@ public class TestItemStackComponentStorageWrapper {
             }
         };
         storageLarge.set(0, ItemResource.of(APPLE_130), APPLE_130.getCount());
-        wrapperLarge = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storageLarge, IngredientComponents.ITEMSTACK_CONVERTER);
+        wrapperLarge = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storageLarge, IngredientComponent.ITEMSTACK_CONVERTER);
     }
 
     @Test
@@ -171,7 +172,7 @@ public class TestItemStackComponentStorageWrapper {
     @Test
     public void testInsertFull() {
         ItemStacksResourceHandlerTesting storage = new ItemStacksResourceHandlerTesting(0);
-        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponents.ITEMSTACK_CONVERTER);
+        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapper = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponent.ITEMSTACK_CONVERTER);
         assertThat(eq(wrapper.insert(APPLE_64, true), APPLE_64), is(true));
 
         assertThat(wrapperLarge.insert(APPLE_130, true), is(APPLE_130));
@@ -228,7 +229,7 @@ public class TestItemStackComponentStorageWrapper {
         storage.setStackInSlot(2, APPLE_1.copy());
         storage.setStackInSlot(6, APPLE_10.copy());
         IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapper =
-                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponents.ITEMSTACK_CONVERTER);
+                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponent.ITEMSTACK_CONVERTER);
 
         assertThat(eq(wrapper.extract(APPLE_11, ItemMatch.EXACT, true), APPLE_11), is(true));
         assertThat(eq(storage.getStackInSlot(2), APPLE_1), is(true));
@@ -251,7 +252,7 @@ public class TestItemStackComponentStorageWrapper {
         storage.setStackInSlot(2, APPLE_1.copy());
         storage.setStackInSlot(6, APPLE_10.copy());
         IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapper =
-                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponents.ITEMSTACK_CONVERTER);
+                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponent.ITEMSTACK_CONVERTER);
 
         assertThat(eq(wrapper.extract(APPLE_8, ItemMatch.STACKSIZE, true), APPLE_8), is(true));
         assertThat(eq(storage.getStackInSlot(2), APPLE_1), is(true));
@@ -278,7 +279,7 @@ public class TestItemStackComponentStorageWrapper {
         };
         storage.setStackInSlot(0, APPLE_10);
         IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<ItemResource, ItemStack, Integer> wrapper =
-                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponents.ITEMSTACK_CONVERTER);
+                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, storage, IngredientComponent.ITEMSTACK_CONVERTER);
         assertThat(eq(wrapper.extract(APPLE_10, ItemMatch.EXACT, false), ItemStack.EMPTY), is(true));
     }
 

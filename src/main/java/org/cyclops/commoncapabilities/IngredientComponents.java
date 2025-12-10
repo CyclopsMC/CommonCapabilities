@@ -8,13 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.transfer.fluid.FluidResource;
-import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
-import org.cyclops.commoncapabilities.api.ingredient.IResourceConverter;
-import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
-import org.cyclops.commoncapabilities.api.ingredient.IngredientComponentCategoryType;
+import org.cyclops.commoncapabilities.api.ingredient.*;
 import org.cyclops.commoncapabilities.ingredient.*;
 import org.cyclops.commoncapabilities.ingredient.storage.IngredientComponentStorageWrapperHandlerEnergyHandler;
 import org.cyclops.commoncapabilities.ingredient.storage.IngredientComponentStorageWrapperHandlerItemStack;
@@ -59,9 +55,6 @@ public class IngredientComponents {
                             Long.class, false, amount -> amount, true, true)
             )).setTranslationKey("recipecomponent.minecraft.energy");
 
-    public static final IResourceConverter<ItemResource, ItemStack> ITEMSTACK_CONVERTER = new ResourceConverterItem();
-    public static final IResourceConverter<FluidResource, FluidStack> FLUIDSTACK_CONVERTER = new ResourceConverterFluid();
-
     public static void registerStorageWrapperHandlers() {
         ENERGY.setStorageWrapperHandler(Capabilities.Energy.BLOCK, new IngredientComponentStorageWrapperHandlerEnergyHandler<>(ENERGY, Capabilities.Energy.BLOCK));
         ENERGY.setStorageWrapperHandler(Capabilities.Energy.ITEM, new IngredientComponentStorageWrapperHandlerEnergyHandler<>(ENERGY, Capabilities.Energy.ITEM));
@@ -75,9 +68,9 @@ public class IngredientComponents {
         ITEMSTACK.setStorageWrapperHandler(org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ITEM, new IngredientComponentStorageWrapperHandlerItemStackSlotless<>(ITEMSTACK, org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ITEM));
         ITEMSTACK.setStorageWrapperHandler(org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ENTITY, new IngredientComponentStorageWrapperHandlerItemStackSlotless<>(ITEMSTACK, org.cyclops.commoncapabilities.api.capability.Capabilities.SlotlessItemHandler.ENTITY));
 
-        FLUIDSTACK.setStorageWrapperHandler(Capabilities.Fluid.BLOCK, new IngredientComponentStorageWrapperHandlerResourceHandler<>(FLUIDSTACK, Capabilities.Fluid.BLOCK, FLUIDSTACK_CONVERTER));
-        FLUIDSTACK.setStorageWrapperHandler(Capabilities.Fluid.ITEM, new IngredientComponentStorageWrapperHandlerResourceHandler<>(FLUIDSTACK, Capabilities.Fluid.ITEM, FLUIDSTACK_CONVERTER));
-        FLUIDSTACK.setStorageWrapperHandler(Capabilities.Fluid.ENTITY, new IngredientComponentStorageWrapperHandlerResourceHandler<>(FLUIDSTACK, Capabilities.Fluid.ENTITY, FLUIDSTACK_CONVERTER));
+        FLUIDSTACK.setStorageWrapperHandler(Capabilities.Fluid.BLOCK, new IngredientComponentStorageWrapperHandlerResourceHandler<>(FLUIDSTACK, Capabilities.Fluid.BLOCK, IngredientComponent.FLUIDSTACK_CONVERTER));
+        FLUIDSTACK.setStorageWrapperHandler(Capabilities.Fluid.ITEM, new IngredientComponentStorageWrapperHandlerResourceHandler<>(FLUIDSTACK, Capabilities.Fluid.ITEM, IngredientComponent.FLUIDSTACK_CONVERTER));
+        FLUIDSTACK.setStorageWrapperHandler(Capabilities.Fluid.ENTITY, new IngredientComponentStorageWrapperHandlerResourceHandler<>(FLUIDSTACK, Capabilities.Fluid.ENTITY, IngredientComponent.FLUIDSTACK_CONVERTER));
     }
 
 }

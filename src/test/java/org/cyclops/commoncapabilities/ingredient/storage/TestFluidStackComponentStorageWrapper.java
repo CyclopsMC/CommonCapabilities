@@ -11,6 +11,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidHandlerConcatenate;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidMatch;
+import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.cyclopscore.fluid.SingleUseTank;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientArrayList;
 import org.cyclops.cyclopscore.ingredient.collection.IngredientLinkedList;
@@ -94,7 +95,7 @@ public class TestFluidStackComponentStorageWrapper {
             t4.insert(FluidResource.of(WATER_10), WATER_10.getAmount(), tx);
             tx.commit();
         }
-        wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, storage, IngredientComponents.FLUIDSTACK_CONVERTER);
+        wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, storage, IngredientComponent.FLUIDSTACK_CONVERTER);
     }
 
     @Test
@@ -184,7 +185,7 @@ public class TestFluidStackComponentStorageWrapper {
     @Test
     public void testInsertFull() {
         SingleUseTank storage = new SingleUseTank(0);
-        IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<FluidResource, FluidStack, Integer> wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, storage, IngredientComponents.FLUIDSTACK_CONVERTER);
+        IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<FluidResource, FluidStack, Integer> wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, storage, IngredientComponent.FLUIDSTACK_CONVERTER);
         assertThat(eq(wrapper.insert(WATER_64, true), WATER_64), is(true));
     }
 
@@ -446,7 +447,7 @@ public class TestFluidStackComponentStorageWrapper {
             storage.insert(FluidResource.of(LAVA_10), LAVA_10.getAmount(), tx);
             tx.commit();
         }
-        IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<FluidResource, FluidStack, Integer> wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, storage, IngredientComponents.FLUIDSTACK_CONVERTER);
+        IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<FluidResource, FluidStack, Integer> wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, storage, IngredientComponent.FLUIDSTACK_CONVERTER);
         assertThat(eq(wrapper.extract(LAVA_10, FluidMatch.EXACT, false), FluidStack.EMPTY), is(true));
     }
 

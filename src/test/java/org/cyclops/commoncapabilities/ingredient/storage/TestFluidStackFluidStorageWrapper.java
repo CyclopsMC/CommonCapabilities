@@ -10,6 +10,7 @@ import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.cyclops.commoncapabilities.IngredientComponents;
 import org.cyclops.commoncapabilities.api.capability.fluidhandler.FluidHandlerConcatenate;
+import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.cyclopscore.fluid.SingleUseTank;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -83,8 +84,8 @@ public class TestFluidStackFluidStorageWrapper {
             t4.insert(FluidResource.of(WATER_10), WATER_10.getAmount(), tx);
             tx.commit();
         }
-        storage = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, innerStorage, IngredientComponents.FLUIDSTACK_CONVERTER);
-        wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ResourceStorageWrapper<>(storage, IngredientComponents.FLUIDSTACK_CONVERTER);
+        storage = new IngredientComponentStorageWrapperHandlerResourceHandler.ComponentStorageWrapper<>(IngredientComponents.FLUIDSTACK, innerStorage, IngredientComponent.FLUIDSTACK_CONVERTER);
+        wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ResourceStorageWrapper<>(storage, IngredientComponent.FLUIDSTACK_CONVERTER);
     }
 
     @Test

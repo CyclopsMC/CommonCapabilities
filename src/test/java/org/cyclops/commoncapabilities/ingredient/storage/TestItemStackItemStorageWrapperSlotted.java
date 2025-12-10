@@ -5,6 +5,7 @@ import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.cyclops.commoncapabilities.IngredientComponents;
+import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.ingredient.ItemStacksResourceHandlerTesting;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,8 +44,8 @@ public class TestItemStackItemStorageWrapperSlotted {
         innerStorage.setStackInSlot(4, APPLE_1.copy());
         innerStorage.setStackInSlot(6, APPLE_10.copy());
         innerStorage.setStackInSlot(8, APPLE_10.copy());
-        storage = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, innerStorage, IngredientComponents.ITEMSTACK_CONVERTER);
-        wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ResourceStorageWrapperSlotted<>(storage, IngredientComponents.ITEMSTACK_CONVERTER);
+        storage = new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper<>(IngredientComponents.ITEMSTACK, innerStorage, IngredientComponent.ITEMSTACK_CONVERTER);
+        wrapper = new IngredientComponentStorageWrapperHandlerResourceHandler.ResourceStorageWrapperSlotted<>(storage, IngredientComponent.ITEMSTACK_CONVERTER);
     }
 
     @Test
