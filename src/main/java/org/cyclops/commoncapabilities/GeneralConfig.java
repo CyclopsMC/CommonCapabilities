@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities;
 
 import com.google.common.collect.Lists;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
@@ -42,6 +42,6 @@ public class GeneralConfig extends DummyConfigCommon<CommonCapabilities> {
     }
 
     protected void updateNbtComparator() {
-        ItemMatch.DATA_COMPARATOR = DataComparator.INSTANCE = new DataComparator(ignoreDataComponentsForEqualityFilters.stream().map(ResourceLocation::parse).collect(Collectors.toSet()));
+        ItemMatch.DATA_COMPARATOR = DataComparator.INSTANCE = new DataComparator(ignoreDataComponentsForEqualityFilters.stream().map(Identifier::parse).collect(Collectors.toSet()));
     }
 }

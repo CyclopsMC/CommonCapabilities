@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.recipebook.PlaceRecipeHelper;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.context.ContextMap;
 import net.minecraft.world.entity.player.Player;
@@ -66,7 +66,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
     private final boolean ignoreEmptySlots;
     private final boolean checkOutput;
 
-    public static Map<Pair<RecipeType<?>, ResourceLocation>, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
+    public static Map<Pair<RecipeType<?>, Identifier>, Collection<IRecipeDefinition>> CACHED_RECIPES = Maps.newHashMap();
 
     public VanillaRecipeTypeRecipeHandler(Supplier<Level> worldSupplier, RecipeType<T> recipeType, Predicate<Integer> inputSizePredicate, Function<CraftingContainer, C> createRecipeInput, boolean ignoreEmptySlots, boolean checkOutput) {
         this.worldSupplier = worldSupplier;
@@ -211,7 +211,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
 
     @Override
     public Collection<IRecipeDefinition> getRecipes() {
-        Pair<RecipeType<?>, ResourceLocation> cacheKey = Pair.of(recipeType, worldSupplier.get().dimension().location());
+        Pair<RecipeType<?>, Identifier> cacheKey = Pair.of(recipeType, worldSupplier.get().dimension().identifier());
         Collection<IRecipeDefinition> cached = CACHED_RECIPES.get(cacheKey);
         if (cached == null) {
             if (worldSupplier.get().recipeAccess() instanceof RecipeManager recipeManager) {

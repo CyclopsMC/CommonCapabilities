@@ -3,7 +3,7 @@ package org.cyclops.commoncapabilities.ingredient;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.cyclops.commoncapabilities.CommonCapabilities;
 import org.cyclops.commoncapabilities.GeneralConfig;
 
@@ -24,10 +24,10 @@ public class DataComparator implements Comparator<DataComponentMap> {
      */
     public static Comparator<DataComponentMap> INSTANCE = new DataComparator(null);
 
-    private final Set<ResourceLocation> ignoreDataComponentTypes;
+    private final Set<Identifier> ignoreDataComponentTypes;
     private Set<DataComponentType<?>> ignoreDataComponentTypeInstances;
 
-    public DataComparator(@Nullable Set<ResourceLocation> ignoreDataComponentTypes) {
+    public DataComparator(@Nullable Set<Identifier> ignoreDataComponentTypes) {
         this.ignoreDataComponentTypes = ignoreDataComponentTypes;
     }
 
@@ -36,7 +36,7 @@ public class DataComparator implements Comparator<DataComponentMap> {
         return this.compare(o1, o2, this.ignoreDataComponentTypes);
     }
 
-    protected int compare(DataComponentMap o1, DataComponentMap o2, @Nullable Set<ResourceLocation> ignoreDataComponentTypes) {
+    protected int compare(DataComponentMap o1, DataComponentMap o2, @Nullable Set<Identifier> ignoreDataComponentTypes) {
         // Return immediately if identical
         if (o1 == o2 || o1.equals(o2)) {
             return 0;

@@ -2,7 +2,7 @@ package org.cyclops.commoncapabilities;
 
 import com.google.common.collect.Lists;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
@@ -29,29 +29,29 @@ public class IngredientComponents {
     public static final IngredientComponent<ItemStack, Integer> ITEMSTACK =
             new IngredientComponent<>("minecraft:itemstack", new IngredientMatcherItemStack(),
                     new IngredientSerializerItemStack(), Lists.newArrayList(
-                    new IngredientComponentCategoryType<>(ResourceLocation.parse("itemstack/item"),
+                    new IngredientComponentCategoryType<>(Identifier.parse("itemstack/item"),
                             Item.class, true,ItemStack::getItem, ItemMatch.ITEM, false),
-                    new IngredientComponentCategoryType<>(ResourceLocation.parse("itemstack/count"),
+                    new IngredientComponentCategoryType<>(Identifier.parse("itemstack/count"),
                             Integer.class, false, ItemStack::getCount, ItemMatch.STACKSIZE, true),
-                    new IngredientComponentCategoryType<>(ResourceLocation.parse("itemstack/data"),
+                    new IngredientComponentCategoryType<>(Identifier.parse("itemstack/data"),
                             DataComponentMap.class, false, ItemStack::getComponents, ItemMatch.DATA, false)
             )).setTranslationKey("recipecomponent.minecraft.itemstack");
 
     public static final IngredientComponent<FluidStack, Integer> FLUIDSTACK =
             new IngredientComponent<>("minecraft:fluidstack", new IngredientMatcherFluidStack(),
                     new IngredientSerializerFluidStack(), Lists.newArrayList(
-                    new IngredientComponentCategoryType<>(ResourceLocation.parse("fluidstack/fluid"),
+                    new IngredientComponentCategoryType<>(Identifier.parse("fluidstack/fluid"),
                             Fluid.class, true, FluidStack::getFluid, FluidMatch.FLUID, false),
-                    new IngredientComponentCategoryType<>(ResourceLocation.parse("fluidstack/amount"),
+                    new IngredientComponentCategoryType<>(Identifier.parse("fluidstack/amount"),
                             Integer.class, false, FluidStack::getAmount, FluidMatch.AMOUNT, true),
-                    new IngredientComponentCategoryType<>(ResourceLocation.parse("fluidstack/data"),
+                    new IngredientComponentCategoryType<>(Identifier.parse("fluidstack/data"),
                             DataComponentMap.class, false, FluidStack::getComponents, FluidMatch.DATA, false)
             )).setTranslationKey("recipecomponent.minecraft.fluidstack");
 
     public static final IngredientComponent<Long, Boolean> ENERGY =
             new IngredientComponent<>("minecraft:energy", new IngredientMatcherEnergy(),
                     new IngredientSerializerEnergy(), Lists.newArrayList(
-                    new IngredientComponentCategoryType<>(ResourceLocation.parse("energy/amount"),
+                    new IngredientComponentCategoryType<>(Identifier.parse("energy/amount"),
                             Long.class, false, amount -> amount, true, true)
             )).setTranslationKey("recipecomponent.minecraft.energy");
 
