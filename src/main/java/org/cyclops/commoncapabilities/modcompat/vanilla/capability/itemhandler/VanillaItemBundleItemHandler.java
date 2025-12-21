@@ -63,10 +63,18 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
     @NotNull
     @Override
     public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
-        if (!isItemValid(slot, stack)) {
-            return stack;
+        int insertCount = Math.min(getMaxAmountToAdd(stack), stack.getCount());
+        int notInserting = stack.getCount() - insertCount;
+        ItemStack remaining = super.insertItem(slot, stack.copyWithCount(insertCount), simulate);
+        if (notInserting > 0) {
+            if (remaining.isEmpty()) {
+                remaining = stack.copy();
+                remaining.setCount(notInserting);
+            } else {
+                remaining.grow(notInserting);
+            }
         }
-        return super.insertItem(slot, stack, simulate);
+        return remaining;
     }
 
     // Copied from BundleContents
