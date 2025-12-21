@@ -1,8 +1,18 @@
 # Changelog for Minecraft 1.21.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.21.1-2.11.3"></a>
+## [1.21.1-2.11.3](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.2...1.21.1-2.11.3) - 2025-12-21 16:25:29
+
+
+### Added
+* Add translations through Crowdin (#44)
+
+### Fixed
+* Fix bundle overfilling through item capability, Closes #45
+
 <a name="1.21.1-2.11.2"></a>
-## [1.21.1-2.11.2](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.1...1.21.1-2.11.2) - 2025-11-16 16:50:45
+## [1.21.1-2.11.2](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.1...1.21.1-2.11.2) - 2025-11-16 16:50:45 +0100
 
 
 ### Changed

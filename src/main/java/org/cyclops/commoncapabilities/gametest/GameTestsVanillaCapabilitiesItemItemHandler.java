@@ -40,7 +40,7 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
     }
 
     @GameTest(template = TEMPLATE_EMPTY)
-    public void testEntityItemCapItemShulkerboxRemove(GameTestHelper helper) {
+    public void testItemItemHandlerCapItemShulkerboxRemove(GameTestHelper helper) {
         // Create shulker box itemstack
         ItemStack itemStack = new ItemStack(Items.SHULKER_BOX);
 
@@ -61,7 +61,7 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
 
     @GameTest(template = TEMPLATE_EMPTY)
     public void testItemItemHandlerCapItemBundleAdd(GameTestHelper helper) {
-        // Create shulker box itemstack
+        // Create bundle itemstack
         ItemStack itemStack = new ItemStack(Items.BUNDLE);
 
         // Add item to shulker box
@@ -79,8 +79,8 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
     }
 
     @GameTest(template = TEMPLATE_EMPTY)
-    public void testEntityItemCapItemBundleRemove(GameTestHelper helper) {
-        // Create shulker box itemstack
+    public void testItemItemHandlerCapItemBundleRemove(GameTestHelper helper) {
+        // Create bundle itemstack
         ItemStack itemStack = new ItemStack(Items.BUNDLE);
 
         // Remove item from shulker box
@@ -100,7 +100,7 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
 
     @GameTest(template = TEMPLATE_EMPTY)
     public void testItemItemHandlerCapItemBundleAddMultiple(GameTestHelper helper) {
-        // Create shulker box itemstack
+        // Create bundle itemstack
         ItemStack itemStack = new ItemStack(Items.BUNDLE);
 
         // Add item to shulker box
@@ -131,8 +131,8 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
     }
 
     @GameTest(template = TEMPLATE_EMPTY)
-    public void testEntityItemCapItemBundleRemoveMultiple(GameTestHelper helper) {
-        // Create shulker box itemstack
+    public void testItemItemHandlerCapItemBundleRemoveMultiple(GameTestHelper helper) {
+        // Create bundle itemstack
         ItemStack itemStack = new ItemStack(Items.BUNDLE);
 
         // Remove item from shulker box
@@ -157,6 +157,54 @@ public class GameTestsVanillaCapabilitiesItemItemHandler {
             helper.assertTrue(removed3 == 1, Component.literal("Removed item 2 is empty"));
             helper.assertTrue(itemHandler.size() == 1, Component.literal("Slot count was not 1"));
             helper.assertTrue(itemHandler.getResource(0).isEmpty(), Component.literal("Item was not removed in slot 0"));
+        });
+    }
+
+    @GameTest(template = TEMPLATE_EMPTY)
+    public void testItemItemHandlerCapItemBundleAddRejectOverfullSameSlot(GameTestHelper helper) {
+        // Create bundle itemstack
+        ItemStack itemStack = new ItemStack(Items.BUNDLE);
+
+        // Add item to shulker box
+        ResourceHandler<ItemResource> itemHandler = itemStack.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(itemStack));
+        int inserted1;
+        int inserted2;
+        try (var tx = Transaction.openRoot()) {
+            inserted1 = itemHandler.insert(0, ItemResource.of(Items.APPLE), 32, tx);
+            inserted2 = itemHandler.insert(0, ItemResource.of(Items.APPLE), 64, tx);
+            tx.commit();
+        }
+
+        helper.succeedIf(() -> {
+            helper.assertValueEqual(32, inserted1, "Inserted 1");
+            helper.assertValueEqual(32, inserted2, "Inserted 2");
+            helper.assertTrue(itemHandler.getResource(0).getItem() == Items.APPLE, "Item was not added");
+            helper.assertValueEqual(64, itemHandler.getAmountAsInt(0), "Item stored count");
+        });
+    }
+
+    @GameTest(template = TEMPLATE_EMPTY)
+    public void testItemItemHandlerCapItemBundleAddRejectOverfullOtherSlot(GameTestHelper helper) {
+        // Create bundle itemstack
+        ItemStack itemStack = new ItemStack(Items.BUNDLE);
+
+        // Add item to shulker box
+        ResourceHandler<ItemResource> itemHandler = itemStack.getCapability(Capabilities.Item.ITEM, ItemAccess.forStack(itemStack));
+        int inserted1;
+        int inserted2;
+        try (var tx = Transaction.openRoot()) {
+            inserted1 = itemHandler.insert(0, ItemResource.of(Items.APPLE), 32, tx);
+            inserted2 = itemHandler.insert(1, ItemResource.of(Items.APPLE), 64, tx);
+            tx.commit();
+        }
+
+        helper.succeedIf(() -> {
+            helper.assertValueEqual(32, inserted1, "Inserted 1");
+            helper.assertValueEqual(32, inserted2, "Inserted 2");
+            helper.assertTrue(itemHandler.getResource(0).getItem() == Items.APPLE, "Item was not added in slot 0");
+            helper.assertTrue(itemHandler.getResource(1).getItem() == Items.APPLE, "Item was not added in slot 1");
+            helper.assertValueEqual(itemHandler.getAmountAsInt(0), 32, "Item stored count slot 0");
+            helper.assertValueEqual(itemHandler.getAmountAsInt(1), 32, "Item stored count slot 1");
         });
     }
 

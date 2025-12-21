@@ -52,16 +52,12 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
         return itemResource.isEmpty() || (itemResource.getItem().canFitInsideContainerItems());
     }
 
-    protected boolean isAmountValid(ItemStack stack) {
-        return getMaxAmountToAdd(stack) > 0;
-    }
-
     @Override
     public int insert(int slot, ItemResource itemResource, int amount, TransactionContext transaction) {
-        if (!(isValid(slot, itemResource) && isAmountValid(itemResource.toStack(amount)))) {
+        if (!(isValid(slot, itemResource))) {
             return 0;
         }
-        return super.insert(slot, itemResource, amount, transaction);
+        return super.insert(slot, itemResource, Math.min(amount, getMaxAmountToAdd(itemResource.toStack(amount))), transaction);
     }
 
     // Copied from BundleContents
