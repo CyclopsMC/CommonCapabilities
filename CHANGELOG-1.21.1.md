@@ -1,8 +1,17 @@
 # Changelog for Minecraft 1.21.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.21.1-2.11.4"></a>
+## [1.21.1-2.11.4](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.3...1.21.1-2.11.4) - 2026-03-14 16:43:54
+
+
+### Fixed
+* Serialize recipe handled recipes by their id
+  This significantly reduces packet sizes.
+  Closes CyclopsMC/IntegratedCrafting#192
+
 <a name="1.21.1-2.11.3"></a>
-## [1.21.1-2.11.3](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.2...1.21.1-2.11.3) - 2025-12-21 16:25:29
+## [1.21.1-2.11.3](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.2...1.21.1-2.11.3) - 2025-12-21 16:25:29 +0100
 
 
 ### Added
