@@ -3,7 +3,6 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandle
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -12,11 +11,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
-import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.common.crafting.SizedIngredient;
 import org.apache.commons.lang3.tuple.Pair;
-import org.cyclops.commoncapabilities.api.capability.recipehandler.IPrototypedIngredientAlternatives;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeHandlerHelpers;
@@ -87,59 +83,6 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
         return component == IngredientComponent.ITEMSTACK && this.inputSizePredicate.test(size);
     }
 
-    /**
-     * A heuristical method for converting a display slot to a list of prototyped ingredients.
-     * @param display A display slot.
-     * @return A list of prototyped ingredients.
-     */
-    @Deprecated // See RecipeHandlerHelpers TODO: rm in next major
-    public static IPrototypedIngredientAlternatives<ItemStack, Integer> getPrototypesFromDisplay(SlotDisplay display) {
-        return RecipeHandlerHelpers.getPrototypesFromDisplay(display);
-    }
-
-    /**
-     * A heuristical method for converting a display slot to a list of prototyped ingredients.
-     * @param display A display slot.
-     * @param count Override for the prototype counts.
-     * @return A list of prototyped ingredients.
-     */
-    @Deprecated // See RecipeHandlerHelpers TODO: rm in next major
-    public static IPrototypedIngredientAlternatives<ItemStack, Integer> getPrototypesFromDisplay(SlotDisplay display, int count) {
-        return RecipeHandlerHelpers.getPrototypesFromDisplay(display, count);
-    }
-
-    /**
-     * A heuristical method for converting an ingredient to a list of prototyped ingredients.
-     * @param ingredient An ingredient.
-     * @return A list of prototyped ingredients.
-     */
-    @Deprecated // See RecipeHandlerHelpers TODO: rm in next major
-    public static IPrototypedIngredientAlternatives<ItemStack, Integer> getPrototypesFromIngredient(Ingredient ingredient, @Nullable SlotDisplay display) {
-        return RecipeHandlerHelpers.getPrototypesFromIngredient(ingredient, display);
-    }
-
-    /**
-     * A heuristical method for converting an ingredient to a list of prototyped ingredients.
-     * @param ingredient An ingredient.
-     * @param count Override for the prototype counts.
-     * @return A list of prototyped ingredients.
-     */
-    @Deprecated // See RecipeHandlerHelpers TODO: rm in next major
-    public static IPrototypedIngredientAlternatives<ItemStack, Integer> getPrototypesFromIngredient(Ingredient ingredient, @Nullable SlotDisplay display, int count) {
-        return RecipeHandlerHelpers.getPrototypesFromIngredient(ingredient, display, count);
-    }
-
-    @Deprecated // See RecipeHandlerHelpers TODO: rm in next major
-    public static IPrototypedIngredientAlternatives<ItemStack, Integer> getPrototypesFromIngredient(SizedIngredient ingredient) {
-        return RecipeHandlerHelpers.getPrototypesFromIngredient(ingredient);
-    }
-
-    @Deprecated // See RecipeHandlerHelpers TODO: rm in next major
-    @Nullable
-    public static <C extends RecipeInput, T extends Recipe<C>> IRecipeDefinition recipeToRecipeDefinition(ResourceKey<Recipe<?>> recipeId, T recipe, Level level) {
-        return RecipeHandlerHelpers.recipeToRecipeDefinition(recipeId, recipe, level);
-    }
-
     @Override
     public Collection<IRecipeDefinition> getRecipes() {
         Pair<RecipeType<?>, Identifier> cacheKey = Pair.of(recipeType, worldSupplier.get().dimension().identifier());
@@ -148,7 +91,7 @@ public class VanillaRecipeTypeRecipeHandler<C extends RecipeInput, T extends Rec
             if (worldSupplier.get().recipeAccess() instanceof RecipeManager recipeManager) {
                 cached = recipeManager.getRecipes().stream()
                         .filter(holder -> holder.value().getType() == recipeType && !holder.value().isSpecial())
-                        .map(recipe -> VanillaRecipeTypeRecipeHandler.recipeToRecipeDefinition(recipe.id(), recipe.value(), this.worldSupplier.get()))
+                        .map(recipe -> RecipeHandlerHelpers.recipeToRecipeDefinition(recipe.id(), recipe.value(), this.worldSupplier.get()))
                         .filter(Objects::nonNull)
                         .collect(Collectors.toList());
             } else {

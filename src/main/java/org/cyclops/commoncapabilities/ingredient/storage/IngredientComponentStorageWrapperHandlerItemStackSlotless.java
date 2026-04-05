@@ -138,7 +138,7 @@ public class IngredientComponentStorageWrapperHandlerItemStackSlotless<C>
         }
 
         @Override
-        public int getLimit() {
+        public long getLimit() {
             return IModHelpers.get().getBaseHelpers().castSafe(storage.getMaxQuantity());
         }
     }

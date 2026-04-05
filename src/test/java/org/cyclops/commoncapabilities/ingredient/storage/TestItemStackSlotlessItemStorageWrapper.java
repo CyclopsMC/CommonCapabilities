@@ -101,7 +101,7 @@ public class TestItemStackSlotlessItemStorageWrapper {
 
     @Test
     public void testGetLimit() {
-        assertThat(wrapper.getLimit(), is(990));
+        assertThat(wrapper.getLimit(), is(990L));
     }
 
 }

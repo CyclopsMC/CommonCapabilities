@@ -15,11 +15,11 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.cyclops.commoncapabilities.api.capability.itemhandler.ItemMatch;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeDefinition;
+import org.cyclops.commoncapabilities.api.capability.recipehandler.RecipeHandlerHelpers;
 import org.cyclops.commoncapabilities.api.ingredient.IPrototypedIngredient;
 import org.cyclops.commoncapabilities.api.ingredient.IngredientComponent;
 import org.cyclops.commoncapabilities.api.ingredient.MixedIngredients;
 import org.cyclops.commoncapabilities.api.ingredient.PrototypedIngredient;
-import org.cyclops.commoncapabilities.modcompat.vanilla.capability.recipehandler.VanillaRecipeTypeRecipeHandler;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,10 +39,10 @@ public class PotionHelperCommonCapabilities {
             List<IPrototypedIngredient<ItemStack, Integer>> ingredients = Lists.newArrayList();
             PotionBrewing potionBrewing = ServerLifecycleHooks.getCurrentServer().potionBrewing();
             for (PotionBrewing.Mix<Item> mixPredicate : potionBrewing.containerMixes) {
-                ingredients.addAll(VanillaRecipeTypeRecipeHandler.getPrototypesFromIngredient(mixPredicate.ingredient(), null).getAlternatives());
+                ingredients.addAll(RecipeHandlerHelpers.getPrototypesFromIngredient(mixPredicate.ingredient(), null).getAlternatives());
             }
             for (PotionBrewing.Mix<Potion> mixPredicate : potionBrewing.potionMixes) {
-                ingredients.addAll(VanillaRecipeTypeRecipeHandler.getPrototypesFromIngredient(mixPredicate.ingredient(), null).getAlternatives());
+                ingredients.addAll(RecipeHandlerHelpers.getPrototypesFromIngredient(mixPredicate.ingredient(), null).getAlternatives());
             }
 
             List<ItemStack> checkInputItems = Lists.newArrayList(inputItems);
