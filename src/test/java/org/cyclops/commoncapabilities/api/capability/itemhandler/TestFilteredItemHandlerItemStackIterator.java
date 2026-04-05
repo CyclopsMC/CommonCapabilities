@@ -1,6 +1,8 @@
 package org.cyclops.commoncapabilities.api.capability.itemhandler;
 
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -22,6 +24,12 @@ public class TestFilteredItemHandlerItemStackIterator {
 
     @BeforeAll
     public static void init() {
+        // Bind components so ItemStack construction works in 26.1 (components are normally bound during resource reload)
+        DataComponentMap defaultComponents = DataComponentMap.builder().set(DataComponents.MAX_STACK_SIZE, 64).build();
+        Items.APPLE.builtInRegistryHolder().bindComponents(defaultComponents);
+        Items.LEAD.builtInRegistryHolder().bindComponents(defaultComponents);
+        Items.BOWL.builtInRegistryHolder().bindComponents(defaultComponents);
+
         HANDLER_EMPTY = new ImmutableListItemHandler(NonNullList.withSize(0, ItemStack.EMPTY));
         HANDLER = new ImmutableListItemHandler(NonNullList.of(ItemStack.EMPTY,
                 new ItemStack(Items.APPLE),

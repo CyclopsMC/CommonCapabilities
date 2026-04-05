@@ -1,6 +1,7 @@
 package org.cyclops.commoncapabilities.ingredient;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.material.Fluids;
@@ -30,6 +31,10 @@ public class TestIngredientMatcherFluidStack {
 
     @BeforeAll
     public static void init() {
+        // Bind empty components so FluidStack construction works in 26.1 (components are normally bound during resource reload)
+        Fluids.WATER.builtInRegistryHolder().bindComponents(DataComponentMap.EMPTY);
+        Fluids.LAVA.builtInRegistryHolder().bindComponents(DataComponentMap.EMPTY);
+
         M = new IngredientMatcherFluidStack();
 
         DataComponentPatch tag1 = DataComponentPatch.builder()

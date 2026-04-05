@@ -42,11 +42,11 @@ public class VanillaAbstractFurnaceWorker implements IWorker {
                 throw new RuntimeException(e);
             }
         }
-        return !toMelt.isEmpty() && recipe != null && !((Recipe<SingleRecipeInput>) recipe).assemble(new SingleRecipeInput(furnace.getItem(0)), furnace.getLevel().registryAccess()).isEmpty();
+        return !toMelt.isEmpty() && recipe != null && !((Recipe<SingleRecipeInput>) recipe).assemble(new SingleRecipeInput(furnace.getItem(0))).isEmpty();
     }
 
     @Override
     public boolean canWork() {
-        return furnace.isLit() || furnace.getBurnDuration(furnace.getLevel().fuelValues(), furnace.getItem(1)) > 0;
+        return furnace.litTimeRemaining > 0 || furnace.getBurnDuration(furnace.getLevel().fuelValues(), furnace.getItem(1)) > 0;
     }
 }

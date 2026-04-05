@@ -1,6 +1,7 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.material.Fluids;
@@ -47,6 +48,12 @@ public class TestFluidStackComponentStorageWrapper {
 
     public static boolean eq(FluidStack a, FluidStack b) {
         return IngredientComponents.FLUIDSTACK.getMatcher().matchesExactly(a, b);
+    }
+
+    static {
+        // Bind empty components so FluidStack construction works in 26.1 (components are normally bound during resource reload)
+        Fluids.WATER.builtInRegistryHolder().bindComponents(DataComponentMap.EMPTY);
+        Fluids.LAVA.builtInRegistryHolder().bindComponents(DataComponentMap.EMPTY);
     }
 
     @BeforeEach

@@ -1,6 +1,7 @@
 package org.cyclops.commoncapabilities.api.capability.resourcehandler;
 
 import com.google.common.collect.Lists;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
@@ -24,6 +25,10 @@ public class TestResourceHandlerFluidStackIterator {
 
     @BeforeAll
     public static void init() {
+        // Bind empty components so FluidStack construction works in 26.1 (components are normally bound during resource reload)
+        Fluids.WATER.builtInRegistryHolder().bindComponents(DataComponentMap.EMPTY);
+        Fluids.LAVA.builtInRegistryHolder().bindComponents(DataComponentMap.EMPTY);
+
         HANDLER_EMPTY = new ImmutableListFluidHandler(Lists.newArrayList());
         HANDLER = new ImmutableListFluidHandler(Lists.newArrayList(
                 new FluidStack(Fluids.WATER, 1000),

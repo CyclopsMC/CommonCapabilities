@@ -2,6 +2,7 @@ package org.cyclops.commoncapabilities;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
@@ -19,7 +20,7 @@ public class TestInitHelpers {
     private static final HolderLookup.Provider HL = TestHolderLookupProvider.get();
 
     public static <T> CompoundTag serialize(Consumer<ValueOutput> deserializer) {
-        TagValueOutput valueOutput = TagValueOutput.createWithContext(null, HL);
+        TagValueOutput valueOutput = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
         deserializer.accept(valueOutput);
         return valueOutput.buildResult();
     }

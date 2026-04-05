@@ -3,6 +3,7 @@ package org.cyclops.commoncapabilities.modcompat.vanilla.capability.itemhandler;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.component.BundleContents;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
@@ -33,7 +34,7 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
 
     @Override
     protected void setItemList(NonNullList<ItemStack> itemStacks) {
-        getItemStack().set(DataComponents.BUNDLE_CONTENTS, new BundleContents(itemStacks.stream().filter(stack -> !stack.isEmpty()).toList()));
+        getItemStack().set(DataComponents.BUNDLE_CONTENTS, new BundleContents(itemStacks.stream().filter(stack -> !stack.isEmpty()).map(ItemStackTemplate::fromNonEmptyStack).toList()));
     }
 
     @Override
@@ -64,7 +65,9 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
 
     private int getMaxAmountToAdd(ItemStack stackToAdd) {
         BundleContents container = getItemStack().get(DataComponents.BUNDLE_CONTENTS);
-        Fraction fraction = Fraction.ONE.subtract(container.weight());
-        return Math.max(fraction.divideBy(BundleContents.getWeight(stackToAdd)).intValue(), 0);
+        Fraction containerWeight = container.weight().result().orElse(Fraction.ONE);
+        Fraction fraction = Fraction.ONE.subtract(containerWeight);
+        Fraction itemWeight = BundleContents.getWeight(stackToAdd).result().orElse(Fraction.ONE);
+        return Math.max(fraction.divideBy(itemWeight).intValue(), 0);
     }
 }

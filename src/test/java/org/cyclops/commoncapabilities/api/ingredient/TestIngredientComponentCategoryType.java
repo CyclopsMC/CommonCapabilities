@@ -20,6 +20,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TestIngredientComponentCategoryType {
 
+    static {
+        // Bind components so ItemStack construction works in 26.1 (components are normally bound during resource reload)
+        DataComponentMap defaultComponents = DataComponentMap.builder().set(DataComponents.MAX_STACK_SIZE, 64).build();
+        Items.APPLE.builtInRegistryHolder().bindComponents(defaultComponents);
+        Items.DIRT.builtInRegistryHolder().bindComponents(defaultComponents);
+        Fluids.WATER.builtInRegistryHolder().bindComponents(DataComponentMap.EMPTY);
+        Fluids.LAVA.builtInRegistryHolder().bindComponents(DataComponentMap.EMPTY);
+    }
+
     @Test
     public void testItemStack() {
         assertThat(IngredientComponents.ITEMSTACK.getCategoryTypes().size(), is(3));

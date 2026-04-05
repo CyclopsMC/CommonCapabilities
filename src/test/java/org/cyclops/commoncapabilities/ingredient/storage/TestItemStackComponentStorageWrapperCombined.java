@@ -1,5 +1,7 @@
 package org.cyclops.commoncapabilities.ingredient.storage;
 
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.transfer.item.ItemResource;
@@ -31,6 +33,11 @@ public class TestItemStackComponentStorageWrapperCombined {
 
     private ItemStacksResourceHandlerTesting storage;
     private IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapperCombined wrapper;
+
+    static {
+        // Bind components so ItemStack construction works in 26.1 (components are normally bound during resource reload)
+        Items.APPLE.builtInRegistryHolder().bindComponents(DataComponentMap.builder().set(DataComponents.MAX_STACK_SIZE, 64).build());
+    }
 
     public static boolean eq(ItemStack a, ItemStack b) {
         return IngredientComponents.ITEMSTACK.getMatcher().matchesExactly(a, b);

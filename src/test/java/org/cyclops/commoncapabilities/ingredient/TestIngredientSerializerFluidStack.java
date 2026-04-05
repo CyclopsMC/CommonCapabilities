@@ -1,6 +1,6 @@
 package org.cyclops.commoncapabilities.ingredient;
 
-import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -33,6 +33,10 @@ public class TestIngredientSerializerFluidStack {
 
     @BeforeAll
     public static void init() {
+        // Bind empty components so FluidStack construction works in 26.1 (components are normally bound during resource reload)
+        Fluids.WATER.builtInRegistryHolder().bindComponents(DataComponentMap.EMPTY);
+        Fluids.LAVA.builtInRegistryHolder().bindComponents(DataComponentMap.EMPTY);
+
         S = new IngredientSerializerFluidStack();
 
         DATA = DataComponentPatch.builder()
@@ -57,7 +61,7 @@ public class TestIngredientSerializerFluidStack {
         F_TAGEMPTY.put("i", subF_TAG3);
 
         F1 = new FluidStack(Fluids.WATER, 1000);
-        F2 = new FluidStack(Holder.direct(Fluids.LAVA), 123, DATA);
+        F2 = new FluidStack(Fluids.LAVA.builtInRegistryHolder(), 123, DATA);
     }
 
     @Test

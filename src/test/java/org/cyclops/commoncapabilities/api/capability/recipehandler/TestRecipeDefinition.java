@@ -3,6 +3,8 @@ package org.cyclops.commoncapabilities.api.capability.recipehandler;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.cyclops.commoncapabilities.IngredientComponents;
@@ -29,6 +31,12 @@ public class TestRecipeDefinition {
 
     @BeforeAll
     public static void init() throws NoSuchFieldException, IllegalAccessException {
+        // Bind components so ItemStack construction works in 26.1 (components are normally bound during resource reload)
+        DataComponentMap defaultComponents = DataComponentMap.builder().set(DataComponents.MAX_STACK_SIZE, 64).build();
+        Items.APPLE.builtInRegistryHolder().bindComponents(defaultComponents);
+        Items.SUGAR.builtInRegistryHolder().bindComponents(defaultComponents);
+        Items.DIAMOND.builtInRegistryHolder().bindComponents(defaultComponents);
+
         Map<IngredientComponent<?, ?>, List<IPrototypedIngredientAlternatives<?, ?>>> dInputMap = Maps.newIdentityHashMap();
         dInputMap.put(IngredientComponents.ITEMSTACK, Lists.newArrayList(
                 new PrototypedIngredientAlternativesList<>(Lists.newArrayList(
