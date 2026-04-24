@@ -1,5 +1,7 @@
 package org.cyclops.commoncapabilities;
 
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -23,6 +25,7 @@ import org.cyclops.cyclopscore.modcompat.ModCompatLoader;
 import org.cyclops.cyclopscore.proxy.IClientProxy;
 import org.cyclops.cyclopscore.proxy.ICommonProxy;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -55,6 +58,8 @@ public class CommonCapabilities extends ModBaseNeoForge<CommonCapabilities> {
         IngredientComponent.REGISTRY.forEach(ingredientComponent -> {
             getModEventBus().addListener(ingredientComponent::gatherCapabilities);
         });
+        // Necessary for RecipeDefinition#fromRecipeId
+        getModHelpers().getMinecraftHelpers().sendRecipesToClients(() -> (Collection) BuiltInRegistries.RECIPE_TYPE.listElements().map(Holder.Reference::value).toList());
     }
 
     @Override
