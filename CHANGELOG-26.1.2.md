@@ -1,8 +1,15 @@
 # Changelog for Minecraft 26.1.2
 All notable changes to this project will be documented in this file.
 
+<a name="26.1.2-2.11.6"></a>
+## [26.1.2-2.11.6](https://github.com/CyclopsMC/CommonCapabilities/compare/26.1.2-2.11.5...26.1.2-2.11.6) - 2026-04-28 19:53:11
+
+
+### Added
+* Restore visual workbench compat
+
 <a name="26.1.2-2.11.5"></a>
-## [26.1.2-2.11.5](https://github.com/CyclopsMC/CommonCapabilities/compare/26.1.2-2.11.4...26.1.2-2.11.5) - 2026-04-24 19:23:42
+## [26.1.2-2.11.5](https://github.com/CyclopsMC/CommonCapabilities/compare/26.1.2-2.11.4...26.1.2-2.11.5) - 2026-04-24 19:23:42 +0200
 
 
 ### Fixed
