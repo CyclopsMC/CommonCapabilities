@@ -130,10 +130,8 @@ dependencies {
         implementation "org.cyclops.cyclopscore:cyclopscore-${project.minecraft_version}-neoforge:${project.cyclopscore_version}"
     }
 
-    compileOnly("curse.maven:visual-workbench-500273:${visualworkbench_version}")
-    compileOnly("curse.maven:puzzles-lib-495476:${puzzleslib_version}")
-        
-        // TODO: port mod dependencies once they update
+    implementation("curse.maven:visual-workbench-500273:${visualworkbench_version}")
+    implementation("curse.maven:puzzles-lib-495476:${puzzleslib_version}")
 }
 
 test {

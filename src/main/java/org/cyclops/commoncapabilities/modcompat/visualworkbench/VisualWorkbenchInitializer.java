@@ -1,7 +1,7 @@
 package org.cyclops.commoncapabilities.modcompat.visualworkbench;
 
-import fuzs.visualworkbench.init.ModRegistry;
-import fuzs.visualworkbench.world.level.block.entity.CraftingTableBlockEntity;
+import fuzs.visualworkbench.common.init.ModRegistry;
+import fuzs.visualworkbench.common.world.level.block.entity.CraftingTableBlockEntity;
 import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.crafting.RecipeType;
