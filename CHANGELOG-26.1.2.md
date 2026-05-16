@@ -1,8 +1,15 @@
 # Changelog for Minecraft 26.1.2
 All notable changes to this project will be documented in this file.
 
+<a name="26.1.2-2.11.7"></a>
+## [26.1.2-2.11.7](https://github.com/CyclopsMC/CommonCapabilities/compare/26.1.2-2.11.6...26.1.2-2.11.7) - 2026-05-16 14:45:25
+
+
+### Changed
+* Avoid inefficient DataComparator usage when not necessary
+
 <a name="26.1.2-2.11.6"></a>
-## [26.1.2-2.11.6](https://github.com/CyclopsMC/CommonCapabilities/compare/26.1.2-2.11.5...26.1.2-2.11.6) - 2026-04-28 19:53:11
+## [26.1.2-2.11.6](https://github.com/CyclopsMC/CommonCapabilities/compare/26.1.2-2.11.5...26.1.2-2.11.6) - 2026-04-28 19:53:11 +0200
 
 
 ### Added
