@@ -22,13 +22,18 @@ public class DataComparator implements Comparator<DataComponentMap> {
     /**
      * A comparator for Data Components. (This is set in GeneralConfig)
      */
-    public static Comparator<DataComponentMap> INSTANCE = new DataComparator(null);
+    public static DataComparator INSTANCE = new DataComparator(null);
 
+    @Nullable
     private final Set<Identifier> ignoreDataComponentTypes;
     private Set<DataComponentType<?>> ignoreDataComponentTypeInstances;
 
     public DataComparator(@Nullable Set<Identifier> ignoreDataComponentTypes) {
         this.ignoreDataComponentTypes = ignoreDataComponentTypes;
+    }
+
+    public boolean hasIgnoreDataComponentTypes() {
+        return ignoreDataComponentTypes != null && !ignoreDataComponentTypes.isEmpty();
     }
 
     @Override
