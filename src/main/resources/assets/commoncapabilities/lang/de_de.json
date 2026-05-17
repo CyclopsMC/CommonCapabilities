@@ -1,1 +1,11 @@
-{}
+{
+    "_comment": "# Fähigkeitseinstellungen",
+    "config.commoncapabilities": "%s-Konfiguration",
+    "recipecomponent.minecraft.itemstack": "Gegenstand",
+    "recipecomponent.minecraft.fluidstack": "Flüssigkeit",
+    "recipecomponent.minecraft.energy": "Energie",
+    "capability.commoncapabilities.inventoryState": "Inventarstatus",
+    "capability.commoncapabilities.temperature": "Temperatur",
+    "capability.commoncapabilities.worldNameable": "Benennbare Welt",
+    "capability.commoncapabilities.wrench": "Schraubenschlüssel"
+}
