@@ -70,6 +70,11 @@ public class IngredientMatcherFluidStack implements IIngredientMatcher<FluidStac
     }
 
     @Override
+    public boolean isEmpty(FluidStack instance) {
+        return instance.isEmpty();
+    }
+
+    @Override
     public int hash(FluidStack instance) {
         if (instance.isEmpty()) {
             return 0;
