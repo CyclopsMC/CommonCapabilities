@@ -1,8 +1,15 @@
 # Changelog for Minecraft 1.21.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.21.1-2.11.5"></a>
+## [1.21.1-2.11.5](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.4...1.21.1-2.11.5) - 2026-06-14 14:50:24
+
+
+### Changed
+* Optimize IngredientMatcherFluidStack#isEmpty method
+
 <a name="1.21.1-2.11.4"></a>
-## [1.21.1-2.11.4](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.3...1.21.1-2.11.4) - 2026-03-14 16:43:54
+## [1.21.1-2.11.4](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.3...1.21.1-2.11.4) - 2026-03-14 16:43:54 +0100
 
 
 ### Fixed
