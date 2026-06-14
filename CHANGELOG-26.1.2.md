@@ -1,8 +1,18 @@
 # Changelog for Minecraft 26.1.2
 All notable changes to this project will be documented in this file.
 
+<a name="26.1.2-2.11.8"></a>
+## [26.1.2-2.11.8](https://github.com/CyclopsMC/CommonCapabilities/compare/26.1.2-2.11.7...26.1.2-2.11.8) - 2026-06-14 14:54:09
+
+
+### Added
+* Add translations through Crowdin (#48)
+
+### Changed
+* Optimize IngredientMatcherFluidStack#isEmpty method
+
 <a name="26.1.2-2.11.7"></a>
-## [26.1.2-2.11.7](https://github.com/CyclopsMC/CommonCapabilities/compare/26.1.2-2.11.6...26.1.2-2.11.7) - 2026-05-16 14:45:25
+## [26.1.2-2.11.7](https://github.com/CyclopsMC/CommonCapabilities/compare/26.1.2-2.11.6...26.1.2-2.11.7) - 2026-05-16 14:45:25 +0200
 
 
 ### Changed
