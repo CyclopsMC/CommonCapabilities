@@ -3,7 +3,7 @@ package org.cyclops.commoncapabilities.gametest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -24,7 +24,7 @@ public class GameTestsVanillaCapabilitiesEntityItemFrame {
     @GameTest(template = TEMPLATE_EMPTY)
     public void testEntityItemFrameAdd(GameTestHelper helper) {
         // Spawn item frame with shulker box
-        ItemFrame entity = helper.spawn(EntityType.ITEM_FRAME, POS);
+        ItemFrame entity = helper.spawn(EntityTypes.ITEM_FRAME, POS);
         entity.setItem(new ItemStack(Items.SHULKER_BOX));
 
         // Add item to shulker box
@@ -44,7 +44,7 @@ public class GameTestsVanillaCapabilitiesEntityItemFrame {
     @GameTest(template = TEMPLATE_EMPTY)
     public void testEntityItemFrameRemove(GameTestHelper helper) {
         // Spawn item frame with shulker box
-        ItemFrame entity = helper.spawn(EntityType.ITEM_FRAME, POS);
+        ItemFrame entity = helper.spawn(EntityTypes.ITEM_FRAME, POS);
         entity.setItem(new ItemStack(Items.SHULKER_BOX));
 
         // Remove item from shulker box

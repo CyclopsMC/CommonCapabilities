@@ -41,8 +41,8 @@ public class TestIngredientMatcherItemStack {
         // Bind components so ItemStack construction works in 26.1 (components are normally bound during resource reload)
         DataComponentMap defaultComponents = DataComponentMap.builder().set(DataComponents.MAX_STACK_SIZE, 64).build();
         Items.APPLE.builtInRegistryHolder().bindComponents(defaultComponents);
-        Items.WHITE_WOOL.builtInRegistryHolder().bindComponents(defaultComponents);
-        Items.BLACK_WOOL.builtInRegistryHolder().bindComponents(defaultComponents);
+        Items.WOOL.white().builtInRegistryHolder().bindComponents(defaultComponents);
+        Items.WOOL.black().builtInRegistryHolder().bindComponents(defaultComponents);
         Items.LEAD.builtInRegistryHolder().bindComponents(defaultComponents);
 
         M = new IngredientMatcherItemStack();
@@ -59,27 +59,27 @@ public class TestIngredientMatcherItemStack {
         CompoundTag tag4 = new CompoundTag();
         tag4.putInt("ignored", 100);
 
-        W_1 = new ItemStack(Items.WHITE_WOOL, 1);
-        W_2 = new ItemStack(Items.WHITE_WOOL, 2);
-        W_100 = new ItemStack(Items.WHITE_WOOL, 100);
-        W_123 = new ItemStack(Items.WHITE_WOOL, 123);
-        W_1_T1 = new ItemStack(Items.WHITE_WOOL, 1);
+        W_1 = new ItemStack(Items.WOOL.white(), 1);
+        W_2 = new ItemStack(Items.WOOL.white(), 2);
+        W_100 = new ItemStack(Items.WOOL.white(), 100);
+        W_123 = new ItemStack(Items.WOOL.white(), 123);
+        W_1_T1 = new ItemStack(Items.WOOL.white(), 1);
         W_1_T1.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
-        W_2_T1 = new ItemStack(Items.WHITE_WOOL, 2);
+        W_2_T1 = new ItemStack(Items.WOOL.white(), 2);
         W_2_T1.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
-        W_1_T2 = new ItemStack(Items.WHITE_WOOL, 1);
+        W_1_T2 = new ItemStack(Items.WOOL.white(), 1);
         W_1_T2.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
-        W_2_T2 = new ItemStack(Items.WHITE_WOOL, 2);
+        W_2_T2 = new ItemStack(Items.WOOL.white(), 2);
         W_2_T2.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, false);
 
         L_1 = new ItemStack(Items.LEAD, 1);
         L_1_T1 = new ItemStack(Items.LEAD, 1);
         L_1_T1.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 
-        B_1 = new ItemStack(Items.BLACK_WOOL, 1);
-        B_1_T3 = new ItemStack(Items.BLACK_WOOL, 1);
+        B_1 = new ItemStack(Items.WOOL.black(), 1);
+        B_1_T3 = new ItemStack(Items.WOOL.black(), 1);
         B_1_T3.set(DataComponents.DAMAGE, 3);
-        B_1_T4 = new ItemStack(Items.BLACK_WOOL, 1);
+        B_1_T4 = new ItemStack(Items.WOOL.black(), 1);
         B_1_T4.set(DataComponents.DAMAGE, 4);
 
         ItemMatch.DATA_COMPARATOR = DataComparator.INSTANCE = new DataComparator(Sets.newHashSet(
@@ -310,8 +310,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1, W_2_T2), is(-1));
         assertThat(M.compare(W_1, W_1_T1), is(8));
         assertThat(M.compare(W_1, W_1_T2), is(8));
-        assertThat(M.compare(W_1, L_1), is(-1049));
-        assertThat(M.compare(W_1, L_1_T1), is(-1049));
+        assertThat(M.compare(W_1, L_1), is(-1051));
+        assertThat(M.compare(W_1, L_1_T1), is(-1051));
 
         assertThat(M.compare(W_1_T1, W_1), is(-8));
         assertThat(M.compare(W_1_T1, W_2), is(-1));
@@ -319,8 +319,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T1, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T1, W_1_T1), is(0));
         assertThat(M.compare(W_1_T1, W_1_T2), is(1));
-        assertThat(M.compare(W_1_T1, L_1), is(-1049));
-        assertThat(M.compare(W_1_T1, L_1_T1), is(-1049));
+        assertThat(M.compare(W_1_T1, L_1), is(-1051));
+        assertThat(M.compare(W_1_T1, L_1_T1), is(-1051));
 
         assertThat(M.compare(W_1_T2, W_1), is(-8));
         assertThat(M.compare(W_1_T2, W_2), is(-1));
@@ -328,8 +328,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_1_T2, W_2_T2), is(-1));
         assertThat(M.compare(W_1_T2, W_1_T1), is(-1));
         assertThat(M.compare(W_1_T2, W_1_T2), is(0));
-        assertThat(M.compare(W_1_T2, L_1), is(-1049));
-        assertThat(M.compare(W_1_T2, L_1_T1), is(-1049));
+        assertThat(M.compare(W_1_T2, L_1), is(-1051));
+        assertThat(M.compare(W_1_T2, L_1_T1), is(-1051));
 
         assertThat(M.compare(W_2, W_1), is(1));
         assertThat(M.compare(W_2, W_1_T1), is(1));
@@ -337,8 +337,8 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2, W_2), is(0));
         assertThat(M.compare(W_2, W_2_T1), is(8));
         assertThat(M.compare(W_2, W_2_T2), is(8));
-        assertThat(M.compare(W_2, L_1), is(-1049));
-        assertThat(M.compare(W_2, L_1_T1), is(-1049));
+        assertThat(M.compare(W_2, L_1), is(-1051));
+        assertThat(M.compare(W_2, L_1_T1), is(-1051));
 
         assertThat(M.compare(W_2_T1, W_1), is(1));
         assertThat(M.compare(W_2_T1, W_1_T1), is(1));
@@ -353,24 +353,24 @@ public class TestIngredientMatcherItemStack {
         assertThat(M.compare(W_2_T2, W_2), is(-8));
         assertThat(M.compare(W_2_T2, W_2_T1), is(-1));
         assertThat(M.compare(W_2_T2, W_2_T2), is(0));
-        assertThat(M.compare(W_2_T2, L_1), is(-1049));
-        assertThat(M.compare(W_2_T2, L_1_T1), is(-1049));
+        assertThat(M.compare(W_2_T2, L_1), is(-1051));
+        assertThat(M.compare(W_2_T2, L_1_T1), is(-1051));
 
-        assertThat(M.compare(L_1, W_1), is(1049));
-        assertThat(M.compare(L_1, W_1_T1), is(1049));
-        assertThat(M.compare(L_1, W_1_T2), is(1049));
-        assertThat(M.compare(L_1, W_2), is(1049));
-        assertThat(M.compare(L_1, W_2_T1), is(1049));
-        assertThat(M.compare(L_1, W_2_T2), is(1049));
+        assertThat(M.compare(L_1, W_1), is(1051));
+        assertThat(M.compare(L_1, W_1_T1), is(1051));
+        assertThat(M.compare(L_1, W_1_T2), is(1051));
+        assertThat(M.compare(L_1, W_2), is(1051));
+        assertThat(M.compare(L_1, W_2_T1), is(1051));
+        assertThat(M.compare(L_1, W_2_T2), is(1051));
         assertThat(M.compare(L_1, L_1), is(0));
         assertThat(M.compare(L_1, L_1_T1), is(8));
 
-        assertThat(M.compare(L_1_T1, W_1), is(1049));
-        assertThat(M.compare(L_1_T1, W_1_T1), is(1049));
-        assertThat(M.compare(L_1_T1, W_1_T2), is(1049));
-        assertThat(M.compare(L_1_T1, W_2), is(1049));
-        assertThat(M.compare(L_1_T1, W_2_T1), is(1049));
-        assertThat(M.compare(L_1_T1, W_2_T2), is(1049));
+        assertThat(M.compare(L_1_T1, W_1), is(1051));
+        assertThat(M.compare(L_1_T1, W_1_T1), is(1051));
+        assertThat(M.compare(L_1_T1, W_1_T2), is(1051));
+        assertThat(M.compare(L_1_T1, W_2), is(1051));
+        assertThat(M.compare(L_1_T1, W_2_T1), is(1051));
+        assertThat(M.compare(L_1_T1, W_2_T2), is(1051));
         assertThat(M.compare(L_1_T1, L_1), is(-8));
         assertThat(M.compare(L_1_T1, L_1_T1), is(0));
     }

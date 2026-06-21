@@ -2,6 +2,7 @@ package org.cyclops.commoncapabilities.modcompat.vanilla;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.decoration.GlowItemFrame;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -81,7 +82,7 @@ public class VanillaModCompat implements IModCompat {
         return (mod) -> {
             CapabilityConstructorRegistry registry = CommonCapabilities._instance.getCapabilityConstructorRegistry();
             // Worker
-            registry.registerBlockEntity(() -> BlockEntityType.FURNACE,
+            registry.registerBlockEntity(() -> BlockEntityTypes.FURNACE,
                     new ICapabilityConstructor<FurnaceBlockEntity, Direction, IWorker, BlockEntityType<FurnaceBlockEntity>>() {
                         @Override
                         public BaseCapability<IWorker, Direction> getCapability() {
@@ -93,7 +94,7 @@ public class VanillaModCompat implements IModCompat {
                             return (blockEntity, side) -> new VanillaAbstractFurnaceWorker(blockEntity);
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.BLAST_FURNACE,
+            registry.registerBlockEntity(() -> BlockEntityTypes.BLAST_FURNACE,
                     new ICapabilityConstructor<BlastFurnaceBlockEntity, Direction, IWorker, BlockEntityType<BlastFurnaceBlockEntity>>() {
                         @Override
                         public BaseCapability<IWorker, Direction> getCapability() {
@@ -105,7 +106,7 @@ public class VanillaModCompat implements IModCompat {
                             return (blockEntity, side) -> new VanillaAbstractFurnaceWorker(blockEntity);
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.SMOKER,
+            registry.registerBlockEntity(() -> BlockEntityTypes.SMOKER,
                     new ICapabilityConstructor<SmokerBlockEntity, Direction, IWorker, BlockEntityType<SmokerBlockEntity>>() {
                         @Override
                         public BaseCapability<IWorker, Direction> getCapability() {
@@ -117,7 +118,7 @@ public class VanillaModCompat implements IModCompat {
                             return (blockEntity, side) -> new VanillaAbstractFurnaceWorker(blockEntity);
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.BREWING_STAND,
+            registry.registerBlockEntity(() -> BlockEntityTypes.BREWING_STAND,
                     new ICapabilityConstructor<BrewingStandBlockEntity, Direction, IWorker, BlockEntityType<BrewingStandBlockEntity>>() {
                         @Override
                         public BaseCapability<IWorker, Direction> getCapability() {
@@ -129,7 +130,7 @@ public class VanillaModCompat implements IModCompat {
                             return (blockEntity, side) -> new VanillaBrewingStandWorker(blockEntity);
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.CAMPFIRE,
+            registry.registerBlockEntity(() -> BlockEntityTypes.CAMPFIRE,
                     new ICapabilityConstructor<CampfireBlockEntity, Direction, IWorker, BlockEntityType<CampfireBlockEntity>>() {
                         @Override
                         public BaseCapability<IWorker, Direction> getCapability() {
@@ -143,7 +144,7 @@ public class VanillaModCompat implements IModCompat {
                     });
 
             // Temperature
-            registry.registerBlockEntity(() -> BlockEntityType.FURNACE,
+            registry.registerBlockEntity(() -> BlockEntityTypes.FURNACE,
                     new ICapabilityConstructor<FurnaceBlockEntity, Direction, ITemperature, BlockEntityType<FurnaceBlockEntity>>() {
                         @Override
                         public BaseCapability<ITemperature, Direction> getCapability() {
@@ -155,7 +156,7 @@ public class VanillaModCompat implements IModCompat {
                             return (blockEntity, side) -> new VanillaAbstractFurnaceTemperature(blockEntity);
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.BLAST_FURNACE,
+            registry.registerBlockEntity(() -> BlockEntityTypes.BLAST_FURNACE,
                     new ICapabilityConstructor<BlastFurnaceBlockEntity, Direction, ITemperature, BlockEntityType<BlastFurnaceBlockEntity>>() {
                         @Override
                         public BaseCapability<ITemperature, Direction> getCapability() {
@@ -167,7 +168,7 @@ public class VanillaModCompat implements IModCompat {
                             return (blockEntity, side) -> new VanillaAbstractFurnaceTemperature(blockEntity);
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.SMOKER,
+            registry.registerBlockEntity(() -> BlockEntityTypes.SMOKER,
                     new ICapabilityConstructor<SmokerBlockEntity, Direction, ITemperature, BlockEntityType<SmokerBlockEntity>>() {
                         @Override
                         public BaseCapability<ITemperature, Direction> getCapability() {
@@ -179,7 +180,7 @@ public class VanillaModCompat implements IModCompat {
                             return (blockEntity, side) -> new VanillaAbstractFurnaceTemperature(blockEntity);
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.CAMPFIRE,
+            registry.registerBlockEntity(() -> BlockEntityTypes.CAMPFIRE,
                     new ICapabilityConstructor<CampfireBlockEntity, Direction, ITemperature, BlockEntityType<CampfireBlockEntity>>() {
                         @Override
                         public BaseCapability<ITemperature, Direction> getCapability() {
@@ -244,7 +245,7 @@ public class VanillaModCompat implements IModCompat {
                     return (itemStack, context) -> new VanillaItemBundleItemHandler(itemStack);
                 }
             });
-            registry.registerEntity(() -> EntityType.ITEM,
+            registry.registerEntity(() -> EntityTypes.ITEM,
                     new ICapabilityConstructor<ItemEntity, Void, ResourceHandler<ItemResource>, EntityType<ItemEntity>>() {
                         @Override
                         public BaseCapability<ResourceHandler<ItemResource>, Void> getCapability() {
@@ -261,7 +262,7 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
-            registry.registerEntity(() -> EntityType.ITEM_FRAME,
+            registry.registerEntity(() -> EntityTypes.ITEM_FRAME,
                     new ICapabilityConstructor<ItemFrame, Void, ResourceHandler<ItemResource>, EntityType<ItemFrame>>() {
                         @Override
                         public BaseCapability<ResourceHandler<ItemResource>, Void> getCapability() {
@@ -278,7 +279,7 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
-            registry.registerEntity(() -> EntityType.GLOW_ITEM_FRAME,
+            registry.registerEntity(() -> EntityTypes.GLOW_ITEM_FRAME,
                     new ICapabilityConstructor<GlowItemFrame, Void, ResourceHandler<ItemResource>, EntityType<GlowItemFrame>>() {
                         @Override
                         public BaseCapability<ResourceHandler<ItemResource>, Void> getCapability() {
@@ -297,7 +298,7 @@ public class VanillaModCompat implements IModCompat {
                     });
 
             // FluidHandler
-            registry.registerEntity(() -> EntityType.ITEM,
+            registry.registerEntity(() -> EntityTypes.ITEM,
                     new ICapabilityConstructor<ItemEntity, Direction, ResourceHandler<FluidResource>, EntityType<ItemEntity>>() {
                         @Override
                         public BaseCapability<ResourceHandler<FluidResource>, Direction> getCapability() {
@@ -314,7 +315,7 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
-            registry.registerEntity(() -> EntityType.ITEM_FRAME,
+            registry.registerEntity(() -> EntityTypes.ITEM_FRAME,
                     new ICapabilityConstructor<ItemFrame, Direction, ResourceHandler<FluidResource>, EntityType<ItemFrame>>() {
                         @Override
                         public BaseCapability<ResourceHandler<FluidResource>, Direction> getCapability() {
@@ -331,7 +332,7 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
-            registry.registerEntity(() -> EntityType.GLOW_ITEM_FRAME,
+            registry.registerEntity(() -> EntityTypes.GLOW_ITEM_FRAME,
                     new ICapabilityConstructor<GlowItemFrame, Direction, ResourceHandler<FluidResource>, EntityType<GlowItemFrame>>() {
                         @Override
                         public BaseCapability<ResourceHandler<FluidResource>, Direction> getCapability() {
@@ -350,7 +351,7 @@ public class VanillaModCompat implements IModCompat {
                     });
 
             // EnergyStorage
-            registry.registerEntity(() -> EntityType.ITEM,
+            registry.registerEntity(() -> EntityTypes.ITEM,
                     new ICapabilityConstructor<ItemEntity, Direction, EnergyHandler, EntityType<ItemEntity>>() {
                         @Override
                         public BaseCapability<EnergyHandler, Direction> getCapability() {
@@ -367,7 +368,7 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
-            registry.registerEntity(() -> EntityType.ITEM_FRAME,
+            registry.registerEntity(() -> EntityTypes.ITEM_FRAME,
                     new ICapabilityConstructor<ItemFrame, Direction, EnergyHandler, EntityType<ItemFrame>>() {
                         @Override
                         public BaseCapability<EnergyHandler, Direction> getCapability() {
@@ -384,7 +385,7 @@ public class VanillaModCompat implements IModCompat {
                             };
                         }
                     });
-            registry.registerEntity(() -> EntityType.GLOW_ITEM_FRAME,
+            registry.registerEntity(() -> EntityTypes.GLOW_ITEM_FRAME,
                     new ICapabilityConstructor<GlowItemFrame, Direction, EnergyHandler, EntityType<GlowItemFrame>>() {
                         @Override
                         public BaseCapability<EnergyHandler, Direction> getCapability() {
@@ -407,7 +408,7 @@ public class VanillaModCompat implements IModCompat {
                 VanillaRecipeTypeRecipeHandler.CACHED_RECIPES.clear();
                 TransformedRecipeHandlerAdapter.CACHED_RECIPES.clear();
             });
-            registry.registerBlockEntity(() -> BlockEntityType.BREWING_STAND,
+            registry.registerBlockEntity(() -> BlockEntityTypes.BREWING_STAND,
                     new ICapabilityConstructor<BrewingStandBlockEntity, Direction, IRecipeHandler, BlockEntityType<BrewingStandBlockEntity>>() {
                         @Override
                         public BaseCapability<IRecipeHandler, Direction> getCapability() {
@@ -419,7 +420,7 @@ public class VanillaModCompat implements IModCompat {
                             return (blockEntity, side) -> VanillaBrewingStandRecipeHandler.getInstance();
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.FURNACE,
+            registry.registerBlockEntity(() -> BlockEntityTypes.FURNACE,
                     new ICapabilityConstructor<FurnaceBlockEntity, Direction, IRecipeHandler, BlockEntityType<FurnaceBlockEntity>>() {
                         @Override
                         public BaseCapability<IRecipeHandler, Direction> getCapability() {
@@ -432,7 +433,7 @@ public class VanillaModCompat implements IModCompat {
                                     RecipeType.SMELTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true, false);
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.BLAST_FURNACE,
+            registry.registerBlockEntity(() -> BlockEntityTypes.BLAST_FURNACE,
                     new ICapabilityConstructor<BlastFurnaceBlockEntity, Direction, IRecipeHandler, BlockEntityType<BlastFurnaceBlockEntity>>() {
                         @Override
                         public BaseCapability<IRecipeHandler, Direction> getCapability() {
@@ -445,7 +446,7 @@ public class VanillaModCompat implements IModCompat {
                                     RecipeType.BLASTING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true, false);
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.SMOKER,
+            registry.registerBlockEntity(() -> BlockEntityTypes.SMOKER,
                     new ICapabilityConstructor<SmokerBlockEntity, Direction, IRecipeHandler, BlockEntityType<SmokerBlockEntity>>() {
                         @Override
                         public BaseCapability<IRecipeHandler, Direction> getCapability() {
@@ -458,7 +459,7 @@ public class VanillaModCompat implements IModCompat {
                                     RecipeType.SMOKING, (size) -> size == 1, (c) -> new SingleRecipeInput(c.getItem(0)), true, false);
                         }
                     });
-            registry.registerBlockEntity(() -> BlockEntityType.CAMPFIRE,
+            registry.registerBlockEntity(() -> BlockEntityTypes.CAMPFIRE,
                     new ICapabilityConstructor<CampfireBlockEntity, Direction, IRecipeHandler, BlockEntityType<CampfireBlockEntity>>() {
                         @Override
                         public BaseCapability<IRecipeHandler, Direction> getCapability() {
