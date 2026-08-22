@@ -12,13 +12,13 @@ import org.cyclops.cyclopscore.proxy.ClientProxyComponent;
  */
 public class ClientProxy extends ClientProxyComponent {
 
-	public ClientProxy() {
-		super(new CommonProxy());
-	}
+    public ClientProxy() {
+        super(new CommonProxy());
+    }
 
-	@Override
-	public ModBaseNeoForge<CommonCapabilities> getMod() {
-		return CommonCapabilities._instance;
-	}
+    @Override
+    public ModBaseNeoForge<CommonCapabilities> getMod() {
+        return CommonCapabilities._instance;
+    }
 
 }
