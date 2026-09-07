@@ -257,8 +257,12 @@ public class IngredientComponentStorageWrapperHandlerItemStack<C>
         protected ItemStack storageExtractItem(int slot, int amount, boolean simulate) {
             // Special handling for inventories that have larger slot sizes, such as Sophisticated Barrels.
             // See https://github.com/CyclopsMC/IntegratedCrafting/issues/106
-            int maxStackSize = ItemStack.EMPTY.getMaxStackSize();
-            if (amount > maxStackSize && storage.getSlotLimit(slot) > maxStackSize) {
+            // The maximum stack size has to come from the stack in the slot:
+            // item handlers cap a single extraction at the stack's own maximum,
+            // and ItemStack.EMPTY has no max stack size component, so it reports 1.
+            ItemStack stackInSlot = storage.getStackInSlot(slot);
+            int maxStackSize = stackInSlot.getMaxStackSize();
+            if (!stackInSlot.isEmpty() && amount > maxStackSize && storage.getSlotLimit(slot) > maxStackSize) {
                 if (simulate) {
                     // In simulate-mode, extract up to max stack size.
                     // If the returned stack less than max stack size, return it.
@@ -267,11 +271,11 @@ public class IngredientComponentStorageWrapperHandlerItemStack<C>
                     if (extractedUntilMaxStackSize.getCount() < maxStackSize) {
                         return extractedUntilMaxStackSize;
                     } else {
-                        ItemStack stackInSlot = storage.getStackInSlot(slot).copy();
-                        if (stackInSlot.getCount() > amount) {
-                            stackInSlot.setCount(amount);
+                        ItemStack extractedFullSlot = stackInSlot.copy();
+                        if (extractedFullSlot.getCount() > amount) {
+                            extractedFullSlot.setCount(amount);
                         }
-                        return stackInSlot;
+                        return extractedFullSlot;
                     }
                 } else {
                     // Iterate extraction until requested amount is reached.

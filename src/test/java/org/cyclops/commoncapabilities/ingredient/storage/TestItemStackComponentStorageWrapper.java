@@ -342,4 +342,75 @@ public class TestItemStackComponentStorageWrapper {
         assertThat(eq(storageLarge.getStackInSlot(0), APPLE_60), is(true));
     }
 
+
+    /**
+     * An item handler with a drawer-like slot capacity, that counts how often it is asked to extract.
+     */
+    private static class CountingItemStackHandler extends ItemStackHandler {
+
+        private final int slotLimit;
+        private int extractCalls = 0;
+
+        public CountingItemStackHandler(int slotLimit) {
+            super(1);
+            this.slotLimit = slotLimit;
+        }
+
+        public int getExtractCalls() {
+            return extractCalls;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return slotLimit;
+        }
+
+        @Override
+        @Nonnull
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            extractCalls++;
+            return super.extractItem(slot, amount, simulate);
+        }
+    }
+
+    /**
+     * Item handlers cap a single extraction at the stack's own maximum stack size,
+     * so a slot holding more than that has to be drained in multiple calls.
+     * Those calls must be full stacks, not single items.
+     */
+    @Test
+    public void testExtractLargeUsesFullStacksPerHandlerCall() {
+        CountingItemStackHandler storageCounting = new CountingItemStackHandler(4096);
+        storageCounting.setStackInSlot(0, new ItemStack(Items.APPLE, 1000));
+        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapperCounting =
+                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(
+                        IngredientComponents.ITEMSTACK, storageCounting);
+
+        ItemStack extracted = wrapperCounting.extract(new ItemStack(Items.APPLE, 1000),
+                ItemMatch.ITEM | ItemMatch.STACKSIZE, false);
+
+        assertThat(extracted.getCount(), is(1000));
+        // 1000 apples is 16 stacks of 64, plus a simulated call, so this is comfortably above the ideal
+        assertThat(storageCounting.getExtractCalls() < 40, is(true));
+    }
+
+    /**
+     * The same, for an item whose maximum stack size is below 64.
+     */
+    @Test
+    public void testExtractLargeUsesFullStacksPerHandlerCallForSmallStacks() {
+        CountingItemStackHandler storageCounting = new CountingItemStackHandler(4096);
+        storageCounting.setStackInSlot(0, new ItemStack(Items.ENDER_PEARL, 200));
+        IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper wrapperCounting =
+                new IngredientComponentStorageWrapperHandlerItemStack.ComponentStorageWrapper(
+                        IngredientComponents.ITEMSTACK, storageCounting);
+
+        ItemStack extracted = wrapperCounting.extract(new ItemStack(Items.ENDER_PEARL, 100),
+                ItemMatch.ITEM | ItemMatch.STACKSIZE, false);
+
+        assertThat(extracted.getCount(), is(100));
+        // Ender pearls stack to 16, so 100 of them is 7 stacks
+        assertThat(storageCounting.getExtractCalls() < 20, is(true));
+    }
+
 }
