@@ -46,7 +46,7 @@ All available versions can be found at the [Maven repo](https://dl.bintray.com/c
 
 ### Branching Strategy
 
-For every major Minecraft version, a `master-{mc_version} branch exists.
+For every major Minecraft version, a `master-{mc_version}` branch exists.
 
 ### License
 All code and images are licenced under the [MIT License](https://github.com/CyclopsMC/CommonCapabilities/blob/master-1.8/LICENSE.txt)
