@@ -1,0 +1,9 @@
+As always, don't forget to backup your world before updating!
+Requires CyclopsCore version 1.25.1 or higher.
+
+Fixes:
+* Fix storageExtractItem always using slow fallback (#49)
+  The workaround for inventories with slots larger than a vanilla stack read
+  its maximum stack size from ItemStack.EMPTY. Since the component rewrite an
+  empty stack carries no MAX_STACK_SIZE component, so that reports 1 rather
+  than 64.

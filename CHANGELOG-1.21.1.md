@@ -1,8 +1,19 @@
 # Changelog for Minecraft 1.21.1
 All notable changes to this project will be documented in this file.
 
+<a name="1.21.1-2.11.6"></a>
+## [1.21.1-2.11.6](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.5...1.21.1-2.11.6) - 2026-09-11 19:10:33
+
+
+### Fixed
+* Fix storageExtractItem always using slow fallback (#49)
+  The workaround for inventories with slots larger than a vanilla stack read
+  its maximum stack size from ItemStack.EMPTY. Since the component rewrite an
+  empty stack carries no MAX_STACK_SIZE component, so that reports 1 rather
+  than 64.
+
 <a name="1.21.1-2.11.5"></a>
-## [1.21.1-2.11.5](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.4...1.21.1-2.11.5) - 2026-06-14 14:50:24
+## [1.21.1-2.11.5](https://github.com/CyclopsMC/CommonCapabilities/compare/1.21.1-2.11.4...1.21.1-2.11.5) - 2026-06-14 14:50:24 +0200
 
 
 ### Changed
