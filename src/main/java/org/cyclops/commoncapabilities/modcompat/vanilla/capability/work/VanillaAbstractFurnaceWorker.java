@@ -27,7 +27,6 @@ public class VanillaAbstractFurnaceWorker implements IWorker {
         if (toMelt.isEmpty() || !(furnace.getLevel() instanceof ServerLevel serverLevel)) {
             return false;
         }
-        // The recipe type is no longer a field, the furnace holds a cached check for it instead
         SingleRecipeInput input = new SingleRecipeInput(toMelt);
         return furnace.quickCheck.getRecipeFor(input, serverLevel)
                 .map(RecipeHolder::value)
@@ -37,7 +36,6 @@ public class VanillaAbstractFurnaceWorker implements IWorker {
 
     @Override
     public boolean canWork() {
-        // FuelValues was replaced by the COOKING_FUEL data component
         return furnace.litTimeRemaining > 0 || furnace.getItem(1).has(DataComponents.COOKING_FUEL);
     }
 }

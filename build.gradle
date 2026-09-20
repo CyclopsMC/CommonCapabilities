@@ -134,9 +134,6 @@ dependencies {
         implementation "org.cyclops.cyclopscore:cyclopscore-${project.minecraft_version}-neoforge:${project.cyclopscore_version}"
     }
 
-    // compileOnly until Visual Workbench (and its Puzzles Lib dependency) release for 26.3:
-    // their 26.2 builds refuse to load on 26.3, which fails the test JVM's mod loading.
-    // The mod compat itself only activates when visualworkbench is actually present.
     // TODO: put these back on implementation once 26.3 builds exist.
     compileOnly("curse.maven:visual-workbench-500273:${visualworkbench_version}")
     compileOnly("curse.maven:puzzles-lib-495476:${puzzleslib_version}")

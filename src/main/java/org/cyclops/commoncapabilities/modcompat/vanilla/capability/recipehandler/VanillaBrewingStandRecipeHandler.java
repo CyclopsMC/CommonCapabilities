@@ -67,7 +67,7 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
             return null;
         }
 
-        // Brewing is recipe-driven since Minecraft 26.3: slot 0 holds the reagent, slots 1-3 the potions
+        // Slot 0 holds the reagent, slots 1-3 the potions
         Level level = ServerLifecycleHooks.getCurrentServer().overworld();
         if (!(level.recipeAccess() instanceof RecipeManager recipeManager)) {
             return null;
