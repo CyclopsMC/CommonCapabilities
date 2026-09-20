@@ -4,7 +4,10 @@ import com.google.common.collect.Sets;
 import net.minecraft.core.NonNullList;
 import net.minecraft.potion.PotionHelperCommonCapabilities;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.PotionBrewing;
+import net.minecraft.world.item.crafting.BrewingInput;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeDefinition;
 import org.cyclops.commoncapabilities.api.capability.recipehandler.IRecipeHandler;
@@ -64,14 +67,28 @@ public class VanillaBrewingStandRecipeHandler implements IRecipeHandler {
             return null;
         }
 
-        NonNullList<ItemStack> brewingItemStacks = NonNullList.withSize(4, ItemStack.EMPTY);
-        PotionBrewing potionbrewing = ServerLifecycleHooks.getCurrentServer().potionBrewing();
-        for (int i = 0; i < recipeIngredients.size(); i++) {
-            brewingItemStacks.set(i, potionbrewing.mix(brewingItemStacks.get(0), recipeIngredients.get(i).copy()));
+        // Brewing is recipe-driven since Minecraft 26.3: slot 0 holds the reagent, slots 1-3 the potions
+        Level level = ServerLifecycleHooks.getCurrentServer().overworld();
+        if (!(level.recipeAccess() instanceof RecipeManager recipeManager)) {
+            return null;
         }
-        brewingItemStacks.set(0, ItemStack.EMPTY);
 
-        return MixedIngredients.ofInstances(IngredientComponent.ITEMSTACK, brewingItemStacks);
+        ItemStack reagent = recipeIngredients.get(0);
+        NonNullList<ItemStack> brewingItemStacks = NonNullList.withSize(4, ItemStack.EMPTY);
+        boolean brewed = false;
+        for (int i = 1; i < recipeIngredients.size(); i++) {
+            ItemStack potion = recipeIngredients.get(i).copy();
+            BrewingInput brewingInput = new BrewingInput(potion, reagent);
+            ItemStack output = recipeManager.getRecipeFor(RecipeType.BREWING, brewingInput, level)
+                    .map(recipe -> recipe.value().assemble(brewingInput))
+                    .orElse(ItemStack.EMPTY);
+            if (!output.isEmpty()) {
+                brewingItemStacks.set(i, output);
+                brewed = true;
+            }
+        }
+
+        return brewed ? MixedIngredients.ofInstances(IngredientComponent.ITEMSTACK, brewingItemStacks) : null;
     }
 
 }

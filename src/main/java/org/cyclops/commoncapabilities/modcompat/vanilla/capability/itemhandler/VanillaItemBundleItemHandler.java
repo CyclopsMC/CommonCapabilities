@@ -25,7 +25,7 @@ public class VanillaItemBundleItemHandler extends ItemItemHandler {
         BundleContents container = getItemStack().get(DataComponents.BUNDLE_CONTENTS);
         if (container != null) {
             NonNullList<ItemStack> list = NonNullList.create();
-            container.itemCopyStream().forEach(list::add);
+            container.itemCopies().forEach(list::add);
             list.add(ItemStack.EMPTY);
             return list;
         }

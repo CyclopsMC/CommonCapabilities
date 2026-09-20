@@ -1,8 +1,7 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.work;
 
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
-import net.minecraft.core.NonNullList;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
 
 /**
@@ -10,7 +9,6 @@ import org.cyclops.commoncapabilities.api.capability.work.IWorker;
  * @author rubensworks
  */
 public class VanillaBrewingStandWorker implements IWorker {
-    private static final int[] outputSlots = new int[] {0, 1, 2, 3};
 
     private final BrewingStandBlockEntity brewingStand;
 
@@ -20,11 +18,9 @@ public class VanillaBrewingStandWorker implements IWorker {
 
     @Override
     public boolean hasWork() {
-        NonNullList<ItemStack> inputs = NonNullList.withSize(outputSlots.length, ItemStack.EMPTY);
-        for (int i = 0; i < inputs.size(); i++) {
-            inputs.set(i, brewingStand.getItem(outputSlots[i]));
-        }
-        return BrewingStandBlockEntity.isBrewable(brewingStand.getLevel().potionBrewing(), inputs);
+        // Brewing is recipe-driven now, so defer to the brewing stand's own check
+        return brewingStand.getLevel() instanceof ServerLevel serverLevel
+                && BrewingStandBlockEntity.isBrewable(serverLevel, brewingStand);
     }
 
     @Override
