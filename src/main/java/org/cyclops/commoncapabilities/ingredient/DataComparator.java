@@ -6,10 +6,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import org.cyclops.commoncapabilities.CommonCapabilities;
 import org.cyclops.commoncapabilities.GeneralConfig;
+import org.cyclops.commoncapabilities.api.ingredient.IDataComparator;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * A comparator implementation for Data Components.
  * @author rubensworks
  */
-public class DataComparator implements Comparator<DataComponentMap> {
+public class DataComparator implements IDataComparator {
 
     /**
      * A comparator for Data Components. (This is set in GeneralConfig)
@@ -32,6 +32,7 @@ public class DataComparator implements Comparator<DataComponentMap> {
         this.ignoreDataComponentTypes = ignoreDataComponentTypes;
     }
 
+    @Override
     public boolean hasIgnoreDataComponentTypes() {
         return ignoreDataComponentTypes != null && !ignoreDataComponentTypes.isEmpty();
     }

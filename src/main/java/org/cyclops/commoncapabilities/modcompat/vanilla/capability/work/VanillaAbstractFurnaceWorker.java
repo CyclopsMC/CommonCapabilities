@@ -1,27 +1,19 @@
 package org.cyclops.commoncapabilities.modcompat.vanilla.capability.work;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.cyclops.commoncapabilities.api.capability.work.IWorker;
-
-import java.lang.reflect.Field;
 
 /**
  * Worker capability for the vanilla furnace tile entities.
  * @author rubensworks
  */
 public class VanillaAbstractFurnaceWorker implements IWorker {
-
-    private static Field FIELD_RECIPE_TYPE;
-    static {
-        try {
-            FIELD_RECIPE_TYPE = AbstractFurnaceBlockEntity.class.getDeclaredField("recipeType");
-            FIELD_RECIPE_TYPE.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
 
     private final AbstractFurnaceBlockEntity furnace;
 
@@ -32,21 +24,18 @@ public class VanillaAbstractFurnaceWorker implements IWorker {
     @Override
     public boolean hasWork() {
         ItemStack toMelt = furnace.getItem(0);
-        Recipe<?> recipe = null;
-        if (furnace.getLevel().recipeAccess() instanceof RecipeManager recipeManager) {
-            try {
-                recipe = recipeManager.getRecipeFor(((RecipeType<? extends AbstractCookingRecipe>) FIELD_RECIPE_TYPE.get(furnace)), new SingleRecipeInput(furnace.getItem(0)), furnace.getLevel())
-                        .map(RecipeHolder::value)
-                        .orElse(null);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+        if (toMelt.isEmpty() || !(furnace.getLevel() instanceof ServerLevel serverLevel)) {
+            return false;
         }
-        return !toMelt.isEmpty() && recipe != null && !((Recipe<SingleRecipeInput>) recipe).assemble(new SingleRecipeInput(furnace.getItem(0))).isEmpty();
+        SingleRecipeInput input = new SingleRecipeInput(toMelt);
+        return furnace.quickCheck.getRecipeFor(input, serverLevel)
+                .map(RecipeHolder::value)
+                .map(recipe -> !((AbstractCookingRecipe) recipe).assemble(input).isEmpty())
+                .orElse(false);
     }
 
     @Override
     public boolean canWork() {
-        return furnace.litTimeRemaining > 0 || furnace.getBurnDuration(furnace.getLevel().fuelValues(), furnace.getItem(1)) > 0;
+        return furnace.litTimeRemaining > 0 || furnace.getItem(1).has(DataComponents.COOKING_FUEL);
     }
 }
