@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Brewing became datapack-driven in Minecraft 26.3, so the recipes are read straight from
- * {@link BrewingRecipe} instead of being derived by walking {@code PotionBrewing}'s mixes.
  * @author rubensworks
  */
 public class PotionHelperCommonCapabilities {
